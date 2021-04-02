@@ -42,7 +42,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+int i = 0;								// duty cycle variable
+int movement =0;						// Variable for save up or down
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -219,7 +220,38 @@ void RCC_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+  //const int i = 0;
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);			// For
+  // Changing duty cycle every interrupt. (Period = 0,01 sec)
+  // Duty cycle from 0 to 100 and back.
+  if(movement == 0)			// Up
+  {
+	  if(i <= 100)
+	  {
+		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
+		  i++;
+	  }
+	  else
+	  {
+		  movement = 1;
+	  }
+  }
+
+
+  if(movement == 1)			// Down
+  {
+	  if( i >= 0)
+	  {
+		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
+		  i--;
+	  }
+	  else
+	  {
+		  movement = 0;
+		  i = 0;
+	  }
+  }
+
  //HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);

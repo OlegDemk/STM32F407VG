@@ -6061,46 +6061,46 @@ LOAD /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_
                 0x0000000008008e90                . = ALIGN (0x4)
                 0x0000000008008e90                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000       0x90 load address 0x0000000008008e90
+.data           0x0000000020000000       0x94 load address 0x0000000008008e90
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
  *(.data*)
+ .data.i        0x0000000020000000        0x4 Core/Src/stm32f4xx_it.o
+                0x0000000020000000                i
  .data.SystemCoreClock
-                0x0000000020000000        0x4 Core/Src/system_stm32f4xx.o
-                0x0000000020000000                SystemCoreClock
+                0x0000000020000004        0x4 Core/Src/system_stm32f4xx.o
+                0x0000000020000004                SystemCoreClock
  .data.uwTickPrio
-                0x0000000020000004        0x4 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
-                0x0000000020000004                uwTickPrio
+                0x0000000020000008        0x4 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
+                0x0000000020000008                uwTickPrio
  .data.uwTickFreq
-                0x0000000020000008        0x1 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
-                0x0000000020000008                uwTickFreq
- *fill*         0x0000000020000009        0x3 
+                0x000000002000000c        0x1 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
+                0x000000002000000c                uwTickFreq
+ *fill*         0x000000002000000d        0x3 
  .data.CDC_Class
-                0x000000002000000c       0x20 Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.o
-                0x000000002000000c                CDC_Class
+                0x0000000020000010       0x20 Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.o
+                0x0000000020000010                CDC_Class
  .data._impure_ptr
-                0x000000002000002c        0x4 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
-                0x000000002000002c                _impure_ptr
+                0x0000000020000030        0x4 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
+                0x0000000020000030                _impure_ptr
  .data.impure_data
-                0x0000000020000030       0x60 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
+                0x0000000020000034       0x60 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
  *(.RamFunc)
  *(.RamFunc*)
-                0x0000000020000090                . = ALIGN (0x4)
-                0x0000000020000090                _edata = .
+                0x0000000020000094                . = ALIGN (0x4)
+                0x0000000020000094                _edata = .
 
-.igot.plt       0x0000000020000090        0x0 load address 0x0000000008008f20
- .igot.plt      0x0000000020000090        0x0 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
-                0x0000000020000090                . = ALIGN (0x4)
+.igot.plt       0x0000000020000094        0x0 load address 0x0000000008008f24
+ .igot.plt      0x0000000020000094        0x0 /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+                0x0000000020000094                . = ALIGN (0x4)
 
-.bss            0x0000000020000090      0x860 load address 0x0000000008008f20
-                0x0000000020000090                _sbss = .
-                0x0000000020000090                __bss_start__ = _sbss
+.bss            0x0000000020000094      0x85c load address 0x0000000008008f24
+                0x0000000020000094                _sbss = .
+                0x0000000020000094                __bss_start__ = _sbss
  *(.bss)
- .bss           0x0000000020000090       0x1c /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .bss           0x0000000020000094       0x1c /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
  *(.bss*)
- .bss.i         0x00000000200000ac        0x4 Core/Src/stm32f4xx_it.o
-                0x00000000200000ac                i
  .bss.movement  0x00000000200000b0        0x4 Core/Src/stm32f4xx_it.o
                 0x00000000200000b0                movement
  .bss.__sbrk_heap_end
@@ -6145,7 +6145,7 @@ LOAD /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_
                 0x00000000200008f0                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x00000000200008f0      0x600 load address 0x0000000008008f20
+                0x00000000200008f0      0x600 load address 0x0000000008008f24
                 0x00000000200008f0                . = ALIGN (0x8)
                 [!provide]                        PROVIDE (end = .)
                 0x00000000200008f0                PROVIDE (_end = .)

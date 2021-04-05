@@ -1,3 +1,6 @@
+"Core/Src/ILI9341_GFX.o"
+"Core/Src/ILI9341_STM32_Driver.o"
+"Core/Src/ILI9341_Touchscreen.o"
 "Core/Src/main.o"
 "Core/Src/stm32f4xx_hal_msp.o"
 "Core/Src/stm32f4xx_it.o"

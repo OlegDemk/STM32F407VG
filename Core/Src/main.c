@@ -142,16 +142,33 @@ int main(void)
   ILI9341_Draw_Text("12345678", 0, 100, WHITE, 5, BLACK);
 
   ILI9341_Draw_Text("12345678912345", 0, 220, WHITE, 3, BLACK);
+  //Проблема з друком тексту з права
+
+  char Character = 'T';
+  ILI9341_Draw_Char(Character, 250, 140, RED, 3, BLACK);
+
+  ILI9341_Draw_Rectangle(290, 100, 20, 20, RED);
+  ILI9341_Draw_Rectangle(250, 70, 30, 30, GREEN);
+
+  ILI9341_Draw_Hollow_Circle(290, 30, 20, BLUE);
+  ILI9341_Draw_Hollow_Circle(310, 60, 10, BLUE);
 
 
-  ILI9341_Draw_Rectangle(280, 100, 20, 20, RED);
-
+  ILI9341_Draw_Vertical_Line(270, 120, 50, YELLOW);
 
   //ILI9341_Fill_Screen(WHITE);
 
+  int i = 0;
   while (1)
   {
-
+	 ILI9341_Draw_Text(" TEST", i, 180, WHITE, 2, BLACK);
+	 ILI9341_Draw_Text(" ", i-1, 160, WHITE, 2, BLACK);
+	 i = i+3;
+	 HAL_Delay(40);
+	 if(i>=320)
+	 {
+		 i=0;
+	 }
     /* USER CODE END WHILE */
     //MX_USB_HOST_Process();
 

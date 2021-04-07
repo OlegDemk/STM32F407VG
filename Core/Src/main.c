@@ -21,11 +21,13 @@
 #include "usb_host.h"
 
 /* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "ILI9341_Touchscreen.h"
 #include "ILI9341_STM32_Driver.h"
 #include "ILI9341_GFX.h"
-//#include "snow_tiger.h"
-/* USER CODE BEGIN Includes */
+#include "LCD.h"
+
+
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
 		PE5 - RESET LCD
@@ -62,6 +64,8 @@
 /* Private variables ---------------------------------------------------------*/
 I2S_HandleTypeDef hi2s3;
 
+RNG_HandleTypeDef hrng;
+
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 
@@ -78,6 +82,7 @@ static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_RNG_Init(void);
 static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
@@ -123,6 +128,7 @@ int main(void)
   MX_USB_HOST_Init();
   MX_TIM2_Init();
   MX_SPI2_Init();
+  MX_RNG_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -141,44 +147,19 @@ int main(void)
   ILI9341_Fill_Screen(BLACK);
   ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);          // was  SCREEN_HORIZONTAL_2
 
-//  ILI9341_Draw_Image((const char*)snow_tiger, SCREEN_HORIZONTAL_2);			// CHowing image doesn't work
-//  HAL_Delay(3000);
 
-  //ILI9341_Draw_Text("FIRST TEST 12345678912", 0, 0, WHITE, 2, BLACK);
- // ILI9341_Draw_Text("12345678912345", 0, 30, WHITE, 3, BLACK);
+  ILI9341_Fill_Screen(BLACK);
+  int number_of_tests = 100;
+  speed_test_LCD(number_of_tests);
 
-  ILI9341_Draw_Text("12345678912345", 0, 220, WHITE, 3, BLACK);
-  //Проблема з друком тексту з права
-
-
-
-  ILI9341_Draw_Rectangle(290, 100, 20, 20, RED);
-  ILI9341_Draw_Rectangle(250, 70, 30, 30, GREEN);
-
-  ILI9341_Draw_Hollow_Circle(290, 30, 20, BLUE);
-  ILI9341_Draw_Hollow_Circle(310, 60, 10, BLUE);
-
-
-  ILI9341_Draw_Vertical_Line(270, 120, 50, YELLOW);
-
-  //ILI9341_Fill_Screen(WHITE);
+  ILI9341_Fill_Screen(BLACK);
 
 
   int i = 0;
   while (1)
   {
-	 ILI9341_Draw_Text(" TEST", i, 180, YELLOW, 4, BLACK);
-	 //ILI9341_Draw_Text(" ", i-1, 160, YELLOW, 4, BLACK);
-	 i = i+2;
-	 HAL_Delay(50);
-	 if(i>=320)
-	 {
-		 i=0;
-	 }
 
-//
-
-	test_touchsreen();
+	 test_touchsreen();
 
 
     /* USER CODE END WHILE */
@@ -282,6 +263,32 @@ static void MX_I2S3_Init(void)
   /* USER CODE BEGIN I2S3_Init 2 */
 
   /* USER CODE END I2S3_Init 2 */
+
+}
+
+/**
+  * @brief RNG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RNG_Init(void)
+{
+
+  /* USER CODE BEGIN RNG_Init 0 */
+
+  /* USER CODE END RNG_Init 0 */
+
+  /* USER CODE BEGIN RNG_Init 1 */
+
+  /* USER CODE END RNG_Init 1 */
+  hrng.Instance = RNG;
+  if (HAL_RNG_Init(&hrng) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RNG_Init 2 */
+
+  /* USER CODE END RNG_Init 2 */
 
 }
 

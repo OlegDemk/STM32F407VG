@@ -1,1 +1,2 @@
-LCD.c:14:6:test_touchsreen	56	static
+LCD.c:21:6:speed_test_LCD	32	static
+LCD.c:56:6:test_touchsreen	64	static

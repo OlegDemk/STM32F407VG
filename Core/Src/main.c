@@ -14,7 +14,6 @@
   * the License. You may obtain a copy of the License at:
   *                             www.st.com/SLA0044
   *
-  ******************************************************************************
   *///
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -22,19 +21,27 @@
 #include "usb_host.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-/* Screen PINs:
-  	PE4	- CS LCD
-	PE5 - RESET LCD
-	PE6 - D/C LCD
-	Touch Screen PINs:
-
-*/
-
-//#include "ILI9341_Touchscreen.h"
+#include "ILI9341_Touchscreen.h"
 #include "ILI9341_STM32_Driver.h"
 #include "ILI9341_GFX.h"
-#include "snow_tiger.h"
+//#include "snow_tiger.h"
+/* USER CODE BEGIN Includes */
+/* Screen PINs:   SIP2
+  		PE4	- CS LCD
+		PE5 - RESET LCD
+		PE6 - D/C LCD
+		PC2 - MISO
+		PB15 - MOSI
+		PB13 - SCK
+   Touch Screen PINs:
+		PC13 - T_IRQ_Pin
+		PE2 - T_MISO_Pin (DO)
+		PE0 - T_MOSI_Pin (DI)
+		PB8 - T_CS_Pin
+		PB7 - T_CLK_Pin
+*/
+
+
 
 /* USER CODE END Includes */
 
@@ -53,8 +60,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
-
 I2S_HandleTypeDef hi2s3;
 
 SPI_HandleTypeDef hspi1;
@@ -69,7 +74,6 @@ TIM_HandleTypeDef htim2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
@@ -114,7 +118,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2C1_Init();
   MX_I2S3_Init();
   MX_SPI1_Init();
   MX_USB_HOST_Init();
@@ -137,15 +140,17 @@ int main(void)
   ILI9341_Init();
   ILI9341_Fill_Screen(BLACK);
   ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);          // was  SCREEN_HORIZONTAL_2
-  ILI9341_Draw_Text("FIRST TEST 12345678912", 0, 0, WHITE, 2, BLACK);
-  ILI9341_Draw_Text("12345678912345", 0, 30, WHITE, 3, BLACK);
-  ILI9341_Draw_Text("12345678", 0, 100, WHITE, 5, BLACK);
+
+//  ILI9341_Draw_Image((const char*)snow_tiger, SCREEN_HORIZONTAL_2);			// CHowing image doesn't work
+//  HAL_Delay(3000);
+
+  //ILI9341_Draw_Text("FIRST TEST 12345678912", 0, 0, WHITE, 2, BLACK);
+ // ILI9341_Draw_Text("12345678912345", 0, 30, WHITE, 3, BLACK);
 
   ILI9341_Draw_Text("12345678912345", 0, 220, WHITE, 3, BLACK);
   //Проблема з друком тексту з права
 
-  char Character = 'T';
-  ILI9341_Draw_Char(Character, 250, 140, RED, 3, BLACK);
+
 
   ILI9341_Draw_Rectangle(290, 100, 20, 20, RED);
   ILI9341_Draw_Rectangle(250, 70, 30, 30, GREEN);
@@ -158,19 +163,26 @@ int main(void)
 
   //ILI9341_Fill_Screen(WHITE);
 
+
   int i = 0;
   while (1)
   {
-	 ILI9341_Draw_Text(" TEST", i, 180, WHITE, 2, BLACK);
-	 ILI9341_Draw_Text(" ", i-1, 160, WHITE, 2, BLACK);
-	 i = i+3;
-	 HAL_Delay(40);
+	 ILI9341_Draw_Text(" TEST", i, 180, YELLOW, 4, BLACK);
+	 //ILI9341_Draw_Text(" ", i-1, 160, YELLOW, 4, BLACK);
+	 i = i+2;
+	 HAL_Delay(50);
 	 if(i>=320)
 	 {
 		 i=0;
 	 }
+
+//
+
+	test_touchsreen();
+
+
     /* USER CODE END WHILE */
-    //MX_USB_HOST_Process();
+    MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
   }
@@ -237,40 +249,6 @@ static void MX_NVIC_Init(void)
   /* TIM2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
-}
-
-/**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_Init(void)
-{
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-
-  /* USER CODE END I2C1_Init 2 */
-
 }
 
 /**
@@ -368,7 +346,7 @@ static void MX_SPI2_Init(void)
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -460,7 +438,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin|CS_LCD_Pin|RESET_LCD_Pin|DC_LCD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, T_MOSI_Pin|CS_I2C_SPI_Pin|CS_LCD_Pin|RESET_LCD_Pin
+                          |DC_LCD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
@@ -469,6 +448,16 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6|T_CLK_Pin|T_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : T_MOSI_Pin CS_LCD_Pin RESET_LCD_Pin DC_LCD_Pin */
+  GPIO_InitStruct.Pin = T_MOSI_Pin|CS_LCD_Pin|RESET_LCD_Pin|DC_LCD_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
   /*Configure GPIO pin : CS_I2C_SPI_Pin */
   GPIO_InitStruct.Pin = CS_I2C_SPI_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -476,12 +465,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(CS_I2C_SPI_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CS_LCD_Pin RESET_LCD_Pin DC_LCD_Pin */
-  GPIO_InitStruct.Pin = CS_LCD_Pin|RESET_LCD_Pin|DC_LCD_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : T_IRQ_Pin */
+  GPIO_InitStruct.Pin = T_IRQ_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  HAL_GPIO_Init(T_IRQ_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : OTG_FS_PowerSwitchOn_Pin */
   GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin;
@@ -532,6 +520,34 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(OTG_FS_OverCurrent_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : T_CLK_Pin T_CS_Pin */
+  GPIO_InitStruct.Pin = T_CLK_Pin|T_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Audio_SDA_Pin */
+  GPIO_InitStruct.Pin = Audio_SDA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+  HAL_GPIO_Init(Audio_SDA_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : T_MISO_Pin */
+  GPIO_InitStruct.Pin = T_MISO_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(T_MISO_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MEMS_INT2_Pin */
   GPIO_InitStruct.Pin = MEMS_INT2_Pin;

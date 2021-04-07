@@ -85,7 +85,6 @@
 #define ILI9341_STM32_DRIVER_H
 
 #include "main.h"
-#include "stdio.h"
 #include "stm32f4xx_hal.h"
 
 extern SPI_HandleTypeDef hspi2;

@@ -70,6 +70,7 @@ SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
 
@@ -83,6 +84,7 @@ static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_RNG_Init(void);
+static void MX_TIM3_Init(void);
 static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
@@ -129,6 +131,7 @@ int main(void)
   MX_TIM2_Init();
   MX_SPI2_Init();
   MX_RNG_Init();
+  MX_TIM3_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -137,6 +140,8 @@ int main(void)
   //HAL_TIM_Base_Start_IT(&htim2);						// Generate interrupt handler
   //HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   ////////////////////////////////////////////////////
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -154,12 +159,18 @@ int main(void)
 
   ILI9341_Fill_Screen(BLACK);
 
+  //HAL_TIM_Base_Start_IT(&htim3);
 
   int i = 0;
   while (1)
   {
+	  char number;
+	  int ARR_REG =0;
 
-	 test_touchsreen();
+	  HAL_TIM_Base_Start_IT(&htim3);			// Start timer measure
+	  number = keyboard_test();					// Target function
+	  HAL_TIM_Base_Stop_IT(&htim3);				// Stop timer measure
+	  ARR_REG = TIM3-> CNT;
 
 
     /* USER CODE END WHILE */
@@ -428,6 +439,51 @@ static void MX_TIM2_Init(void)
 }
 
 /**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 1;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 42000;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -452,7 +508,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
+  HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin|KEYBOARD_ROW_3_Pin|KEYBOARD_ROW_2_Pin|KEYBOARD_ROW_1_Pin
+                          |LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -513,9 +570,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
   HAL_GPIO_Init(CLK_IN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD4_Pin LD3_Pin LD5_Pin LD6_Pin
+  /*Configure GPIO pins : KEYBOARD_COLUMN_3_Pin KEYBOARD_COLUMN_2_Pin KEYBOARD_COLUMN_1_Pin */
+  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_3_Pin|KEYBOARD_COLUMN_2_Pin|KEYBOARD_COLUMN_1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : KEYBOARD_ROW_4_Pin KEYBOARD_ROW_3_Pin KEYBOARD_ROW_2_Pin KEYBOARD_ROW_1_Pin
+                           LD4_Pin LD3_Pin LD5_Pin LD6_Pin
                            Audio_RST_Pin */
-  GPIO_InitStruct.Pin = LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
+  GPIO_InitStruct.Pin = KEYBOARD_ROW_4_Pin|KEYBOARD_ROW_3_Pin|KEYBOARD_ROW_2_Pin|KEYBOARD_ROW_1_Pin
+                          |LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;

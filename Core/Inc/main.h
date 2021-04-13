@@ -32,12 +32,21 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+
 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+struct keyboard_struct		// Struct for keyboard
+{
+	char keyboard_digits_buffer[30];
+	uint8_t how_meny_digits_must_be_written;
+	bool read_one_digit_status;
+	bool all_digits_was_read;
+	int read_digits_position;
+} keyboard;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

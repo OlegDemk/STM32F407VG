@@ -27,6 +27,7 @@
 #include "ILI9341_GFX.h"
 #include "LCD.h"
 
+#include <stdbool.h>
 
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
@@ -47,6 +48,17 @@
 
 /* USER CODE END Includes */
 
+extern char digits_buffer[14];	// Global buffer for read data from keyboard
+extern bool read_status_digits;
+extern bool all_digits_entered;
+
+//struct keyboard_struct
+//{
+//	char keyboard_digits_buffer[30];
+//	uint8_t how_meny_digits_must_be_written;
+//	bool all_digits_was_read;
+//} keyboard;
+//extern struct keyboard;
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -159,18 +171,87 @@ int main(void)
 
   ILI9341_Fill_Screen(BLACK);
 
-  //HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_Base_Start_IT(&htim3);			// Start read digits
+  keyboard.how_meny_digits_must_be_written = 10;
 
   int i = 0;
   while (1)
   {
+	  if(keyboard.read_one_digit_status == true)
+	  {
+		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
+	  }
+
+
+//	  HAL_TIM_Base_Start_IT(&htim3);			// Start read digits
+//	  if(read_status_digits == true)		// If key was entered
+//	  {
+//		  HAL_Delay(300);
+//		  ILI9341_Draw_Text(digits_buffer, 10, 10, WHITE, 3, BLACK);
+//		  read_status_digits == false;
+//	  }
+//	  if(all_digits_entered == true)
+//	  {
+//		  HAL_TIM_Base_Stop_IT(&htim3);			// Start read digits
+//		  ILI9341_Draw_Text("OK", 10, 40, WHITE, 3, BLACK);
+//	  }
+
+
+
+
+
+
+	  //////////////////////////////////////////////////////////////
+//      НОВИЙ МЕТОД ЗЧИТУВАННЯ ЗНАКІВ З ЗЛАВІАТУРИ
+//	  введені_всі_символи? = read_keys_from_keyboard(how_meny_read_digits);
+
+
+	  /*
+	   * 1. включити переривання.
+	   * 2. якщо не введені всі символи:
+	   * 		тоді ввести символ в буфер
+	   * 3. Якщо введені всі символи:
+	   * 		вернути статус готовності
+	   * 		виключити переривання
+	   *
+	   * Вивід на екран це має бути окрема функція !!!!!!!!
+	   *
+	   */
+/////////////////////////////////////////////////////
+
+
+
+	 //  ВИкористати окремий канал для цього????? <<<<<<<<<<<<<<<<<<<<
+	  /* Алгоритм реалізації зчитування з клавіатури одного або
+	  багатьох символів
+	  1. Зробити таймер з перериванням на 1/3 секунди
+	  2. Помістити в неї функцію зчитування клавіатури
+	  	  Функція приймає параметри:
+	  	  	  1. Показник на массив буфера.
+	  	  	  2. Кількість знаків які потрібно записати
+	  	  Функція вертає статус виконання запису цифр. (0 - заипсаноб 1 - в процесі)
+	  При кожному перериванні функція зчитує натиснуті кнопки.
+	  	  Якщо кнопка не написанена - пропустити
+	  	  Якщо кнопка натиснута:
+	  	  	  Записано менше 10 цифр?
+	  	  	  	  так
+	  	  	  	  	  Записати знак в поеазник на елемент масива вхідного масиву.
+	  	  	  	  	  Зробити інкремент показника на масив.
+	  	  	  	  Ні
+	  	  	  	  	  Вернути знак завершення роботи
+
+
+
+	  */
+
+	  //test_touchsreen();
 	  char number;
 	  int ARR_REG =0;
 
-	  HAL_TIM_Base_Start_IT(&htim3);			// Start timer measure
-	  number = keyboard_test();					// Target function
-	  HAL_TIM_Base_Stop_IT(&htim3);				// Stop timer measure
-	  ARR_REG = TIM3-> CNT;
+	 // HAL_TIM_Base_Start_IT(&htim3);			// Start timer measure
+	  //number = keyboard_test();					// Target function
+//	  HAL_TIM_Base_Stop_IT(&htim3);				// Stop timer measure
+//	  ARR_REG = TIM3-> CNT;
 
 
     /* USER CODE END WHILE */
@@ -457,9 +538,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 1;
+  htim3.Init.Prescaler = 4200;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 42000;
+  htim3.Init.Period = 10000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)

@@ -6,10 +6,103 @@
  */
 
 #include "main.h"
+#include "keyboard.h"
 
-char keyboard_test(void)
+#include "ILI9341_Touchscreen.h"
+#include "ILI9341_STM32_Driver.h"
+#include "ILI9341_GFX.h"
+#include "LCD.h"
+
+#include <stdbool.h>
+
+
+//----------------------------------------------------------------------------------------
+void read_digits(void)
 {
-	char num;
+	char digith = 0;;
+
+	digith = read_one_digit_from_keyboard();
+	if(digith == '#')						// Clean buffer
+	{
+		memset(keyboard.keyboard_digits_buffer, '\0', sizeof(keyboard.keyboard_digits_buffer));
+		keyboard.read_digits_position = 0;
+		keyboard.read_one_digit_status = false;
+	}
+	if(digith == '*')						// If pressed enter
+	{
+		keyboard.all_digits_was_read = true;
+		keyboard.read_one_digit_status = false;
+		keyboard.read_digits_position = 0;
+	}
+
+	if((digith != '\0') && (digith != '#')&& (digith != '*'))
+	{
+		if(keyboard.read_digits_position <= keyboard.how_meny_digits_must_be_written)
+		{
+			keyboard.keyboard_digits_buffer[keyboard.read_digits_position] = digith;
+			keyboard.read_digits_position++;
+			keyboard.all_digits_was_read = false;
+			keyboard.read_one_digit_status = true;
+		}
+		else								// If entered all digits
+		{
+			keyboard.all_digits_was_read = true;
+			keyboard.read_one_digit_status = false;
+			keyboard.read_digits_position = 0;
+		}
+	}
+	else									// If didn't enter any key
+	{
+		keyboard.read_one_digit_status = false;
+	}
+
+    //int h = 0;
+
+
+	//////////////////////////////////////////////////////////////////////////
+//	digith = read_one_digit_from_keyboard();
+//	//resd_status_digits = false;
+//
+//	if(digith == '#')
+//	{
+//		memset(digits_buffer, '\0', sizeof(digits_buffer));
+//		ILI9341_Draw_Text("               ", 10, 10, WHITE, 3, BLACK);
+//	}
+//
+//	if((digith != '\0') && (digith != '#'))
+//	{
+//
+//		if(read_digits <= 13)		  // Записувати 10 символів
+//		{
+//			digits_buffer[read_digits] = digith;
+//			read_digits++;
+//			read_status_digits = true;
+//			all_digits_entered = false;
+//
+//			ILI9341_Draw_Text(digits_buffer, 10, 10, WHITE, 3, BLACK);
+//
+//			//return true;	// Кнопка була нажата
+//		}
+//		else
+//		{
+//			all_digits_entered = true;
+//		}
+//	}
+//	else
+//	{
+//		read_status_digits = false;
+//		all_digits_entered = false;
+//		//return false;		// Кнопка була не нажата
+//	}
+///////////////////////////////////////////////////////////////
+	//LI9341_Draw_Text(digits_buff, k, 10, RED, 3, BLACK);
+	//k = k +15;
+}
+
+//----------------------------------------------------------------------------------------
+char read_one_digit_from_keyboard(void)
+{
+	char digit = '\0';
 	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
@@ -22,25 +115,25 @@ char keyboard_test(void)
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
 		{
-			num = '1';
+			digit = '1';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
 		{
-			num = '4';
+			digit = '4';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
 		{
-			num = '7';
+			digit =  '7';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
 		{
-			num = '*';
+			digit =  '*';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 	}
@@ -57,25 +150,25 @@ char keyboard_test(void)
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)
 		{
-			num = '2';
+			digit =  '2';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)
 		{
-			num = '5';
+			digit =  '5';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)
 		{
-			num = '8';
+			digit = '8';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)
 		{
-			num = '0';
+			digit = '0';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 	}
@@ -93,113 +186,28 @@ char keyboard_test(void)
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)
 		{
-			num = '3';
+			digit = '3';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)
 		{
-			num = '6';
+			digit = '6';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)
 		{
-			num = '9';
+			digit = '9';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
 		if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)
 		{
-			num = '#';
+			digit = '#';
 		}
 		HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
 	}
-	return num;
+	return digit;
 }
-
-
-//void keyboard_test(void)
-//{
-//	char num;
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '1';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '4';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '7';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_1_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '*';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
-//	////////////////////////////////////////////////////////////////
-//
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '2';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '3';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '8';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_2_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '0';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
-//
-//	////////////////////////////////////////////////////////////////
-//
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '3';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_1_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '6';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_2_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '9';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_3_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_RESET);
-//	if(HAL_GPIO_ReadPin(GPIOB, KEYBOARD_COLUMN_3_Pin) == GPIO_PIN_RESET)	// Entered 1 or 4 or 7 or *
-//	{
-//		num = '#';
-//	}
-//	HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin, GPIO_PIN_SET);
-//
-//
-//}
-
+//----------------------------------------------------------------------------------------

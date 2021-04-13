@@ -8,6 +8,7 @@
 #ifndef INC_KEYBOARD_H_
 #define INC_KEYBOARD_H_
 
-void keyboard_test(void);
+char read_one_digit_from_keyboard(void);
+
 
 #endif /* INC_KEYBOARD_H_ */

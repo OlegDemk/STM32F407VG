@@ -48,17 +48,6 @@
 
 /* USER CODE END Includes */
 
-extern char digits_buffer[14];	// Global buffer for read data from keyboard
-extern bool read_status_digits;
-extern bool all_digits_entered;
-
-//struct keyboard_struct
-//{
-//	char keyboard_digits_buffer[30];
-//	uint8_t how_meny_digits_must_be_written;
-//	bool all_digits_was_read;
-//} keyboard;
-//extern struct keyboard;
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -81,6 +70,7 @@ RNG_HandleTypeDef hrng;
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
@@ -97,6 +87,7 @@ static void MX_TIM2_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_RNG_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM1_Init(void);
 static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
@@ -144,6 +135,7 @@ int main(void)
   MX_SPI2_Init();
   MX_RNG_Init();
   MX_TIM3_Init();
+  MX_TIM1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -171,30 +163,52 @@ int main(void)
 
   ILI9341_Fill_Screen(BLACK);
 
+  // Start scan digits ///////////////////////////////
   HAL_TIM_Base_Start_IT(&htim3);			// Start read digits
+  HAL_TIM_OC_Start_IT(&htim3, TIM_CHANNEL_1);
   keyboard.how_meny_digits_must_be_written = 10;
+  // Stop scan digits
 
-  int i = 0;
+  // Encoder /////////////////////////////////////////
+  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+  int32_t prevCounter = 0;
+  ////////////////////////////////////////////////////
   while (1)
   {
-	  if(keyboard.read_one_digit_status == true)
+
+	  int currCounter = __HAL_TIM_GET_COUNTER(&htim1);
+	  currCounter = 32767 - ((currCounter-1) & 0xFFFF) / 2;
+	  if(currCounter != prevCounter)
 	  {
-		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
+	          char buff[16];
+	          snprintf(buff, sizeof(buff), "%06d", currCounter);
+	          ILI9341_Draw_Text( buff, 10, 30, WHITE, 3, BLACK);
+
+	          // выводим куда-то currCounter
+	          // ... пропущено ...
+
+	          prevCounter = currCounter;
+	   }
+	  if(HAL_GPIO_ReadPin(GPIOE, encoder_button_Pin) == 0)
+	  {
+		  ILI9341_Draw_Text( "KEY pressed", 10, 60, WHITE, 3, BLACK);
+	  }
+	  else
+	  {
+		  ILI9341_Draw_Text( "            ", 10, 60, WHITE, 3, BLACK);
 	  }
 
 
-//	  HAL_TIM_Base_Start_IT(&htim3);			// Start read digits
-//	  if(read_status_digits == true)		// If key was entered
+
+
+	  // Keyboard test //////////////////////////////////////////////
+//	  if(keyboard.read_one_digit_status == true)
 //	  {
-//		  HAL_Delay(300);
-//		  ILI9341_Draw_Text(digits_buffer, 10, 10, WHITE, 3, BLACK);
-//		  read_status_digits == false;
+//		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
 //	  }
-//	  if(all_digits_entered == true)
-//	  {
-//		  HAL_TIM_Base_Stop_IT(&htim3);			// Start read digits
-//		  ILI9341_Draw_Text("OK", 10, 40, WHITE, 3, BLACK);
-//	  }
+	  /////////////////////////////////////////////////////////////////
+
+
 
 
 
@@ -461,6 +475,56 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_Encoder_InitTypeDef sConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC1Filter = 0;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC2Filter = 0;
+  if (HAL_TIM_Encoder_Init(&htim1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
   * @brief TIM2 Initialization Function
   * @param None
   * @retval None
@@ -474,7 +538,6 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
@@ -494,28 +557,15 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 100;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -533,12 +583,13 @@ static void MX_TIM3_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM3_Init 1 */
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 4200;
+  htim3.Init.Prescaler = 2099;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 10000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -552,9 +603,21 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -642,6 +705,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : encoder_button_Pin */
+  GPIO_InitStruct.Pin = encoder_button_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(encoder_button_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : CLK_IN_Pin */
   GPIO_InitStruct.Pin = CLK_IN_Pin;

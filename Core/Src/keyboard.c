@@ -55,48 +55,6 @@ void read_digits(void)
 	{
 		keyboard.read_one_digit_status = false;
 	}
-
-    //int h = 0;
-
-
-	//////////////////////////////////////////////////////////////////////////
-//	digith = read_one_digit_from_keyboard();
-//	//resd_status_digits = false;
-//
-//	if(digith == '#')
-//	{
-//		memset(digits_buffer, '\0', sizeof(digits_buffer));
-//		ILI9341_Draw_Text("               ", 10, 10, WHITE, 3, BLACK);
-//	}
-//
-//	if((digith != '\0') && (digith != '#'))
-//	{
-//
-//		if(read_digits <= 13)		  // Записувати 10 символів
-//		{
-//			digits_buffer[read_digits] = digith;
-//			read_digits++;
-//			read_status_digits = true;
-//			all_digits_entered = false;
-//
-//			ILI9341_Draw_Text(digits_buffer, 10, 10, WHITE, 3, BLACK);
-//
-//			//return true;	// Кнопка була нажата
-//		}
-//		else
-//		{
-//			all_digits_entered = true;
-//		}
-//	}
-//	else
-//	{
-//		read_status_digits = false;
-//		all_digits_entered = false;
-//		//return false;		// Кнопка була не нажата
-//	}
-///////////////////////////////////////////////////////////////
-	//LI9341_Draw_Text(digits_buff, k, 10, RED, 3, BLACK);
-	//k = k +15;
 }
 
 //----------------------------------------------------------------------------------------

@@ -1,2 +1,2 @@
 keyboard.c:20:6:read_digits	16	static
-keyboard.c:103:6:read_one_digit_from_keyboard	16	static
+keyboard.c:61:6:read_one_digit_from_keyboard	16	static

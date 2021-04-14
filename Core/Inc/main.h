@@ -145,6 +145,8 @@ void Error_Handler(void);
 #define SWCLK_GPIO_Port GPIOA
 #define I2S3_SCK_Pin GPIO_PIN_10
 #define I2S3_SCK_GPIO_Port GPIOC
+#define CS_M25Q_Pin GPIO_PIN_11
+#define CS_M25Q_GPIO_Port GPIOC
 #define I2S3_SD_Pin GPIO_PIN_12
 #define I2S3_SD_GPIO_Port GPIOC
 #define Audio_RST_Pin GPIO_PIN_4

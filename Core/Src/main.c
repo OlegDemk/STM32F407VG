@@ -174,35 +174,42 @@ int main(void)
   // Stop scan digits
 
   // Encoder /////////////////////////////////////////
-  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-  int32_t prevCounter = 0;
+//  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+//  int32_t prevCounter = 0;
   ////////////////////////////////////////////////////
   while (1)
   {
+	  /////////////////////////////////////////////////////////////////
 
-	  int currCounter = __HAL_TIM_GET_COUNTER(&htim1);
-	  currCounter = 32767 - ((currCounter-1) & 0xFFFF) / 2;
-	  if(currCounter != prevCounter)
-	  {
-	          char buff[16];
-	          snprintf(buff, sizeof(buff), "%06d", currCounter);
-	          ILI9341_Draw_Text( buff, 10, 30, WHITE, 3, BLACK);
-
-	          // выводим куда-то currCounter
-	          // ... пропущено ...
-
-	          prevCounter = currCounter;
-	   }
-	  if(HAL_GPIO_ReadPin(GPIOE, encoder_button_Pin) == 0)
-	  {
-		  ILI9341_Draw_Text( "KEY pressed", 10, 60, WHITE, 3, BLACK);
-	  }
-	  else
-	  {
-		  ILI9341_Draw_Text( "            ", 10, 60, WHITE, 3, BLACK);
-	  }
+	 menu();
 
 
+
+
+
+//	  // Encoder test //////////////////////////////////////////////
+//	  int currCounter = __HAL_TIM_GET_COUNTER(&htim1);
+//	  currCounter = 32767 - ((currCounter-1) & 0xFFFF) / 2;
+//	  if(currCounter != prevCounter)
+//	  {
+//	          char buff[16];
+//	          snprintf(buff, sizeof(buff), "%06d", currCounter);
+//	          ILI9341_Draw_Text( buff, 10, 30, WHITE, 3, BLACK);
+//
+//	          // выводим куда-то currCounter
+//	          // ... пропущено ...
+//
+//	          prevCounter = currCounter;
+//	   }
+//	  if(HAL_GPIO_ReadPin(GPIOE, encoder_button_Pin) == 0)
+//	  {
+//		  ILI9341_Draw_Text( "KEY pressed", 10, 60, WHITE, 3, BLACK);
+//	  }
+//	  else
+//	  {
+//		  ILI9341_Draw_Text( "            ", 10, 60, WHITE, 3, BLACK);
+//	  }
+//	  ////////////////////////////////////////////////////////////////
 
 
 	  // Keyboard test //////////////////////////////////////////////
@@ -263,8 +270,8 @@ int main(void)
 	  */
 
 	  //test_touchsreen();
-	  char number;
-	  int ARR_REG =0;
+//	  char number;
+//	  int ARR_REG =0;
 
 	 // HAL_TIM_Base_Start_IT(&htim3);			// Start timer measure
 	  //number = keyboard_test();					// Target function
@@ -695,7 +702,7 @@ static void MX_GPIO_Init(void)
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CS_M25Q_GPIO_Port, CS_M25Q_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, CS_mcroSD_Pin|CS_M25Q_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6|T_CLK_Pin|T_CS_Pin, GPIO_PIN_RESET);
@@ -720,8 +727,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(T_IRQ_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin CS_M25Q_Pin */
-  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|CS_M25Q_Pin;
+  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin CS_mcroSD_Pin CS_M25Q_Pin */
+  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|CS_mcroSD_Pin|CS_M25Q_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

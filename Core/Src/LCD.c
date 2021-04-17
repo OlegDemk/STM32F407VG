@@ -59,7 +59,8 @@ typedef enum								// Enumeration for button state
 // Menus  Name | Next | Prev | Parent | Child | SelectFunction | EnterFunction | Text
 MENU_ITEM(Menu_1, Menu_2, Menu_3, NULL_MENU, Menu_1_1, NULL, NULL, "Menu-1");
 MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-2");
-MENU_ITEM(Menu_3, Menu_1, Menu_2, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-3");
+//MENU_ITEM(Menu_3, Menu_1, Menu_2, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-3");
+MENU_ITEM(Menu_3, Menu_1, Menu_2, NULL_MENU, NULL_MENU, NULL, Level1Item3_Enter, "Enter ON/OFF red LED");
 
 MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_2, Menu_1, Menu_1_1_1, NULL, NULL, "Menu-1.1");
 MENU_ITEM(Menu_1_2, Menu_1_1, Menu_1_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.2");
@@ -124,7 +125,66 @@ void RED_LED_ON(void)
 // -----------------------------------------------------------------------
 void RED_LED_OFF(void)
 {
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+}
+// -----------------------------------------------------------------------
+static void Level1Item3_Enter(void)
+{
+ bool flagPressed = false; 			// Прапорець натиснутої кнопки
+
+ //lcdClrScr();   // Очищаємо екран дисплею
+ ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);
+
+ //lcdGoto(LCD_1st_LINE,0); // Друкуємо в першому рядку
+ //lcdPuts("  BackLight is"); // Назву параметру
+ ILI9341_Draw_Text( "Red LED is:", 10, 10, WHITE, 2, BLACK);
+
+// Поки не натиснути кнопка "ліворуч" тут виконує функцію як "вихід"
+ while(getPressKey() != BUTTON_LEFT)
+ {
+
+	 // Перевіримо в якому стані ніжка мікроконтролера куди під'єднано підсвічування дисплею
+	 if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14))
+	 {
+//		 lcdGoto(LCD_2nd_LINE,0); // В другому рядку друкуємо стан параметру
+//		 lcdPuts("\tON ");   // Підсвічування увімкнено
+		 ILI9341_Draw_Text( "ON ", 150, 10, WHITE, 2, BLACK);
+	 } else
+	 {
+//		 lcdGoto(LCD_2nd_LINE,0); // В інакшому разі
+//		 lcdPuts("\tOFF");   // Підсвічування вимкнено
+		 ILI9341_Draw_Text( "OFF", 150, 10, WHITE, 2, BLACK);
+
+	 }
+// Скануємо тільки кнопки "вгору" і "вниз"
+  if(getPressKey() != BUTTON_NOTHING && !flagPressed)              //<<<<<<<<<<<<<<<<<<<<<< TEN
+  {
+	  flagPressed = true; // Коли якусь кнопку натиснули
+
+	  switch(getPressKey())  // Перевіряємо що натиснуто
+	  {
+	  	  case BUTTON_UP:  // Якщо кнопку "вгору", то увімкнемо підсвічування дисплею
+	  		  //HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,ENABLE);
+	  		  RED_LED_ON();
+	  		  break;
+	  	  case BUTTON_DOWN: // Якщо кнопку "вниз", то вимкнемо підсвічування дисплею
+	  		  //HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,DISABLE);
+	  		  RED_LED_OFF();
+	  		  break;
+	  	  default:  // В будь якому іншому випадку просто вихід з switch
+	  		  break;
+	  }
+  }
+  else if(getPressKey() == BUTTON_NOTHING && flagPressed)
+  {
+	  flagPressed = false; // Коли кнопку відпустили
+  }
+ }
+
+ //lcdClrScr();  // Очищення дисплею
+ ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK);
+ //ILI9341_Draw_Text( "                        ", 10, 40, WHITE, 2, BLACK);
+ Menu_Navigate(&Menu_3); // Повертаємося до того ж меню де були
 }
 // -----------------------------------------------------------------------
 static uint8_t getPressKey()		// Simulation keyboard
@@ -143,35 +203,35 @@ static uint8_t getPressKey()		// Simulation keyboard
 	digit = read_one_digit_from_keyboard();
 	switch(digit)
 	{
-		flagPressed = true;			// Flag: Key was pressed
+		//flagPressed = true;			// Flag: Key was pressed
 		case '0':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 3, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_LEFT;
 		}
 		case '1':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 3, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_UP;
 		}
 		case '2':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 3, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_DOWN;
 		}
 		case '3':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 3, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_RIGHT;
 		}
 		case '4':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 3, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_SELECT;
 		}
 		default:
@@ -187,8 +247,8 @@ void Generic_Write(const char* Text)
 //		lcdClrScr();
 //		lcdPuts(Text);
 
-		ILI9341_Draw_Text( "                   ", 10, 10, WHITE, 3, BLACK);
-		ILI9341_Draw_Text( Text, 10, 10, WHITE, 3, BLACK);
+		ILI9341_Draw_Text( "                   ", 10, 10, WHITE, 2, BLACK);
+		ILI9341_Draw_Text( Text, 10, 10, WHITE, 2, BLACK);
 	}
 }
 // -----------------------------------------------------------------------

@@ -36,7 +36,7 @@ Core/Src/LCD.o: ../Core/Src/LCD.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h ../Core/Inc/LCD.h \
  ../Core/Inc/ILI9341_Touchscreen.h ../Core/Inc/main.h \
  ../Core/Inc/ILI9341_STM32_Driver.h ../Core/Inc/ILI9341_GFX.h \
- ../Core/Inc/snow_tiger.h
+ ../Core/Inc/snow_tiger.h ../Core/Inc/keyboard.h
 
 ../Core/Inc/main.h:
 
@@ -121,3 +121,5 @@ Core/Src/LCD.o: ../Core/Src/LCD.c ../Core/Inc/main.h \
 ../Core/Inc/ILI9341_GFX.h:
 
 ../Core/Inc/snow_tiger.h:
+
+../Core/Inc/keyboard.h:

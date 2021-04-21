@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0002009c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00023bf3  00000000  00000000  000200cc  2**0
+ 12 .debug_info   00023be8  00000000  00000000  000200cc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00004bef  00000000  00000000  00043cbf  2**0
+ 13 .debug_abbrev 00004be5  00000000  00000000  00043cb4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000018d0  00000000  00000000  000488b0  2**3
+ 14 .debug_aranges 000018d0  00000000  00000000  000488a0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00001700  00000000  00000000  0004a180  2**3
+ 15 .debug_ranges 00001700  00000000  00000000  0004a170  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00025cc8  00000000  00000000  0004b880  2**0
+ 16 .debug_macro  00025cd2  00000000  00000000  0004b870  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00022bee  00000000  00000000  00071548  2**0
+ 17 .debug_line   00022bff  00000000  00000000  00071542  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000d4ed3  00000000  00000000  00094136  2**0
+ 18 .debug_str    000d4ed3  00000000  00000000  00094141  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  00169009  2**0
+ 19 .comment      00000053  00000000  00000000  00169014  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00006a60  00000000  00000000  0016905c  2**2
+ 20 .debug_frame  00006a60  00000000  00000000  00169068  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2007,374 +2007,355 @@ void menu()
  8000f78:	b580      	push	{r7, lr}
  8000f7a:	b082      	sub	sp, #8
  8000f7c:	af00      	add	r7, sp, #0
-//	bool flagPressed = false;						// flag presed key
-	//Menu_Navigate(&Menu_1);			// <<<<<<< What ti i????????????????????????
-	Menu_SetGenericWriteCallback(Generic_Write);
- 8000f7e:	482e      	ldr	r0, [pc, #184]	; (8001038 <menu+0xc0>)
+	Menu_SetGenericWriteCallback(Generic_Write);  // transfer Generic_Write function point in Menu_SetGenericWriteCallback
+ 8000f7e:	482c      	ldr	r0, [pc, #176]	; (8001030 <menu+0xb8>)
  8000f80:	f000 f9f0 	bl	8001364 <Menu_SetGenericWriteCallback>
 	Menu_Navigate(&Menu_1);
- 8000f84:	482d      	ldr	r0, [pc, #180]	; (800103c <menu+0xc4>)
+ 8000f84:	482b      	ldr	r0, [pc, #172]	; (8001034 <menu+0xbc>)
  8000f86:	f000 f9bf 	bl	8001308 <Menu_Navigate>
 	while (1)
 	  {
 	   uint8_t pressed_key = getPressKey();
- 8000f8a:	f000 f8f9 	bl	8001180 <getPressKey>
+ 8000f8a:	f000 f8f5 	bl	8001178 <getPressKey>
  8000f8e:	4603      	mov	r3, r0
  8000f90:	71fb      	strb	r3, [r7, #7]
 
 	   if (pressed_key != BUTTON_NOTHING && !flagPressed)
  8000f92:	79fb      	ldrb	r3, [r7, #7]
  8000f94:	2bff      	cmp	r3, #255	; 0xff
- 8000f96:	d042      	beq.n	800101e <menu+0xa6>
- 8000f98:	4b29      	ldr	r3, [pc, #164]	; (8001040 <menu+0xc8>)
+ 8000f96:	d03e      	beq.n	8001016 <menu+0x9e>
+ 8000f98:	4b27      	ldr	r3, [pc, #156]	; (8001038 <menu+0xc0>)
  8000f9a:	781b      	ldrb	r3, [r3, #0]
  8000f9c:	f083 0301 	eor.w	r3, r3, #1
  8000fa0:	b2db      	uxtb	r3, r3
  8000fa2:	2b00      	cmp	r3, #0
- 8000fa4:	d03b      	beq.n	800101e <menu+0xa6>
+ 8000fa4:	d037      	beq.n	8001016 <menu+0x9e>
 	   {
-//		    Menu_Navigate(&Menu_1);			// <<<<<<< What ti i????????????????????????
-			//Menu_SetGenericWriteCallback(Generic_Write);	// print menu
 			flagPressed = true;
- 8000fa6:	4b26      	ldr	r3, [pc, #152]	; (8001040 <menu+0xc8>)
+ 8000fa6:	4b24      	ldr	r3, [pc, #144]	; (8001038 <menu+0xc0>)
  8000fa8:	2201      	movs	r2, #1
  8000faa:	701a      	strb	r2, [r3, #0]
-			pressed_key = getPressKey();
- 8000fac:	f000 f8e8 	bl	8001180 <getPressKey>
- 8000fb0:	4603      	mov	r3, r0
- 8000fb2:	71fb      	strb	r3, [r7, #7]
 			switch(pressed_key)
- 8000fb4:	79fb      	ldrb	r3, [r7, #7]
- 8000fb6:	2b04      	cmp	r3, #4
- 8000fb8:	d82f      	bhi.n	800101a <menu+0xa2>
- 8000fba:	a201      	add	r2, pc, #4	; (adr r2, 8000fc0 <menu+0x48>)
- 8000fbc:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
- 8000fc0:	08000fd5 	.word	0x08000fd5
- 8000fc4:	08000fe5 	.word	0x08000fe5
- 8000fc8:	08000ff5 	.word	0x08000ff5
- 8000fcc:	08001005 	.word	0x08001005
- 8000fd0:	08001015 	.word	0x08001015
+ 8000fac:	79fb      	ldrb	r3, [r7, #7]
+ 8000fae:	2b04      	cmp	r3, #4
+ 8000fb0:	d82f      	bhi.n	8001012 <menu+0x9a>
+ 8000fb2:	a201      	add	r2, pc, #4	; (adr r2, 8000fb8 <menu+0x40>)
+ 8000fb4:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 8000fb8:	08000fcd 	.word	0x08000fcd
+ 8000fbc:	08000fdd 	.word	0x08000fdd
+ 8000fc0:	08000fed 	.word	0x08000fed
+ 8000fc4:	08000ffd 	.word	0x08000ffd
+ 8000fc8:	0800100d 	.word	0x0800100d
 			{
 			 case BUTTON_LEFT:
 			  Menu_Navigate(MENU_PARENT);
- 8000fd4:	f000 f98c 	bl	80012f0 <Menu_GetCurrentMenu>
- 8000fd8:	4603      	mov	r3, r0
- 8000fda:	689b      	ldr	r3, [r3, #8]
- 8000fdc:	4618      	mov	r0, r3
- 8000fde:	f000 f993 	bl	8001308 <Menu_Navigate>
+ 8000fcc:	f000 f990 	bl	80012f0 <Menu_GetCurrentMenu>
+ 8000fd0:	4603      	mov	r3, r0
+ 8000fd2:	689b      	ldr	r3, [r3, #8]
+ 8000fd4:	4618      	mov	r0, r3
+ 8000fd6:	f000 f997 	bl	8001308 <Menu_Navigate>
 			  break;
- 8000fe2:	e01b      	b.n	800101c <menu+0xa4>
+ 8000fda:	e01b      	b.n	8001014 <menu+0x9c>
 			 case BUTTON_UP:
 			  Menu_Navigate(MENU_PREVIOUS);
- 8000fe4:	f000 f984 	bl	80012f0 <Menu_GetCurrentMenu>
- 8000fe8:	4603      	mov	r3, r0
- 8000fea:	685b      	ldr	r3, [r3, #4]
- 8000fec:	4618      	mov	r0, r3
- 8000fee:	f000 f98b 	bl	8001308 <Menu_Navigate>
+ 8000fdc:	f000 f988 	bl	80012f0 <Menu_GetCurrentMenu>
+ 8000fe0:	4603      	mov	r3, r0
+ 8000fe2:	685b      	ldr	r3, [r3, #4]
+ 8000fe4:	4618      	mov	r0, r3
+ 8000fe6:	f000 f98f 	bl	8001308 <Menu_Navigate>
 			  break;
- 8000ff2:	e013      	b.n	800101c <menu+0xa4>
+ 8000fea:	e013      	b.n	8001014 <menu+0x9c>
 			 case BUTTON_DOWN:
 			  Menu_Navigate(MENU_NEXT);
- 8000ff4:	f000 f97c 	bl	80012f0 <Menu_GetCurrentMenu>
- 8000ff8:	4603      	mov	r3, r0
- 8000ffa:	681b      	ldr	r3, [r3, #0]
- 8000ffc:	4618      	mov	r0, r3
- 8000ffe:	f000 f983 	bl	8001308 <Menu_Navigate>
+ 8000fec:	f000 f980 	bl	80012f0 <Menu_GetCurrentMenu>
+ 8000ff0:	4603      	mov	r3, r0
+ 8000ff2:	681b      	ldr	r3, [r3, #0]
+ 8000ff4:	4618      	mov	r0, r3
+ 8000ff6:	f000 f987 	bl	8001308 <Menu_Navigate>
 			  break;
- 8001002:	e00b      	b.n	800101c <menu+0xa4>
+ 8000ffa:	e00b      	b.n	8001014 <menu+0x9c>
 			 case BUTTON_RIGHT:
 			  Menu_Navigate(MENU_CHILD);
- 8001004:	f000 f974 	bl	80012f0 <Menu_GetCurrentMenu>
- 8001008:	4603      	mov	r3, r0
- 800100a:	68db      	ldr	r3, [r3, #12]
- 800100c:	4618      	mov	r0, r3
- 800100e:	f000 f97b 	bl	8001308 <Menu_Navigate>
+ 8000ffc:	f000 f978 	bl	80012f0 <Menu_GetCurrentMenu>
+ 8001000:	4603      	mov	r3, r0
+ 8001002:	68db      	ldr	r3, [r3, #12]
+ 8001004:	4618      	mov	r0, r3
+ 8001006:	f000 f97f 	bl	8001308 <Menu_Navigate>
 			  break;
- 8001012:	e003      	b.n	800101c <menu+0xa4>
+ 800100a:	e003      	b.n	8001014 <menu+0x9c>
 			 case BUTTON_SELECT:
 			  Menu_EnterCurrentItem();
- 8001014:	f000 f9ba 	bl	800138c <Menu_EnterCurrentItem>
+ 800100c:	f000 f9be 	bl	800138c <Menu_EnterCurrentItem>
 			  break;
- 8001018:	e000      	b.n	800101c <menu+0xa4>
+ 8001010:	e000      	b.n	8001014 <menu+0x9c>
 			 default:
 			  break;
- 800101a:	bf00      	nop
+ 8001012:	bf00      	nop
 			switch(pressed_key)
- 800101c:	e00b      	b.n	8001036 <menu+0xbe>
+ 8001014:	e00b      	b.n	800102e <menu+0xb6>
 			}
 	   }
 	   else if (getPressKey() == BUTTON_NOTHING && flagPressed)
- 800101e:	f000 f8af 	bl	8001180 <getPressKey>
- 8001022:	4603      	mov	r3, r0
- 8001024:	2bff      	cmp	r3, #255	; 0xff
- 8001026:	d1b0      	bne.n	8000f8a <menu+0x12>
- 8001028:	4b05      	ldr	r3, [pc, #20]	; (8001040 <menu+0xc8>)
- 800102a:	781b      	ldrb	r3, [r3, #0]
- 800102c:	2b00      	cmp	r3, #0
- 800102e:	d0ac      	beq.n	8000f8a <menu+0x12>
+ 8001016:	f000 f8af 	bl	8001178 <getPressKey>
+ 800101a:	4603      	mov	r3, r0
+ 800101c:	2bff      	cmp	r3, #255	; 0xff
+ 800101e:	d1b4      	bne.n	8000f8a <menu+0x12>
+ 8001020:	4b05      	ldr	r3, [pc, #20]	; (8001038 <menu+0xc0>)
+ 8001022:	781b      	ldrb	r3, [r3, #0]
+ 8001024:	2b00      	cmp	r3, #0
+ 8001026:	d0b0      	beq.n	8000f8a <menu+0x12>
 	   {
 		   flagPressed = false;
- 8001030:	4b03      	ldr	r3, [pc, #12]	; (8001040 <menu+0xc8>)
- 8001032:	2200      	movs	r2, #0
- 8001034:	701a      	strb	r2, [r3, #0]
+ 8001028:	4b03      	ldr	r3, [pc, #12]	; (8001038 <menu+0xc0>)
+ 800102a:	2200      	movs	r2, #0
+ 800102c:	701a      	strb	r2, [r3, #0]
 	  {
- 8001036:	e7a8      	b.n	8000f8a <menu+0x12>
- 8001038:	080012a9 	.word	0x080012a9
- 800103c:	0800b168 	.word	0x0800b168
- 8001040:	200000bc 	.word	0x200000bc
+ 800102e:	e7ac      	b.n	8000f8a <menu+0x12>
+ 8001030:	080012a9 	.word	0x080012a9
+ 8001034:	0800b168 	.word	0x0800b168
+ 8001038:	200000bc 	.word	0x200000bc
 
-08001044 <RED_LED_ON>:
+0800103c <RED_LED_ON>:
 
 	  }
 }
 // -----------------------------------------------------------------------
 void RED_LED_ON(void)
 {
- 8001044:	b580      	push	{r7, lr}
- 8001046:	af00      	add	r7, sp, #0
+ 800103c:	b580      	push	{r7, lr}
+ 800103e:	af00      	add	r7, sp, #0
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
- 8001048:	2201      	movs	r2, #1
- 800104a:	f44f 4180 	mov.w	r1, #16384	; 0x4000
- 800104e:	4802      	ldr	r0, [pc, #8]	; (8001058 <RED_LED_ON+0x14>)
- 8001050:	f001 fefa 	bl	8002e48 <HAL_GPIO_WritePin>
+ 8001040:	2201      	movs	r2, #1
+ 8001042:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8001046:	4802      	ldr	r0, [pc, #8]	; (8001050 <RED_LED_ON+0x14>)
+ 8001048:	f001 fefe 	bl	8002e48 <HAL_GPIO_WritePin>
 }
- 8001054:	bf00      	nop
- 8001056:	bd80      	pop	{r7, pc}
- 8001058:	40020c00 	.word	0x40020c00
+ 800104c:	bf00      	nop
+ 800104e:	bd80      	pop	{r7, pc}
+ 8001050:	40020c00 	.word	0x40020c00
 
-0800105c <RED_LED_OFF>:
+08001054 <RED_LED_OFF>:
 // -----------------------------------------------------------------------
 void RED_LED_OFF(void)
 {
- 800105c:	b580      	push	{r7, lr}
- 800105e:	af00      	add	r7, sp, #0
+ 8001054:	b580      	push	{r7, lr}
+ 8001056:	af00      	add	r7, sp, #0
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
- 8001060:	2200      	movs	r2, #0
- 8001062:	f44f 4180 	mov.w	r1, #16384	; 0x4000
- 8001066:	4802      	ldr	r0, [pc, #8]	; (8001070 <RED_LED_OFF+0x14>)
- 8001068:	f001 feee 	bl	8002e48 <HAL_GPIO_WritePin>
+ 8001058:	2200      	movs	r2, #0
+ 800105a:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 800105e:	4802      	ldr	r0, [pc, #8]	; (8001068 <RED_LED_OFF+0x14>)
+ 8001060:	f001 fef2 	bl	8002e48 <HAL_GPIO_WritePin>
 }
- 800106c:	bf00      	nop
- 800106e:	bd80      	pop	{r7, pc}
- 8001070:	40020c00 	.word	0x40020c00
+ 8001064:	bf00      	nop
+ 8001066:	bd80      	pop	{r7, pc}
+ 8001068:	40020c00 	.word	0x40020c00
 
-08001074 <Level1Item3_Enter>:
+0800106c <Level1Item3_Enter>:
 // -----------------------------------------------------------------------
 static void Level1Item3_Enter(void)
 {
- 8001074:	b580      	push	{r7, lr}
- 8001076:	b084      	sub	sp, #16
- 8001078:	af02      	add	r7, sp, #8
- bool flagPressed = false; 			// Прапорець натиснутої кнопки
- 800107a:	2300      	movs	r3, #0
- 800107c:	71fb      	strb	r3, [r7, #7]
+ 800106c:	b580      	push	{r7, lr}
+ 800106e:	b084      	sub	sp, #16
+ 8001070:	af02      	add	r7, sp, #8
+ bool flagPressed = false;
+ 8001072:	2300      	movs	r3, #0
+ 8001074:	71fb      	strb	r3, [r7, #7]
 
- //lcdClrScr();   // Очищаємо екран дисплею
- ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);
- 800107e:	2300      	movs	r3, #0
- 8001080:	9301      	str	r3, [sp, #4]
- 8001082:	2302      	movs	r3, #2
- 8001084:	9300      	str	r3, [sp, #0]
- 8001086:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 800108a:	220a      	movs	r2, #10
- 800108c:	210a      	movs	r1, #10
- 800108e:	4835      	ldr	r0, [pc, #212]	; (8001164 <Level1Item3_Enter+0xf0>)
- 8001090:	f7ff fb34 	bl	80006fc <ILI9341_Draw_Text>
+ ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);   // Clearn lcd
+ 8001076:	2300      	movs	r3, #0
+ 8001078:	9301      	str	r3, [sp, #4]
+ 800107a:	2302      	movs	r3, #2
+ 800107c:	9300      	str	r3, [sp, #0]
+ 800107e:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 8001082:	220a      	movs	r2, #10
+ 8001084:	210a      	movs	r1, #10
+ 8001086:	4835      	ldr	r0, [pc, #212]	; (800115c <Level1Item3_Enter+0xf0>)
+ 8001088:	f7ff fb38 	bl	80006fc <ILI9341_Draw_Text>
 
- //lcdGoto(LCD_1st_LINE,0); // Друкуємо в першому рядку
- //lcdPuts("  BackLight is"); // Назву параметру
  ILI9341_Draw_Text( "Red LED is:", 10, 10, WHITE, 2, BLACK);
- 8001094:	2300      	movs	r3, #0
- 8001096:	9301      	str	r3, [sp, #4]
- 8001098:	2302      	movs	r3, #2
- 800109a:	9300      	str	r3, [sp, #0]
- 800109c:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 80010a0:	220a      	movs	r2, #10
- 80010a2:	210a      	movs	r1, #10
- 80010a4:	4830      	ldr	r0, [pc, #192]	; (8001168 <Level1Item3_Enter+0xf4>)
- 80010a6:	f7ff fb29 	bl	80006fc <ILI9341_Draw_Text>
+ 800108c:	2300      	movs	r3, #0
+ 800108e:	9301      	str	r3, [sp, #4]
+ 8001090:	2302      	movs	r3, #2
+ 8001092:	9300      	str	r3, [sp, #0]
+ 8001094:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 8001098:	220a      	movs	r2, #10
+ 800109a:	210a      	movs	r1, #10
+ 800109c:	4830      	ldr	r0, [pc, #192]	; (8001160 <Level1Item3_Enter+0xf4>)
+ 800109e:	f7ff fb2d 	bl	80006fc <ILI9341_Draw_Text>
 
-// Поки не натиснути кнопка "ліворуч" тут виконує функцію як "вихід"
  while(getPressKey() != BUTTON_LEFT)
- 80010aa:	e044      	b.n	8001136 <Level1Item3_Enter+0xc2>
+ 80010a2:	e044      	b.n	800112e <Level1Item3_Enter+0xc2>
  {
-
-	 // Перевіримо в якому стані ніжка мікроконтролера куди під'єднано підсвічування дисплею
+	 // Read PIN
 	 if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14))
- 80010ac:	f44f 4180 	mov.w	r1, #16384	; 0x4000
- 80010b0:	482e      	ldr	r0, [pc, #184]	; (800116c <Level1Item3_Enter+0xf8>)
- 80010b2:	f001 feb1 	bl	8002e18 <HAL_GPIO_ReadPin>
- 80010b6:	4603      	mov	r3, r0
- 80010b8:	2b00      	cmp	r3, #0
- 80010ba:	d00b      	beq.n	80010d4 <Level1Item3_Enter+0x60>
+ 80010a4:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 80010a8:	482e      	ldr	r0, [pc, #184]	; (8001164 <Level1Item3_Enter+0xf8>)
+ 80010aa:	f001 feb5 	bl	8002e18 <HAL_GPIO_ReadPin>
+ 80010ae:	4603      	mov	r3, r0
+ 80010b0:	2b00      	cmp	r3, #0
+ 80010b2:	d00b      	beq.n	80010cc <Level1Item3_Enter+0x60>
 	 {
-//		 lcdGoto(LCD_2nd_LINE,0); // В другому рядку друкуємо стан параметру
-//		 lcdPuts("\tON ");   // Підсвічування увімкнено
 		 ILI9341_Draw_Text( "ON ", 150, 10, WHITE, 2, BLACK);
- 80010bc:	2300      	movs	r3, #0
- 80010be:	9301      	str	r3, [sp, #4]
- 80010c0:	2302      	movs	r3, #2
- 80010c2:	9300      	str	r3, [sp, #0]
- 80010c4:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 80010c8:	220a      	movs	r2, #10
- 80010ca:	2196      	movs	r1, #150	; 0x96
- 80010cc:	4828      	ldr	r0, [pc, #160]	; (8001170 <Level1Item3_Enter+0xfc>)
- 80010ce:	f7ff fb15 	bl	80006fc <ILI9341_Draw_Text>
- 80010d2:	e00a      	b.n	80010ea <Level1Item3_Enter+0x76>
+ 80010b4:	2300      	movs	r3, #0
+ 80010b6:	9301      	str	r3, [sp, #4]
+ 80010b8:	2302      	movs	r3, #2
+ 80010ba:	9300      	str	r3, [sp, #0]
+ 80010bc:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 80010c0:	220a      	movs	r2, #10
+ 80010c2:	2196      	movs	r1, #150	; 0x96
+ 80010c4:	4828      	ldr	r0, [pc, #160]	; (8001168 <Level1Item3_Enter+0xfc>)
+ 80010c6:	f7ff fb19 	bl	80006fc <ILI9341_Draw_Text>
+ 80010ca:	e00a      	b.n	80010e2 <Level1Item3_Enter+0x76>
 	 } else
 	 {
-//		 lcdGoto(LCD_2nd_LINE,0); // В інакшому разі
-//		 lcdPuts("\tOFF");   // Підсвічування вимкнено
 		 ILI9341_Draw_Text( "OFF", 150, 10, WHITE, 2, BLACK);
- 80010d4:	2300      	movs	r3, #0
- 80010d6:	9301      	str	r3, [sp, #4]
- 80010d8:	2302      	movs	r3, #2
- 80010da:	9300      	str	r3, [sp, #0]
- 80010dc:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 80010e0:	220a      	movs	r2, #10
- 80010e2:	2196      	movs	r1, #150	; 0x96
- 80010e4:	4823      	ldr	r0, [pc, #140]	; (8001174 <Level1Item3_Enter+0x100>)
- 80010e6:	f7ff fb09 	bl	80006fc <ILI9341_Draw_Text>
+ 80010cc:	2300      	movs	r3, #0
+ 80010ce:	9301      	str	r3, [sp, #4]
+ 80010d0:	2302      	movs	r3, #2
+ 80010d2:	9300      	str	r3, [sp, #0]
+ 80010d4:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 80010d8:	220a      	movs	r2, #10
+ 80010da:	2196      	movs	r1, #150	; 0x96
+ 80010dc:	4823      	ldr	r0, [pc, #140]	; (800116c <Level1Item3_Enter+0x100>)
+ 80010de:	f7ff fb0d 	bl	80006fc <ILI9341_Draw_Text>
 
 	 }
-// Скануємо тільки кнопки "вгору" і "вниз"
-  if(getPressKey() != BUTTON_NOTHING && !flagPressed)              //<<<<<<<<<<<<<<<<<<<<<< TEN
- 80010ea:	f000 f849 	bl	8001180 <getPressKey>
- 80010ee:	4603      	mov	r3, r0
- 80010f0:	2bff      	cmp	r3, #255	; 0xff
- 80010f2:	d016      	beq.n	8001122 <Level1Item3_Enter+0xae>
- 80010f4:	79fb      	ldrb	r3, [r7, #7]
- 80010f6:	f083 0301 	eor.w	r3, r3, #1
- 80010fa:	b2db      	uxtb	r3, r3
- 80010fc:	2b00      	cmp	r3, #0
- 80010fe:	d010      	beq.n	8001122 <Level1Item3_Enter+0xae>
+  if(getPressKey() != BUTTON_NOTHING && !flagPressed)
+ 80010e2:	f000 f849 	bl	8001178 <getPressKey>
+ 80010e6:	4603      	mov	r3, r0
+ 80010e8:	2bff      	cmp	r3, #255	; 0xff
+ 80010ea:	d016      	beq.n	800111a <Level1Item3_Enter+0xae>
+ 80010ec:	79fb      	ldrb	r3, [r7, #7]
+ 80010ee:	f083 0301 	eor.w	r3, r3, #1
+ 80010f2:	b2db      	uxtb	r3, r3
+ 80010f4:	2b00      	cmp	r3, #0
+ 80010f6:	d010      	beq.n	800111a <Level1Item3_Enter+0xae>
   {
-	  flagPressed = true; // Коли якусь кнопку натиснули
- 8001100:	2301      	movs	r3, #1
- 8001102:	71fb      	strb	r3, [r7, #7]
+	  flagPressed = true;
+ 80010f8:	2301      	movs	r3, #1
+ 80010fa:	71fb      	strb	r3, [r7, #7]
 
-	  switch(getPressKey())  // Перевіряємо що натиснуто
- 8001104:	f000 f83c 	bl	8001180 <getPressKey>
- 8001108:	4603      	mov	r3, r0
- 800110a:	2b01      	cmp	r3, #1
- 800110c:	d002      	beq.n	8001114 <Level1Item3_Enter+0xa0>
- 800110e:	2b02      	cmp	r3, #2
- 8001110:	d003      	beq.n	800111a <Level1Item3_Enter+0xa6>
-	  	  case BUTTON_DOWN: // Якщо кнопку "вниз", то вимкнемо підсвічування дисплею
-	  		  //HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,DISABLE);
+	  switch(getPressKey())  // If press any key
+ 80010fc:	f000 f83c 	bl	8001178 <getPressKey>
+ 8001100:	4603      	mov	r3, r0
+ 8001102:	2b01      	cmp	r3, #1
+ 8001104:	d002      	beq.n	800110c <Level1Item3_Enter+0xa0>
+ 8001106:	2b02      	cmp	r3, #2
+ 8001108:	d003      	beq.n	8001112 <Level1Item3_Enter+0xa6>
+	  		  break;
+	  	  case BUTTON_DOWN:
 	  		  RED_LED_OFF();
 	  		  break;
-	  	  default:  // В будь якому іншому випадку просто вихід з switch
+	  	  default:
 	  		  break;
- 8001112:	e005      	b.n	8001120 <Level1Item3_Enter+0xac>
+ 800110a:	e005      	b.n	8001118 <Level1Item3_Enter+0xac>
 	  		  RED_LED_ON();
- 8001114:	f7ff ff96 	bl	8001044 <RED_LED_ON>
+ 800110c:	f7ff ff96 	bl	800103c <RED_LED_ON>
 	  		  break;
- 8001118:	e002      	b.n	8001120 <Level1Item3_Enter+0xac>
+ 8001110:	e002      	b.n	8001118 <Level1Item3_Enter+0xac>
 	  		  RED_LED_OFF();
- 800111a:	f7ff ff9f 	bl	800105c <RED_LED_OFF>
+ 8001112:	f7ff ff9f 	bl	8001054 <RED_LED_OFF>
 	  		  break;
- 800111e:	bf00      	nop
-	  switch(getPressKey())  // Перевіряємо що натиснуто
- 8001120:	e009      	b.n	8001136 <Level1Item3_Enter+0xc2>
+ 8001116:	bf00      	nop
+	  switch(getPressKey())  // If press any key
+ 8001118:	e009      	b.n	800112e <Level1Item3_Enter+0xc2>
 	  }
   }
   else if(getPressKey() == BUTTON_NOTHING && flagPressed)
- 8001122:	f000 f82d 	bl	8001180 <getPressKey>
- 8001126:	4603      	mov	r3, r0
- 8001128:	2bff      	cmp	r3, #255	; 0xff
- 800112a:	d104      	bne.n	8001136 <Level1Item3_Enter+0xc2>
- 800112c:	79fb      	ldrb	r3, [r7, #7]
- 800112e:	2b00      	cmp	r3, #0
- 8001130:	d001      	beq.n	8001136 <Level1Item3_Enter+0xc2>
+ 800111a:	f000 f82d 	bl	8001178 <getPressKey>
+ 800111e:	4603      	mov	r3, r0
+ 8001120:	2bff      	cmp	r3, #255	; 0xff
+ 8001122:	d104      	bne.n	800112e <Level1Item3_Enter+0xc2>
+ 8001124:	79fb      	ldrb	r3, [r7, #7]
+ 8001126:	2b00      	cmp	r3, #0
+ 8001128:	d001      	beq.n	800112e <Level1Item3_Enter+0xc2>
   {
-	  flagPressed = false; // Коли кнопку відпустили
- 8001132:	2300      	movs	r3, #0
- 8001134:	71fb      	strb	r3, [r7, #7]
+	  flagPressed = false; 	// if button was release
+ 800112a:	2300      	movs	r3, #0
+ 800112c:	71fb      	strb	r3, [r7, #7]
  while(getPressKey() != BUTTON_LEFT)
- 8001136:	f000 f823 	bl	8001180 <getPressKey>
- 800113a:	4603      	mov	r3, r0
- 800113c:	2b00      	cmp	r3, #0
- 800113e:	d1b5      	bne.n	80010ac <Level1Item3_Enter+0x38>
+ 800112e:	f000 f823 	bl	8001178 <getPressKey>
+ 8001132:	4603      	mov	r3, r0
+ 8001134:	2b00      	cmp	r3, #0
+ 8001136:	d1b5      	bne.n	80010a4 <Level1Item3_Enter+0x38>
   }
  }
 
- //lcdClrScr();  // Очищення дисплею
- ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK);
- 8001140:	2300      	movs	r3, #0
- 8001142:	9301      	str	r3, [sp, #4]
- 8001144:	2302      	movs	r3, #2
- 8001146:	9300      	str	r3, [sp, #0]
- 8001148:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 800114c:	220a      	movs	r2, #10
- 800114e:	210a      	movs	r1, #10
- 8001150:	4809      	ldr	r0, [pc, #36]	; (8001178 <Level1Item3_Enter+0x104>)
- 8001152:	f7ff fad3 	bl	80006fc <ILI9341_Draw_Text>
- //ILI9341_Draw_Text( "                        ", 10, 40, WHITE, 2, BLACK);
- Menu_Navigate(&Menu_3); // Повертаємося до того ж меню де були
- 8001156:	4809      	ldr	r0, [pc, #36]	; (800117c <Level1Item3_Enter+0x108>)
- 8001158:	f000 f8d6 	bl	8001308 <Menu_Navigate>
+ ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK); // Cleaning one row LCD
+ 8001138:	2300      	movs	r3, #0
+ 800113a:	9301      	str	r3, [sp, #4]
+ 800113c:	2302      	movs	r3, #2
+ 800113e:	9300      	str	r3, [sp, #0]
+ 8001140:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 8001144:	220a      	movs	r2, #10
+ 8001146:	210a      	movs	r1, #10
+ 8001148:	4809      	ldr	r0, [pc, #36]	; (8001170 <Level1Item3_Enter+0x104>)
+ 800114a:	f7ff fad7 	bl	80006fc <ILI9341_Draw_Text>
+ Menu_Navigate(&Menu_3);  // Back to menu 3
+ 800114e:	4809      	ldr	r0, [pc, #36]	; (8001174 <Level1Item3_Enter+0x108>)
+ 8001150:	f000 f8da 	bl	8001308 <Menu_Navigate>
 }
- 800115c:	bf00      	nop
- 800115e:	3708      	adds	r7, #8
- 8001160:	46bd      	mov	sp, r7
- 8001162:	bd80      	pop	{r7, pc}
- 8001164:	0800ae34 	.word	0x0800ae34
- 8001168:	0800ae50 	.word	0x0800ae50
- 800116c:	40020c00 	.word	0x40020c00
- 8001170:	0800ae5c 	.word	0x0800ae5c
- 8001174:	0800ae60 	.word	0x0800ae60
- 8001178:	0800ae64 	.word	0x0800ae64
- 800117c:	0800b1a8 	.word	0x0800b1a8
+ 8001154:	bf00      	nop
+ 8001156:	3708      	adds	r7, #8
+ 8001158:	46bd      	mov	sp, r7
+ 800115a:	bd80      	pop	{r7, pc}
+ 800115c:	0800ae34 	.word	0x0800ae34
+ 8001160:	0800ae50 	.word	0x0800ae50
+ 8001164:	40020c00 	.word	0x40020c00
+ 8001168:	0800ae5c 	.word	0x0800ae5c
+ 800116c:	0800ae60 	.word	0x0800ae60
+ 8001170:	0800ae64 	.word	0x0800ae64
+ 8001174:	0800b1a8 	.word	0x0800b1a8
 
-08001180 <getPressKey>:
+08001178 <getPressKey>:
 // -----------------------------------------------------------------------
-static uint8_t getPressKey()		// Simulation keyboard
+static uint8_t getPressKey()		// 3x4 keyboard
 {
- 8001180:	b580      	push	{r7, lr}
- 8001182:	b088      	sub	sp, #32
- 8001184:	af02      	add	r7, sp, #8
+ 8001178:	b580      	push	{r7, lr}
+ 800117a:	b088      	sub	sp, #32
+ 800117c:	af02      	add	r7, sp, #8
 ////	BUTTON_SELECT  = 4,
 ////	BUTTON_NOTHING  = 255
 //	//flagPressed = true;
 
 
 	char digit = '\0';
- 8001186:	2300      	movs	r3, #0
- 8001188:	75fb      	strb	r3, [r7, #23]
+ 800117e:	2300      	movs	r3, #0
+ 8001180:	75fb      	strb	r3, [r7, #23]
 	char buff_lcd[20] = "KEY: ";
- 800118a:	4a46      	ldr	r2, [pc, #280]	; (80012a4 <getPressKey+0x124>)
- 800118c:	463b      	mov	r3, r7
- 800118e:	e892 0003 	ldmia.w	r2, {r0, r1}
- 8001192:	6018      	str	r0, [r3, #0]
- 8001194:	3304      	adds	r3, #4
- 8001196:	8019      	strh	r1, [r3, #0]
- 8001198:	1dbb      	adds	r3, r7, #6
- 800119a:	2200      	movs	r2, #0
- 800119c:	601a      	str	r2, [r3, #0]
- 800119e:	605a      	str	r2, [r3, #4]
- 80011a0:	609a      	str	r2, [r3, #8]
- 80011a2:	819a      	strh	r2, [r3, #12]
+ 8001182:	4a48      	ldr	r2, [pc, #288]	; (80012a4 <getPressKey+0x12c>)
+ 8001184:	463b      	mov	r3, r7
+ 8001186:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800118a:	6018      	str	r0, [r3, #0]
+ 800118c:	3304      	adds	r3, #4
+ 800118e:	8019      	strh	r1, [r3, #0]
+ 8001190:	1dbb      	adds	r3, r7, #6
+ 8001192:	2200      	movs	r2, #0
+ 8001194:	601a      	str	r2, [r3, #0]
+ 8001196:	605a      	str	r2, [r3, #4]
+ 8001198:	609a      	str	r2, [r3, #8]
+ 800119a:	819a      	strh	r2, [r3, #12]
 	digit = read_one_digit_from_keyboard();
- 80011a4:	f000 f9b4 	bl	8001510 <read_one_digit_from_keyboard>
- 80011a8:	4603      	mov	r3, r0
- 80011aa:	b2db      	uxtb	r3, r3
- 80011ac:	75fb      	strb	r3, [r7, #23]
+ 800119c:	f000 f9b8 	bl	8001510 <read_one_digit_from_keyboard>
+ 80011a0:	4603      	mov	r3, r0
+ 80011a2:	75fb      	strb	r3, [r7, #23]
 	switch(digit)
- 80011ae:	7dfb      	ldrb	r3, [r7, #23]
- 80011b0:	3b30      	subs	r3, #48	; 0x30
- 80011b2:	2b04      	cmp	r3, #4
- 80011b4:	d870      	bhi.n	8001298 <getPressKey+0x118>
- 80011b6:	a201      	add	r2, pc, #4	; (adr r2, 80011bc <getPressKey+0x3c>)
- 80011b8:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 80011a4:	7dfb      	ldrb	r3, [r7, #23]
+ 80011a6:	3b32      	subs	r3, #50	; 0x32
+ 80011a8:	2b06      	cmp	r3, #6
+ 80011aa:	d875      	bhi.n	8001298 <getPressKey+0x120>
+ 80011ac:	a201      	add	r2, pc, #4	; (adr r2, 80011b4 <getPressKey+0x3c>)
+ 80011ae:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 80011b2:	bf00      	nop
+ 80011b4:	080011f9 	.word	0x080011f9
+ 80011b8:	08001299 	.word	0x08001299
  80011bc:	080011d1 	.word	0x080011d1
- 80011c0:	080011f9 	.word	0x080011f9
- 80011c4:	08001221 	.word	0x08001221
- 80011c8:	08001249 	.word	0x08001249
- 80011cc:	08001271 	.word	0x08001271
+ 80011c0:	08001271 	.word	0x08001271
+ 80011c4:	08001249 	.word	0x08001249
+ 80011c8:	08001299 	.word	0x08001299
+ 80011cc:	08001221 	.word	0x08001221
 	{
-		//flagPressed = true;			// Flag: Key was pressed
-		case '0':
+		case '4':
 		{
 			strncat(buff_lcd, &digit, 1);
  80011d0:	f107 0117 	add.w	r1, r7, #23
@@ -2394,9 +2375,9 @@ static uint8_t getPressKey()		// Simulation keyboard
  80011f0:	f7ff fa84 	bl	80006fc <ILI9341_Draw_Text>
 			return BUTTON_LEFT;
  80011f4:	2300      	movs	r3, #0
- 80011f6:	e050      	b.n	800129a <getPressKey+0x11a>
+ 80011f6:	e050      	b.n	800129a <getPressKey+0x122>
 		}
-		case '1':
+		case '2':
 		{
 			strncat(buff_lcd, &digit, 1);
  80011f8:	f107 0117 	add.w	r1, r7, #23
@@ -2416,9 +2397,9 @@ static uint8_t getPressKey()		// Simulation keyboard
  8001218:	f7ff fa70 	bl	80006fc <ILI9341_Draw_Text>
 			return BUTTON_UP;
  800121c:	2301      	movs	r3, #1
- 800121e:	e03c      	b.n	800129a <getPressKey+0x11a>
+ 800121e:	e03c      	b.n	800129a <getPressKey+0x122>
 		}
-		case '2':
+		case '8':
 		{
 			strncat(buff_lcd, &digit, 1);
  8001220:	f107 0117 	add.w	r1, r7, #23
@@ -2438,9 +2419,9 @@ static uint8_t getPressKey()		// Simulation keyboard
  8001240:	f7ff fa5c 	bl	80006fc <ILI9341_Draw_Text>
 			return BUTTON_DOWN;
  8001244:	2302      	movs	r3, #2
- 8001246:	e028      	b.n	800129a <getPressKey+0x11a>
+ 8001246:	e028      	b.n	800129a <getPressKey+0x122>
 		}
-		case '3':
+		case '6':
 		{
 			strncat(buff_lcd, &digit, 1);
  8001248:	f107 0117 	add.w	r1, r7, #23
@@ -2460,9 +2441,9 @@ static uint8_t getPressKey()		// Simulation keyboard
  8001268:	f7ff fa48 	bl	80006fc <ILI9341_Draw_Text>
 			return BUTTON_RIGHT;
  800126c:	2303      	movs	r3, #3
- 800126e:	e014      	b.n	800129a <getPressKey+0x11a>
+ 800126e:	e014      	b.n	800129a <getPressKey+0x122>
 		}
-		case '4':
+		case '5':
 		{
 			strncat(buff_lcd, &digit, 1);
  8001270:	f107 0117 	add.w	r1, r7, #23
@@ -2482,12 +2463,15 @@ static uint8_t getPressKey()		// Simulation keyboard
  8001290:	f7ff fa34 	bl	80006fc <ILI9341_Draw_Text>
 			return BUTTON_SELECT;
  8001294:	2304      	movs	r3, #4
- 8001296:	e000      	b.n	800129a <getPressKey+0x11a>
+ 8001296:	e000      	b.n	800129a <getPressKey+0x122>
 		}
 		default:
 			return BUTTON_NOTHING;
  8001298:	23ff      	movs	r3, #255	; 0xff
-			break;
+//		}
+//		default:
+//			return BUTTON_NOTHING;
+//			break;
 	}
 }
  800129a:	4618      	mov	r0, r3
@@ -2499,7 +2483,7 @@ static uint8_t getPressKey()		// Simulation keyboard
 
 080012a8 <Generic_Write>:
 // -----------------------------------------------------------------------
-void Generic_Write(const char* Text)
+void Generic_Write(const char* Text)		// Print data on LCD
 {
  80012a8:	b580      	push	{r7, lr}
  80012aa:	b084      	sub	sp, #16
@@ -2510,9 +2494,6 @@ void Generic_Write(const char* Text)
  80012b2:	2b00      	cmp	r3, #0
  80012b4:	d015      	beq.n	80012e2 <Generic_Write+0x3a>
 	{
-//		lcdClrScr();
-//		lcdPuts(Text);
-
 		ILI9341_Draw_Text( "                   ", 10, 10, WHITE, 2, BLACK);
  80012b6:	2300      	movs	r3, #0
  80012b8:	9301      	str	r3, [sp, #4]
@@ -2548,7 +2529,7 @@ Menu_Item_t* Menu_GetCurrentMenu(void)
 {
  80012f0:	b480      	push	{r7}
  80012f2:	af00      	add	r7, sp, #0
- return CurrentMenuItem;
+	return CurrentMenuItem;
  80012f4:	4b03      	ldr	r3, [pc, #12]	; (8001304 <Menu_GetCurrentMenu+0x14>)
  80012f6:	681b      	ldr	r3, [r3, #0]
 }
@@ -2561,13 +2542,14 @@ Menu_Item_t* Menu_GetCurrentMenu(void)
 
 08001308 <Menu_Navigate>:
 // -----------------------------------------------------------------------
+// Navigation on menu
 void Menu_Navigate(Menu_Item_t* const NewMenu)
 {
  8001308:	b580      	push	{r7, lr}
  800130a:	b084      	sub	sp, #16
  800130c:	af00      	add	r7, sp, #0
  800130e:	6078      	str	r0, [r7, #4]
- if ((NewMenu == &NULL_MENU) || (NewMenu == NULL))
+	if ((NewMenu == &NULL_MENU) || (NewMenu == NULL))  // What it mean???
  8001310:	687b      	ldr	r3, [r7, #4]
  8001312:	4a11      	ldr	r2, [pc, #68]	; (8001358 <Menu_Navigate+0x50>)
  8001314:	4293      	cmp	r3, r2
@@ -2575,22 +2557,22 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
  8001318:	687b      	ldr	r3, [r7, #4]
  800131a:	2b00      	cmp	r3, #0
  800131c:	d017      	beq.n	800134e <Menu_Navigate+0x46>
- {
-	 return;
- }
+	{
+		return;		// Exit
+	}
 
- CurrentMenuItem = NewMenu;
+	CurrentMenuItem = NewMenu;    //
  800131e:	4a0f      	ldr	r2, [pc, #60]	; (800135c <Menu_Navigate+0x54>)
  8001320:	687b      	ldr	r3, [r7, #4]
  8001322:	6013      	str	r3, [r2, #0]
 
- if (MenuWriteFunc)
+	if (MenuWriteFunc)    // If   MenuWriteFunc  != NULL
  8001324:	4b0e      	ldr	r3, [pc, #56]	; (8001360 <Menu_Navigate+0x58>)
  8001326:	681b      	ldr	r3, [r3, #0]
  8001328:	2b00      	cmp	r3, #0
  800132a:	d006      	beq.n	800133a <Menu_Navigate+0x32>
- {
-	 MenuWriteFunc(CurrentMenuItem->Text);
+	{
+		MenuWriteFunc(CurrentMenuItem->Text);			// Print on LCD
  800132c:	4b0c      	ldr	r3, [pc, #48]	; (8001360 <Menu_Navigate+0x58>)
  800132e:	681b      	ldr	r3, [r3, #0]
  8001330:	4a0a      	ldr	r2, [pc, #40]	; (800135c <Menu_Navigate+0x54>)
@@ -2598,26 +2580,28 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
  8001334:	3218      	adds	r2, #24
  8001336:	4610      	mov	r0, r2
  8001338:	4798      	blx	r3
- }
+	}
 
- void (*SelectCallback)(void) = CurrentMenuItem->SelectCallback;
+	//   void (*SelectCallback)(void) - Creating pointer on function
+	// Write  CurrentMenuItem->SelectCallback in  void (*SelectCallback)(void) pinter
+	void (*SelectCallback)(void) = CurrentMenuItem->SelectCallback;
  800133a:	4b08      	ldr	r3, [pc, #32]	; (800135c <Menu_Navigate+0x54>)
  800133c:	681b      	ldr	r3, [r3, #0]
  800133e:	691b      	ldr	r3, [r3, #16]
  8001340:	60fb      	str	r3, [r7, #12]
 
- if (SelectCallback)
+	if (SelectCallback)		// If SelectCallback != NULL
  8001342:	68fb      	ldr	r3, [r7, #12]
  8001344:	2b00      	cmp	r3, #0
  8001346:	d003      	beq.n	8001350 <Menu_Navigate+0x48>
- {
-	 SelectCallback();
+	{
+		SelectCallback();   // It does - CurrentMenuItem->SelectCallback;
  8001348:	68fb      	ldr	r3, [r7, #12]
  800134a:	4798      	blx	r3
  800134c:	e000      	b.n	8001350 <Menu_Navigate+0x48>
-	 return;
+		return;		// Exit
  800134e:	bf00      	nop
- }
+	}
 }
  8001350:	3710      	adds	r7, #16
  8001352:	46bd      	mov	sp, r7
@@ -2629,17 +2613,17 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
 
 08001364 <Menu_SetGenericWriteCallback>:
 // -----------------------------------------------------------------------
-void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))
+void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))    //  What doing this function??????? <<<<<<<<<<<
 {
  8001364:	b580      	push	{r7, lr}
  8001366:	b082      	sub	sp, #8
  8001368:	af00      	add	r7, sp, #0
  800136a:	6078      	str	r0, [r7, #4]
- MenuWriteFunc = WriteFunc;
+	MenuWriteFunc = WriteFunc;  		// Write pointer WriteFunc in MenuWriteFunc
  800136c:	4a05      	ldr	r2, [pc, #20]	; (8001384 <Menu_SetGenericWriteCallback+0x20>)
  800136e:	687b      	ldr	r3, [r7, #4]
  8001370:	6013      	str	r3, [r2, #0]
- Menu_Navigate(CurrentMenuItem);
+	Menu_Navigate(CurrentMenuItem);
  8001372:	4b05      	ldr	r3, [pc, #20]	; (8001388 <Menu_SetGenericWriteCallback+0x24>)
  8001374:	681b      	ldr	r3, [r3, #0]
  8001376:	4618      	mov	r0, r3
@@ -2654,12 +2638,12 @@ void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))
 
 0800138c <Menu_EnterCurrentItem>:
 // -----------------------------------------------------------------------
-void Menu_EnterCurrentItem(void)
+void Menu_EnterCurrentItem(void)		// It does when was press any buttons
 {
  800138c:	b580      	push	{r7, lr}
  800138e:	b082      	sub	sp, #8
  8001390:	af00      	add	r7, sp, #0
- if ((CurrentMenuItem == &NULL_MENU) || (CurrentMenuItem == NULL))
+	if ((CurrentMenuItem == &NULL_MENU) || (CurrentMenuItem == NULL))
  8001392:	4b0b      	ldr	r3, [pc, #44]	; (80013c0 <Menu_EnterCurrentItem+0x34>)
  8001394:	681b      	ldr	r3, [r3, #0]
  8001396:	4a0b      	ldr	r2, [pc, #44]	; (80013c4 <Menu_EnterCurrentItem+0x38>)
@@ -2669,24 +2653,28 @@ void Menu_EnterCurrentItem(void)
  800139e:	681b      	ldr	r3, [r3, #0]
  80013a0:	2b00      	cmp	r3, #0
  80013a2:	d009      	beq.n	80013b8 <Menu_EnterCurrentItem+0x2c>
-  return;
+	{
+		return;
+	}
 
- void (*EnterCallback)(void) = CurrentMenuItem->EnterCallback;
+	void (*EnterCallback)(void) = CurrentMenuItem->EnterCallback;
  80013a4:	4b06      	ldr	r3, [pc, #24]	; (80013c0 <Menu_EnterCurrentItem+0x34>)
  80013a6:	681b      	ldr	r3, [r3, #0]
  80013a8:	695b      	ldr	r3, [r3, #20]
  80013aa:	607b      	str	r3, [r7, #4]
-
- if (EnterCallback)
+	if (EnterCallback)		// If EnterCallback != NULL
  80013ac:	687b      	ldr	r3, [r7, #4]
  80013ae:	2b00      	cmp	r3, #0
  80013b0:	d003      	beq.n	80013ba <Menu_EnterCurrentItem+0x2e>
-  EnterCallback();
+	{
+		EnterCallback();
  80013b2:	687b      	ldr	r3, [r7, #4]
  80013b4:	4798      	blx	r3
  80013b6:	e000      	b.n	80013ba <Menu_EnterCurrentItem+0x2e>
-  return;
+		return;
  80013b8:	bf00      	nop
+	}
+
 }// -----------------------------------------------------------------------
  80013ba:	3708      	adds	r7, #8
  80013bc:	46bd      	mov	sp, r7

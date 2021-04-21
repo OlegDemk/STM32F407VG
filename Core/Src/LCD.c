@@ -14,6 +14,8 @@
 #include "ILI9341_GFX.h"
 #include "snow_tiger.h"
 
+#include "keyboard.h"
+
 #include <string.h>
 
 extern RNG_HandleTypeDef hrng;
@@ -42,7 +44,7 @@ static void (*MenuWriteFunc)(const char* Text) = NULL;
 static Menu_Item_t* CurrentMenuItem = &NULL_MENU;
 //-------------------------------------------------------------------------------------------
 
-//bool flagPressed = false;						// flag pressed key
+//bool flagPressed = false;					// flag pressed key
 
 #define BUTTONn	5					 		// How many buttons use
 
@@ -75,9 +77,7 @@ bool flagPressed = false;						// flag presed key
 
 void menu()
 {
-//	bool flagPressed = false;						// flag presed key
-	//Menu_Navigate(&Menu_1);			// <<<<<<< What ti i????????????????????????
-	Menu_SetGenericWriteCallback(Generic_Write);
+	Menu_SetGenericWriteCallback(Generic_Write);  // transfer Generic_Write function point in Menu_SetGenericWriteCallback
 	Menu_Navigate(&Menu_1);
 	while (1)
 	  {
@@ -85,10 +85,7 @@ void menu()
 
 	   if (pressed_key != BUTTON_NOTHING && !flagPressed)
 	   {
-//		    Menu_Navigate(&Menu_1);			// <<<<<<< What ti i????????????????????????
-			//Menu_SetGenericWriteCallback(Generic_Write);	// print menu
 			flagPressed = true;
-			pressed_key = getPressKey();
 			switch(pressed_key)
 			{
 			 case BUTTON_LEFT:
@@ -130,64 +127,50 @@ void RED_LED_OFF(void)
 // -----------------------------------------------------------------------
 static void Level1Item3_Enter(void)
 {
- bool flagPressed = false; 			// Прапорець натиснутої кнопки
+ bool flagPressed = false;
 
- //lcdClrScr();   // Очищаємо екран дисплею
- ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);
+ ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);   // Clearn lcd
 
- //lcdGoto(LCD_1st_LINE,0); // Друкуємо в першому рядку
- //lcdPuts("  BackLight is"); // Назву параметру
  ILI9341_Draw_Text( "Red LED is:", 10, 10, WHITE, 2, BLACK);
 
-// Поки не натиснути кнопка "ліворуч" тут виконує функцію як "вихід"
  while(getPressKey() != BUTTON_LEFT)
  {
-
-	 // Перевіримо в якому стані ніжка мікроконтролера куди під'єднано підсвічування дисплею
+	 // Read PIN
 	 if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14))
 	 {
-//		 lcdGoto(LCD_2nd_LINE,0); // В другому рядку друкуємо стан параметру
-//		 lcdPuts("\tON ");   // Підсвічування увімкнено
 		 ILI9341_Draw_Text( "ON ", 150, 10, WHITE, 2, BLACK);
 	 } else
 	 {
-//		 lcdGoto(LCD_2nd_LINE,0); // В інакшому разі
-//		 lcdPuts("\tOFF");   // Підсвічування вимкнено
 		 ILI9341_Draw_Text( "OFF", 150, 10, WHITE, 2, BLACK);
 
 	 }
-// Скануємо тільки кнопки "вгору" і "вниз"
-  if(getPressKey() != BUTTON_NOTHING && !flagPressed)              //<<<<<<<<<<<<<<<<<<<<<< TEN
+  if(getPressKey() != BUTTON_NOTHING && !flagPressed)
   {
-	  flagPressed = true; // Коли якусь кнопку натиснули
+	  flagPressed = true;
 
-	  switch(getPressKey())  // Перевіряємо що натиснуто
+	  switch(getPressKey())  // If press any key
 	  {
-	  	  case BUTTON_UP:  // Якщо кнопку "вгору", то увімкнемо підсвічування дисплею
-	  		  //HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,ENABLE);
+	  	  case BUTTON_UP:
 	  		  RED_LED_ON();
 	  		  break;
-	  	  case BUTTON_DOWN: // Якщо кнопку "вниз", то вимкнемо підсвічування дисплею
-	  		  //HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,DISABLE);
+	  	  case BUTTON_DOWN:
 	  		  RED_LED_OFF();
 	  		  break;
-	  	  default:  // В будь якому іншому випадку просто вихід з switch
+	  	  default:
 	  		  break;
 	  }
   }
   else if(getPressKey() == BUTTON_NOTHING && flagPressed)
   {
-	  flagPressed = false; // Коли кнопку відпустили
+	  flagPressed = false; 	// if button was release
   }
  }
 
- //lcdClrScr();  // Очищення дисплею
- ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK);
- //ILI9341_Draw_Text( "                        ", 10, 40, WHITE, 2, BLACK);
- Menu_Navigate(&Menu_3); // Повертаємося до того ж меню де були
+ ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK); // Cleaning one row LCD
+ Menu_Navigate(&Menu_3);  // Back to menu 3
 }
 // -----------------------------------------------------------------------
-static uint8_t getPressKey()		// Simulation keyboard
+static uint8_t getPressKey()		// 3x4 keyboard
 {
 ////	BUTTON_LEFT   = 0,
 ////	BUTTON_UP   = 1,
@@ -203,32 +186,31 @@ static uint8_t getPressKey()		// Simulation keyboard
 	digit = read_one_digit_from_keyboard();
 	switch(digit)
 	{
-		//flagPressed = true;			// Flag: Key was pressed
-		case '0':
+		case '4':
 		{
 			strncat(buff_lcd, &digit, 1);
 			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_LEFT;
 		}
-		case '1':
+		case '2':
 		{
 			strncat(buff_lcd, &digit, 1);
 			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_UP;
 		}
-		case '2':
+		case '8':
 		{
 			strncat(buff_lcd, &digit, 1);
 			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_DOWN;
 		}
-		case '3':
+		case '6':
 		{
 			strncat(buff_lcd, &digit, 1);
 			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
 			return BUTTON_RIGHT;
 		}
-		case '4':
+		case '5':
 		{
 			strncat(buff_lcd, &digit, 1);
 			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
@@ -237,16 +219,48 @@ static uint8_t getPressKey()		// Simulation keyboard
 		default:
 			return BUTTON_NOTHING;
 			break;
+
+		//flagPressed = true;			// Flag: Key was pressed
+//		case '0':
+//		{
+//			strncat(buff_lcd, &digit, 1);
+//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+//			return BUTTON_LEFT;
+//		}
+//		case '1':
+//		{
+//			strncat(buff_lcd, &digit, 1);
+//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+//			return BUTTON_UP;
+//		}
+//		case '2':
+//		{
+//			strncat(buff_lcd, &digit, 1);
+//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+//			return BUTTON_DOWN;
+//		}
+//		case '3':
+//		{
+//			strncat(buff_lcd, &digit, 1);
+//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+//			return BUTTON_RIGHT;
+//		}
+//		case '4':
+//		{
+//			strncat(buff_lcd, &digit, 1);
+//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+//			return BUTTON_SELECT;
+//		}
+//		default:
+//			return BUTTON_NOTHING;
+//			break;
 	}
 }
 // -----------------------------------------------------------------------
-void Generic_Write(const char* Text)
+void Generic_Write(const char* Text)		// Print data on LCD
 {
 	if (Text)
 	{
-//		lcdClrScr();
-//		lcdPuts(Text);
-
 		ILI9341_Draw_Text( "                   ", 10, 10, WHITE, 2, BLACK);
 		ILI9341_Draw_Text( Text, 10, 10, WHITE, 2, BLACK);
 	}
@@ -254,46 +268,53 @@ void Generic_Write(const char* Text)
 // -----------------------------------------------------------------------
 Menu_Item_t* Menu_GetCurrentMenu(void)
 {
- return CurrentMenuItem;
+	return CurrentMenuItem;
 }
 // -----------------------------------------------------------------------
+// Navigation on menu
 void Menu_Navigate(Menu_Item_t* const NewMenu)
 {
- if ((NewMenu == &NULL_MENU) || (NewMenu == NULL))
- {
-	 return;
- }
+	if ((NewMenu == &NULL_MENU) || (NewMenu == NULL))  // What it mean???
+	{
+		return;		// Exit
+	}
 
- CurrentMenuItem = NewMenu;
+	CurrentMenuItem = NewMenu;    //
 
- if (MenuWriteFunc)
- {
-	 MenuWriteFunc(CurrentMenuItem->Text);
- }
+	if (MenuWriteFunc)    // If   MenuWriteFunc  != NULL
+	{
+		MenuWriteFunc(CurrentMenuItem->Text);			// Print on LCD
+	}
 
- void (*SelectCallback)(void) = CurrentMenuItem->SelectCallback;
+	//   void (*SelectCallback)(void) - Creating pointer on function
+	// Write  CurrentMenuItem->SelectCallback in  void (*SelectCallback)(void) pinter
+	void (*SelectCallback)(void) = CurrentMenuItem->SelectCallback;
 
- if (SelectCallback)
- {
-	 SelectCallback();
- }
+	if (SelectCallback)		// If SelectCallback != NULL
+	{
+		SelectCallback();   // It does - CurrentMenuItem->SelectCallback;
+	}
 }
 // -----------------------------------------------------------------------
-void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))
+void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))    //  What doing this function??????? <<<<<<<<<<<
 {
- MenuWriteFunc = WriteFunc;
- Menu_Navigate(CurrentMenuItem);
+	MenuWriteFunc = WriteFunc;  		// Write pointer WriteFunc in MenuWriteFunc
+	Menu_Navigate(CurrentMenuItem);
 }
 // -----------------------------------------------------------------------
-void Menu_EnterCurrentItem(void)
+void Menu_EnterCurrentItem(void)		// It does when was press any buttons
 {
- if ((CurrentMenuItem == &NULL_MENU) || (CurrentMenuItem == NULL))
-  return;
+	if ((CurrentMenuItem == &NULL_MENU) || (CurrentMenuItem == NULL))
+	{
+		return;
+	}
 
- void (*EnterCallback)(void) = CurrentMenuItem->EnterCallback;
+	void (*EnterCallback)(void) = CurrentMenuItem->EnterCallback;
+	if (EnterCallback)		// If EnterCallback != NULL
+	{
+		EnterCallback();
+	}
 
- if (EnterCallback)
-  EnterCallback();
 }// -----------------------------------------------------------------------
 
 

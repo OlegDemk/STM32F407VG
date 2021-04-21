@@ -30,7 +30,7 @@ void menu(void);                         // FUNCTION FOR TEST !!!!!!!!!!!!!!!!!!
   void (*SelectCallback)(void); /**< Pointer to the optional menu-specific select callback of this menu item */
   void (*EnterCallback)(void); /**< Pointer to the optional menu-specific enter callback of this menu item */
   const char Text[]; /**< Menu item text to pass to the menu display callback function */
- } Menu_Item_t;
+ } Menu_Item_t;		// Назва типу даних - const struct Menu_Item
 
  /** Creates a new menu item entry with the specified links and callbacks.
   *

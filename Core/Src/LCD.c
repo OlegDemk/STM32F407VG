@@ -60,7 +60,11 @@ typedef enum								// Enumeration for button state
 
 // Test place ///////////////////////////////////////////////////////
 //void (*print_all_top_menu)(const char* Text);
-void print_all_top_menu();
+void print_all_top_menu(void);
+void print_all_menu_1_menus(void);
+void print_all_menu_1_1_menus(void);
+
+void tongle_green_led(void);
 /////////////////////////////////////////////////////////////////////
 
 char main_menus[5][20] =
@@ -72,20 +76,34 @@ char main_menus[5][20] =
 		"Menu-5"
 };
 
+char menu_1[2][20] =
+{
+		"Menu-1.1",
+		"Menu-1.2"
+};
+
+char menu_1_1[4][20] =
+{
+		"Menu-1.1.1",
+		"Menu-1.1.2",
+		"Menu-1.1.3",
+		"Menu-1.1.4"
+};
+
 // Menus  Name | Next | Prev | Parent | Child | SelectFunction | EnterFunction | Text
-MENU_ITEM(Menu_1, Menu_2, Menu_4, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "Menu-1");
+MENU_ITEM(Menu_1, Menu_2, Menu_5, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "Menu-1");
 MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-2");
 MENU_ITEM(Menu_3, Menu_4, Menu_2, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-3");
 MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "Menu-4 Red LED");
-MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "Menu-5");
+MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-5");
 
-MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_2, Menu_1, Menu_1_1_1, NULL, NULL, "Menu-1.1");
-MENU_ITEM(Menu_1_2, Menu_1_1, Menu_1_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.2");
+MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_2, Menu_1, Menu_1_1_1, print_all_menu_1_menus, NULL, "Menu-1.1");
+MENU_ITEM(Menu_1_2, Menu_1_1, Menu_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "Menu-1.2");
 
-MENU_ITEM(Menu_1_1_1, Menu_1_1_2, Menu_1_1_4, Menu_1_1, NULL_MENU, NULL, NULL, "Menu-1.1.1");
-MENU_ITEM(Menu_1_1_2, Menu_1_1_3, Menu_1_1_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.2");
-MENU_ITEM(Menu_1_1_3, Menu_1_1_4, Menu_1_1_2, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.3");
-MENU_ITEM(Menu_1_1_4, Menu_1_1_1, Menu_1_1_3, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.4");
+MENU_ITEM(Menu_1_1_1, Menu_1_1_2, Menu_1_1_4, Menu_1_1, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.1");
+MENU_ITEM(Menu_1_1_2, Menu_1_1_3, Menu_1_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.2");
+MENU_ITEM(Menu_1_1_3, Menu_1_1_4, Menu_1_1_2, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.3");
+MENU_ITEM(Menu_1_1_4, Menu_1_1_1, Menu_1_1_3, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, tongle_green_led, "Menu-1.1.4");
 
 
 bool flagPressed = false;						// flag pressed key
@@ -151,12 +169,20 @@ void menu()
 //// TEST PRINT FUNCTION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void print_all_top_menu(void)
 {
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
 	// Print all main menus
-	ILI9341_Draw_Text(main_menus[0], 40, 110, WHITE, 2, BLACK);
-	ILI9341_Draw_Text(main_menus[1], 40, 130, WHITE, 2, BLACK);
-	ILI9341_Draw_Text(main_menus[2], 40, 150, WHITE, 2, BLACK);
-	ILI9341_Draw_Text(main_menus[3], 40, 170, WHITE, 2, BLACK);
-	ILI9341_Draw_Text(main_menus[4], 40, 190, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[3], 30, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[4], 30, 190, WHITE, 2, BLACK);
 
 	//
 	if(pointer_on_selected_menu <= 0)
@@ -195,7 +221,101 @@ void print_all_top_menu(void)
 	}
 
 }
-//// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+void print_all_menu_1_menus(void)
+{
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
+	// Clearn all pointers on menu
+	ILI9341_Draw_Text( "  ", 5, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 190, WHITE, 2, BLACK);
+
+	ILI9341_Draw_Text(menu_1[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[1], 30, 130, WHITE, 2, BLACK);
+
+	if(pointer_on_selected_menu <= 0)
+	{
+		pointer_on_selected_menu = 2;
+	}
+	if(pointer_on_selected_menu >= 3)
+	{
+		pointer_on_selected_menu = 1;
+	}
+
+	switch (pointer_on_selected_menu)
+	{
+		case 1:
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			break;
+		case 2:
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+	}
+}
+// -----------------------------------------------------------------------
+void print_all_menu_1_1_menus(void)
+{
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
+	// Clearn all pointers on menu
+	ILI9341_Draw_Text( "  ", 5, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 190, WHITE, 2, BLACK);
+
+	ILI9341_Draw_Text(menu_1_1[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[3], 30, 170, WHITE, 2, BLACK);
+
+	if(pointer_on_selected_menu <= 0)
+	{
+		pointer_on_selected_menu = 4;
+	}
+	if(pointer_on_selected_menu >= 5)
+	{
+		pointer_on_selected_menu = 1;
+	}
+
+	switch (pointer_on_selected_menu)
+	{
+		case 1:
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			break;
+		case 2:
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+		case 3:
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			break;
+		case 4:
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
+			break;
+	}
+}
+// -----------------------------------------------------------------------
+void tongle_green_led(void)
+{
+	HAL_GPIO_TogglePin( GPIOD, GPIO_PIN_12);
+}
+// -----------------------------------------------------------------------
+
 void print_main_menus(Menu_Item_t* const NewMenu)
 {
 //	static uint8_t k =0;
@@ -327,8 +447,8 @@ void Generic_Write(const char* Text)		// Print "Text" data on LCD
 {
 	if (Text)
 	{
-		ILI9341_Draw_Text( "                   ", 10, 60, WHITE, 2, BLACK);
-		ILI9341_Draw_Text( Text, 10, 60, WHITE, 2, BLACK);
+		ILI9341_Draw_Text( "                   ", 40, 30, WHITE, 2, BLACK);
+		ILI9341_Draw_Text( Text, 40, 30, WHITE, 2, BLACK);
 	}
 }
 // -----------------------------------------------------------------------

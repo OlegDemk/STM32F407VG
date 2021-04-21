@@ -78,18 +78,21 @@ MENU_ITEM(Menu_1_1_3, Menu_1_1_4, Menu_1_1_2, NULL_MENU, NULL_MENU, NULL, NULL, 
 MENU_ITEM(Menu_1_1_4, Menu_1_1_1, Menu_1_1_3, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.4");
 
 
-bool flagPressed = false;						// flag presed key
+bool flagPressed = false;						// flag pressed key
 
 uint8_t k =0;
-uint8_t p =0;
-void print_sign(p);
+//uint8_t p =0;
+//void print_sign(p);
 
 void menu()
 {
 	Menu_SetGenericWriteCallback(Generic_Write);  //передача показника на Generic_Write функцію  point in Menu_SetGenericWriteCallback
+
+	//print_all_top_menu();
 	Menu_Navigate(&Menu_1);
-	print_all_top_menu();
-	print_sign(p);
+//	Menu_Navigate(MENU_NEXT);
+//	Menu_Navigate(MENU_NEXT);
+//	print_sign(p);
 //	Menu_Navigate(&Menu_2);
 //	Menu_Navigate(&Menu_3);
 	while (1)
@@ -105,17 +108,17 @@ void menu()
 			  Menu_Navigate(MENU_PARENT);	// Перейти на MENU_PARENT
 			  break;
 			 case BUTTON_UP:
-			  print_sign(p);
-			  p = p - 20;
+//			  print_sign(p);
+//			  p = p - 20;
 			  Menu_Navigate(MENU_PREVIOUS);  // Перейти на MENU_PREVIOUS
 			  break;
 			 case BUTTON_DOWN:
-			  print_sign(p);
-			  p = p + 20;
-			  if(p <= 100)
-			  {
-				  p=60;
-			  }
+//			  print_sign(p);
+//			  p = p + 20;
+//			  if(p <= 100)
+//			  {
+//				  p=60;
+//			  }
 			  Menu_Navigate(MENU_NEXT);      // Перейти на MENU_NEXT
 			  break;
 			 case BUTTON_RIGHT:
@@ -136,14 +139,14 @@ void menu()
 	  }
 }
 // -----------------------------------------------------------------------
-// TEST PRINT FUNCTION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//// TEST PRINT FUNCTION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void print_all_top_menu(void)
 {
 	print_main_menus(&Menu_1);
 	print_main_menus(&Menu_2);
 	print_main_menus(&Menu_3);
 }
-// -----------------------------------------------------------------------
+//// -----------------------------------------------------------------------
 void print_main_menus(Menu_Item_t* const NewMenu)
 {
 //	static uint8_t k =0;
@@ -153,11 +156,11 @@ void print_main_menus(Menu_Item_t* const NewMenu)
 	//MenuWriteFunc(CurrentMenuItem->Text);			// Print Text string on LCD
 
 }
-// -----------------------------------------------------------------------
-void print_sign(p)
-{
-	ILI9341_Draw_Text( "<", 180, 60+p, WHITE, 2, BLACK);
-}
+//// -----------------------------------------------------------------------
+//void print_sign(p)
+//{
+//	ILI9341_Draw_Text( "<", 180, 60+p, WHITE, 2, BLACK);
+//}
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -183,34 +186,41 @@ static void Level1Item3_Enter(void)
  while(getPressKey() != BUTTON_LEFT)
  {
 	 // Read PIN
-	 if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14))
-	 {
-		 ILI9341_Draw_Text( "ON ", 150, 60, WHITE, 2, BLACK);
-	 } else
-	 {
-		 ILI9341_Draw_Text( "OFF", 150, 60, WHITE, 2, BLACK);
+	 int led_status =  HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14);
 
+	 if(flagPressed == true)
+	 {
+		 if(led_status == GPIO_PIN_SET)
+		 {
+			 ILI9341_Draw_Text( "ON ", 150, 60, WHITE, 2, BLACK);
+		 }
+		 else
+		 {
+		 	 ILI9341_Draw_Text( "OFF", 150, 60, WHITE, 2, BLACK);
+		 }
 	 }
-  if(getPressKey() != BUTTON_NOTHING && !flagPressed)
-  {
-	  flagPressed = true;
 
-	  switch(getPressKey())  // If press any key
-	  {
-	  	  case BUTTON_UP:
-	  		  RED_LED_ON();
-	  		  break;
-	  	  case BUTTON_DOWN:
-	  		  RED_LED_OFF();
-	  		  break;
-	  	  default:
-	  		  break;
-	  }
-  }
-  else if(getPressKey() == BUTTON_NOTHING && flagPressed)
-  {
-	  flagPressed = false; 	// if button was release
-  }
+
+	 if(getPressKey() != BUTTON_NOTHING && !flagPressed)
+	 {
+		 flagPressed = true;
+
+		 switch(getPressKey())  // If press any key
+		 {
+	  	  	  case BUTTON_UP:
+	  	  		  RED_LED_ON();
+	  	  		  break;
+	  	  	  case BUTTON_DOWN:
+	  	  		  RED_LED_OFF();
+	  	  		  break;
+	  	  	  default:
+	  	  		  break;
+		 }
+	 }
+	 else if(getPressKey() == BUTTON_NOTHING && flagPressed)
+	 {
+		 flagPressed = false; 	// if button was release
+	 }
  }
 
  ILI9341_Draw_Text( "                           ", 10, 60, WHITE, 2, BLACK); // Cleaning one row LCD
@@ -303,15 +313,16 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
 	}
 }
 // -----------------------------------------------------------------------
-/*Налаштовує функцію зворотного виклику тексту тексту меню, що спрацьовує для всіх
-/* пунктів меню. В рамках цієї функції зворотного виклику користувач повинен
+/*Налаштовує функцію зворотного виклику тексту меню, що спрацьовує для всіх
+ пунктів меню. В рамках цієї функції зворотного виклику користувач повинен
  реалізувати код для відображення поточного тексту меню, що зберігається
  в  ref MENU_ITEM_STORAGE пам'яті.. */
 // In: вказівник на функцію зворотного виклику для виконання кожного вибраного пункту меню.
 void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))    //  What doing this function??????? <<<<<<<<<<<
 {
-	MenuWriteFunc = WriteFunc;  		// Запис показника функції WriteFunc в MenuWriteFunc
-	Menu_Navigate(CurrentMenuItem);
+	MenuWriteFunc = WriteFunc;  		// Запис показника функції WriteFunc в
+	//  показник на функцію під назвою MenuWriteFunc
+	Menu_Navigate(CurrentMenuItem);      // Передача цього показника в функцію Menu_Navigate
 }
 // -----------------------------------------------------------------------
 /* Функція входить у вибраний на даний момент пункт меню, виконуючи налаштовану

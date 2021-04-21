@@ -163,7 +163,7 @@ int main(void)
 
   ILI9341_Fill_Screen(BLACK);
   int number_of_tests = 100;
-  speed_test_LCD(number_of_tests);
+  //speed_test_LCD(number_of_tests);
 
   ILI9341_Fill_Screen(BLACK);
 

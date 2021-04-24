@@ -2,6 +2,7 @@
 "Core/Src/ILI9341_STM32_Driver.o"
 "Core/Src/ILI9341_Touchscreen.o"
 "Core/Src/LCD.o"
+"Core/Src/i2c_scanner.o"
 "Core/Src/keyboard.o"
 "Core/Src/main.o"
 "Core/Src/stm32f4xx_hal_msp.o"

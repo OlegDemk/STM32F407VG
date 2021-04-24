@@ -177,11 +177,27 @@ int main(void)
 //  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
 //  int32_t prevCounter = 0;
   ////////////////////////////////////////////////////
+
+  I2C_1_scaner();
+  // Found:
+  // 0x60				// OLED
+  // 0x87				// CLOCK
+  // 0x104				// CLOCK ???
+  // 0x118				//  ????
+  // 0x119              // MEMS
+  // 0x188              // OLED ???
+  // 0x215				// CLOCK ???
+  // 0x232				// CLOCK ???
+  // 0x246				//  ????
+  // 0x247				// MEMS
+  // 0x255              //  ????
+
   while (1)
   {
 	  /////////////////////////////////////////////////////////////////
 
-	 menu();
+	// menu();
+	  I2C_1_scaner();
 
 
 

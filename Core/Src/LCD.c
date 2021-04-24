@@ -67,19 +67,21 @@ void print_all_menu_1_1_menus(void);
 void tongle_green_led(void);
 /////////////////////////////////////////////////////////////////////
 
-char main_menus[5][20] =
+char main_menus[5][30] =
 {
-		"Menu-1",
-		"Menu-2",
-		"Menu-3",
-		"Menu-4 Red LED",
-		"Menu-5"
+		"1. Communication",
+		"2. Sensors",
+		"3. Data logging",
+		"4. Menu. Red LED",   //<< LEDs on off
+		"5. Menu"
 };
 
-char menu_1[2][20] =
+char menu_1[4][20] =
 {
-		"Menu-1.1",
-		"Menu-1.2"
+		"1. GSM",
+		"2. NRf",
+		"3. ESP",
+		"4. LoRa"
 };
 
 char menu_1_1[4][20] =
@@ -91,14 +93,16 @@ char menu_1_1[4][20] =
 };
 
 // Menus  Name | Next | Prev | Parent | Child | SelectFunction | EnterFunction | Text
-MENU_ITEM(Menu_1, Menu_2, Menu_5, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "Menu-1");
-MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-2");
-MENU_ITEM(Menu_3, Menu_4, Menu_2, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-3");
-MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "Menu-4 Red LED");
-MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "Menu-5");
+MENU_ITEM(Menu_1, Menu_2, Menu_5, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "1. Wireless communication");
+MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "2. Sensors");
+MENU_ITEM(Menu_3, Menu_4, Menu_2, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "3. Data logging");
+MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "4. Menu. Red LED");
+MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "5. Menu");
 
-MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_2, Menu_1, Menu_1_1_1, print_all_menu_1_menus, NULL, "Menu-1.1");
-MENU_ITEM(Menu_1_2, Menu_1_1, Menu_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "Menu-1.2");
+MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_4, Menu_1, Menu_1_1_1, print_all_menu_1_menus, NULL, "1. GSM");
+MENU_ITEM(Menu_1_2, Menu_1_3, Menu_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "2. NRf");
+MENU_ITEM(Menu_1_3, Menu_1_4, Menu_1_2, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "3. ESP");
+MENU_ITEM(Menu_1_4, Menu_1_1, Menu_1_3, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "4. LoRa");
 
 MENU_ITEM(Menu_1_1_1, Menu_1_1_2, Menu_1_1_4, Menu_1_1, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.1");
 MENU_ITEM(Menu_1_1_2, Menu_1_1_3, Menu_1_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.2");
@@ -133,17 +137,17 @@ void menu()
 			switch(pressed_key)
 			{
 				case BUTTON_LEFT:
-					Menu_Navigate(MENU_PARENT);	// Перейти на MENU_PARENT
+					Menu_Navigate(MENU_PARENT);
 					break;
 
 				case BUTTON_UP:
-					pointer_on_selected_menu--;
-					Menu_Navigate(MENU_PREVIOUS);  // Перейти на MENU_PREVIOUS
+					pointer_on_selected_menu--;			// <<<<<<<<<<<<<<<<
+					Menu_Navigate(MENU_PREVIOUS);
 					break;
 
 				case BUTTON_DOWN:
-					pointer_on_selected_menu++;
-					Menu_Navigate(MENU_NEXT);      // Перейти на MENU_NEXT
+					pointer_on_selected_menu++;			// <<<<<<<<<<<<<<<<
+					Menu_Navigate(MENU_NEXT);
 					break;
 
 				case BUTTON_RIGHT:
@@ -241,12 +245,14 @@ void print_all_menu_1_menus(void)
 
 	ILI9341_Draw_Text(menu_1[0], 30, 110, WHITE, 2, BLACK);
 	ILI9341_Draw_Text(menu_1[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[3], 30, 170, WHITE, 2, BLACK);
 
 	if(pointer_on_selected_menu <= 0)
 	{
-		pointer_on_selected_menu = 2;
+		pointer_on_selected_menu = 4;
 	}
-	if(pointer_on_selected_menu >= 3)
+	if(pointer_on_selected_menu >= 5)
 	{
 		pointer_on_selected_menu = 1;
 	}
@@ -258,6 +264,12 @@ void print_all_menu_1_menus(void)
 			break;
 		case 2:
 			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+		case 3:
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			break;
+		case 4:
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
 			break;
 	}
 }
@@ -318,13 +330,7 @@ void tongle_green_led(void)
 
 void print_main_menus(Menu_Item_t* const NewMenu)
 {
-//	static uint8_t k =0;
-//	CurrentMenuItem = NewMenu;
-//	k = k + 20;
-//	ILI9341_Draw_Text( CurrentMenuItem->Text, 10, 60+k, WHITE, 2, BLACK);
-//	k = k + 20;
 
-	//MenuWriteFunc(CurrentMenuItem->Text);			// Print Text string on LCD
 
 }
 //// -----------------------------------------------------------------------
@@ -447,8 +453,8 @@ void Generic_Write(const char* Text)		// Print "Text" data on LCD
 {
 	if (Text)
 	{
-		ILI9341_Draw_Text( "                   ", 40, 30, WHITE, 2, BLACK);
-		ILI9341_Draw_Text( Text, 40, 30, WHITE, 2, BLACK);
+		ILI9341_Draw_Text( "                                 ", 10, 100, WHITE, 1, BLACK);
+		ILI9341_Draw_Text( Text, 10, 100, WHITE, 1, BLACK);
 	}
 }
 // -----------------------------------------------------------------------

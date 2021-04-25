@@ -29,6 +29,8 @@
 
 #include <stdbool.h>
 
+#include "bme280.h"
+
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
 		PE5 - RESET LCD
@@ -180,10 +182,13 @@ int main(void)
 
   I2C_1_scaner();
   // Found:
-  // 0x60				// OLED
+  //   Dec       Heh
+  //   118		 0x76     // BME280
+
+  // 0x60				// OLED       <<<<<<<<<<<
   // 0x87				// CLOCK
   // 0x104				// CLOCK ???
-  // 0x118				//  ????
+  // 0x118				// BME280
   // 0x119              // MEMS
   // 0x188              // OLED ???
   // 0x215				// CLOCK ???
@@ -192,12 +197,27 @@ int main(void)
   // 0x247				// MEMS
   // 0x255              //  ????
 
+  // Test read ID from BME280 ////////////////////////////////////////////////////////////////
+  uint16_t STATUS=0;
+  uint16_t addres_devise = 0x76;
+  uint16_t addr = 0xD0;
+  uint8_t buff=0;         // Return 0x96 -> Dec 60
+  STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+  /////////////////////////////////////////////////////////////////////////////////////////
+
+
+ // my_print_readings();
   while (1)
   {
+	  //my_print_readings();  // ID = 96  (0x60)
+
+
+
+	  //I2C_1_scaner();
 	  /////////////////////////////////////////////////////////////////
 
 	// menu();
-	  I2C_1_scaner();
+	  //I2C_1_scaner();
 
 
 

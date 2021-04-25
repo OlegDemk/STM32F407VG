@@ -1,0 +1,7 @@
+sup.c:25:6:my_print_readings	16	static
+sup.c:40:6:print_sensor_data	16	static
+sup.c:49:8:stream_sensor_data_forced_mode	48	static
+sup.c:77:8:stream_sensor_data_normal_mode	48	static
+sup.c:109:6:user_delay_ms	16	static
+sup.c:114:8:user_i2c_write	40	static
+sup.c:126:8:user_i2c_read	40	static

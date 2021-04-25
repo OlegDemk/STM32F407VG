@@ -197,11 +197,18 @@ int main(void)
   // 0x247				// MEMS
   // 0x255              //  ????
 
-  // Test read ID from BME280 ////////////////////////////////////////////////////////////////
+  // Read ID from BME280 ////////////////////////////////////////////////////////////////
   uint16_t STATUS=0;
-  uint16_t addres_devise = 0x76;
+  uint16_t addres_devise = 0x76;   // BME280
   uint16_t addr = 0xD0;
   uint8_t buff=0;         // Return 0x96 -> Dec 60
+  STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+  /////////////////////////////////////////////////////////////////////////////////////////
+
+  // Read ID from DS3231 ////////////////////////////////////////////////////////////////
+  addres_devise = 0x68;            // DS3231
+  addr = 0x00;						// Read seconds register
+  buff=0;
   STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
   /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -209,6 +216,12 @@ int main(void)
  // my_print_readings();
   while (1)
   {
+
+
+
+
+
+
 	  //my_print_readings();  // ID = 96  (0x60)
 
 

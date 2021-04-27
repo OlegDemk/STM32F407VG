@@ -30,6 +30,7 @@
 #include "oled/oled.h"
 #include "oled/gfx.h"
 
+#include "MEMS/mpu6050.h"
 
 #include <stdbool.h>
 
@@ -65,7 +66,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+MPU6050_t MPU6050;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -217,19 +218,27 @@ int main(void)
   /////////////////////////////////////////////////////////////////////////////////////////
 
   // Test OLED  ////////////////////////////////////////////////////////////////
-  oled_init();
-  char oled_buff[] = "TEST";
-  // draw_pixel(10, 10, WHITE);
-  graphics_text(1, 1, 1, oled_buff);
-  graphics_text(1, 20, 2, oled_buff);
-  graphics_text(50, 1, 3, oled_buff);
-  oled_update();
+//  oled_init();
+//  char oled_buff[] = "TEST";
+//  // draw_pixel(10, 10, WHITE);
+//  graphics_text(1, 1, 1, oled_buff);
+//  graphics_text(1, 20, 2, oled_buff);
+//  graphics_text(50, 1, 3, oled_buff);
+//  oled_update();
   /////////////////////////////////////////////////////////////////////////////////////////
+
+  // Test MEMS  ////////////////////////////////////////////////////////////////
+  while (MPU6050_Init(&hi2c3) == 1);
+  MPU6050_Read_All(&hi2c3, &MPU6050);
+
+   /////////////////////////////////////////////////////////////////////////////////////////
 
 
  // my_print_readings();
   while (1)
   {
+
+	  MPU6050_Read_All(&hi2c3, &MPU6050);
 
 
 

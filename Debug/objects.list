@@ -12,6 +12,7 @@
 "Core/Src/syscalls.o"
 "Core/Src/sysmem.o"
 "Core/Src/system_stm32f4xx.o"
+"Core/Src/MEMS/mpu6050.o"
 "Core/Src/oled/fonts.o"
 "Core/Src/oled/gfx.o"
 "Core/Src/oled/oled.o"

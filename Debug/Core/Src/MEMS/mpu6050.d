@@ -1,4 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/MEMS/mpu6050.o: ../Core/Src/MEMS/mpu6050.c \
+ ../Core/Inc/MEMS/mpu6050.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -33,12 +34,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../USB_HOST/App/usb_host.h ../Core/Inc/ILI9341_Touchscreen.h \
- ../Core/Inc/main.h ../Core/Inc/ILI9341_STM32_Driver.h \
- ../Core/Inc/ILI9341_GFX.h ../Core/Inc/LCD.h ../Core/Inc/oled/oled.h \
- ../Core/Inc/oled/gfx.h ../Core/Inc/MEMS/mpu6050.h ../Core/Inc/bme280.h \
- ../Core/Inc/bme280_defs.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
+
+../Core/Inc/MEMS/mpu6050.h:
 
 ../Core/Inc/main.h:
 
@@ -111,25 +109,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
-
-../USB_HOST/App/usb_host.h:
-
-../Core/Inc/ILI9341_Touchscreen.h:
-
-../Core/Inc/main.h:
-
-../Core/Inc/ILI9341_STM32_Driver.h:
-
-../Core/Inc/ILI9341_GFX.h:
-
-../Core/Inc/LCD.h:
-
-../Core/Inc/oled/oled.h:
-
-../Core/Inc/oled/gfx.h:
-
-../Core/Inc/MEMS/mpu6050.h:
-
-../Core/Inc/bme280.h:
-
-../Core/Inc/bme280_defs.h:

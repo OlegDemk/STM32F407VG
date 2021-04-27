@@ -27,6 +27,10 @@
 #include "ILI9341_GFX.h"
 #include "LCD.h"
 
+#include "oled/oled.h"
+#include "oled/gfx.h"
+
+
 #include <stdbool.h>
 
 #include "bme280.h"
@@ -210,6 +214,16 @@ int main(void)
   addr = 0x00;						// Read seconds register
   buff=0;
   STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+  /////////////////////////////////////////////////////////////////////////////////////////
+
+  // Test OLED  ////////////////////////////////////////////////////////////////
+  oled_init();
+  char oled_buff[] = "TEST";
+  // draw_pixel(10, 10, WHITE);
+  graphics_text(1, 1, 1, oled_buff);
+  graphics_text(1, 20, 2, oled_buff);
+  graphics_text(50, 1, 3, oled_buff);
+  oled_update();
   /////////////////////////////////////////////////////////////////////////////////////////
 
 

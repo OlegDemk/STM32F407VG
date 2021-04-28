@@ -1,0 +1,13 @@
+gfx.c:26:6:draw_pixel	24	static
+gfx.c:40:6:draw_pixel_triple	24	static
+gfx.c:51:6:invert_pixel	24	static
+gfx.c:60:6:invert_rectangle	32	static
+gfx.c:68:6:clear	16	static
+gfx.c:76:6:line_v	40	static
+gfx.c:140:6:line_h	40	static
+gfx.c:207:6:graphics_Glyph	40	static
+gfx.c:230:6:graphics_text	48	static
+gfx.c:273:6:graphics_Glyph_vertical	40	static
+gfx.c:296:6:graphics_text_vertical	48	static
+gfx.c:339:6:draw_bitmap	32	static
+gfx.c:368:6:draw_bitmap_fast	24	static

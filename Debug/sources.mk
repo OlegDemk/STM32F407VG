@@ -21,7 +21,8 @@ OBJCOPY_BIN :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 Core/Src \
-Core/Src/screens \
+Core/Src/screens/lcd \
+Core/Src/screens/oled \
 Core/Src/sensors \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \

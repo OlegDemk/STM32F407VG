@@ -7,12 +7,12 @@
 
 #include "main.h"
 
-#include "screens/LCD.h"
+#include "screens/lcd/LCD.h"
 
-#include "screens/ILI9341_Touchscreen.h"
-#include "screens/ILI9341_STM32_Driver.h"
-#include "screens/ILI9341_GFX.h"
-#include "screens/snow_tiger.h"
+#include "screens/lcd/ILI9341_Touchscreen.h"
+#include "screens/lcd/ILI9341_STM32_Driver.h"
+#include "screens/lcd/ILI9341_GFX.h"
+#include "screens/lcd/snow_tiger.h"
 
 #include "keyboard.h"
 

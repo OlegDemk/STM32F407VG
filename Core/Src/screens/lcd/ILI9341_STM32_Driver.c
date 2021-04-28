@@ -81,7 +81,7 @@
 //-----------------------------------
 
 /* Includes ------------------------------------------------------------------*/
-#include "screens/ILI9341_STM32_Driver.h"
+#include "screens/lcd/ILI9341_STM32_Driver.h"
 //#include "spi.h"
 //#include "gpio.h"
 

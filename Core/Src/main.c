@@ -22,12 +22,15 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "screens/ILI9341_Touchscreen.h"
-#include "screens/ILI9341_STM32_Driver.h"
-#include "screens/ILI9341_GFX.h"
-#include "screens/LCD.h"
+#include "screens/lcd/ILI9341_Touchscreen.h"
+#include "screens/lcd/ILI9341_STM32_Driver.h"
+#include "screens/lcd/ILI9341_GFX.h"
+#include "screens/lcd/LCD.h"
 
 #include <stdbool.h>
+
+#include "screens/oled/oled.h"
+#include "screens/oled/gfx.h"
 
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
@@ -216,13 +219,13 @@ int main(void)
     /////////////////////////////////////////////////////////////////////////////////////////
 
     // Test OLED  ////////////////////////////////////////////////////////////////
-  //  oled_init();
-  //  char oled_buff[] = "TEST";
-  //  // draw_pixel(10, 10, WHITE);
-  //  graphics_text(1, 1, 1, oled_buff);
-  //  graphics_text(1, 20, 2, oled_buff);
-  //  graphics_text(50, 1, 3, oled_buff);
-  //  oled_update();
+    oled_init();
+    char oled_buff[] = "TEST";
+    // draw_pixel(10, 10, WHITE);
+    graphics_text(1, 1, 1, oled_buff);
+    graphics_text(1, 20, 2, oled_buff);
+    graphics_text(50, 1, 3, oled_buff);
+    oled_update();
     /////////////////////////////////////////////////////////////////////////////////////////
 
     // Test MEMS  ////////////////////////////////////////////////////////////////

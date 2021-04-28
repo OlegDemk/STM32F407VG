@@ -1,5 +1,6 @@
-Core/Src/ILI9341_STM32_Driver.o: ../Core/Src/ILI9341_STM32_Driver.c \
- ../Core/Inc/ILI9341_STM32_Driver.h ../Core/Inc/main.h \
+Core/Src/screens/ILI9341_Touchscreen.o: \
+ ../Core/Src/screens/ILI9341_Touchscreen.c \
+ ../Core/Inc/screens/ILI9341_Touchscreen.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -36,7 +37,7 @@ Core/Src/ILI9341_STM32_Driver.o: ../Core/Src/ILI9341_STM32_Driver.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 
-../Core/Inc/ILI9341_STM32_Driver.h:
+../Core/Inc/screens/ILI9341_Touchscreen.h:
 
 ../Core/Inc/main.h:
 

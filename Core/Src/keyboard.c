@@ -8,10 +8,10 @@
 #include "main.h"
 #include "keyboard.h"
 
-#include "ILI9341_Touchscreen.h"
-#include "ILI9341_STM32_Driver.h"
-#include "ILI9341_GFX.h"
-#include "LCD.h"
+#include "screens/ILI9341_Touchscreen.h"
+#include "screens/ILI9341_STM32_Driver.h"
+#include "screens/ILI9341_GFX.h"
+#include "screens/LCD.h"
 
 #include <stdbool.h>
 

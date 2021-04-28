@@ -1,5 +1,4 @@
-Core/Src/ILI9341_GFX.o: ../Core/Src/ILI9341_GFX.c \
- ../Core/Inc/ILI9341_STM32_Driver.h ../Core/Inc/main.h \
+Core/Src/screens/LCD.o: ../Core/Src/screens/LCD.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -35,9 +34,10 @@ Core/Src/ILI9341_GFX.o: ../Core/Src/ILI9341_GFX.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../Core/Inc/ILI9341_GFX.h ../Core/Inc/5x5_font.h
-
-../Core/Inc/ILI9341_STM32_Driver.h:
+ ../Core/Inc/screens/LCD.h ../Core/Inc/screens/ILI9341_Touchscreen.h \
+ ../Core/Inc/screens/ILI9341_STM32_Driver.h \
+ ../Core/Inc/screens/ILI9341_GFX.h ../Core/Inc/screens/snow_tiger.h \
+ ../Core/Inc/keyboard.h
 
 ../Core/Inc/main.h:
 
@@ -111,6 +111,14 @@ Core/Src/ILI9341_GFX.o: ../Core/Src/ILI9341_GFX.c \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 
-../Core/Inc/ILI9341_GFX.h:
+../Core/Inc/screens/LCD.h:
 
-../Core/Inc/5x5_font.h:
+../Core/Inc/screens/ILI9341_Touchscreen.h:
+
+../Core/Inc/screens/ILI9341_STM32_Driver.h:
+
+../Core/Inc/screens/ILI9341_GFX.h:
+
+../Core/Inc/screens/snow_tiger.h:
+
+../Core/Inc/keyboard.h:

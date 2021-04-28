@@ -35,15 +35,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_ranges 00001708  00000000  00000000  0004a1b8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00025cc4  00000000  00000000  0004b8c0  2**0
+ 16 .debug_macro  00025cd2  00000000  00000000  0004b8c0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00022c55  00000000  00000000  00071584  2**0
+ 17 .debug_line   00022c55  00000000  00000000  00071592  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000d4eb8  00000000  00000000  000941d9  2**0
+ 18 .debug_str    000d4efe  00000000  00000000  000941e7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  00169091  2**0
+ 19 .comment      00000053  00000000  00000000  001690e5  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00006a50  00000000  00000000  001690e4  2**2
+ 20 .debug_frame  00006a50  00000000  00000000  00169138  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -4035,9 +4035,9 @@ static void MX_GPIO_Init(void)
  8001bd8:	4844      	ldr	r0, [pc, #272]	; (8001cec <MX_GPIO_Init+0x2c4>)
  8001bda:	f000 fdbb 	bl	8002754 <HAL_GPIO_Init>
 
-  /*Configure GPIO pins : KEYBOARD_COLUMN_3_Pin encoder_button_Pin */
-  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_3_Pin|encoder_button_Pin;
- 8001bde:	f44f 4340 	mov.w	r3, #49152	; 0xc000
+  /*Configure GPIO pins : MOTION_SENSOR_9960_Pin KEYBOARD_COLUMN_3_Pin encoder_button_Pin */
+  GPIO_InitStruct.Pin = MOTION_SENSOR_9960_Pin|KEYBOARD_COLUMN_3_Pin|encoder_button_Pin;
+ 8001bde:	f44f 4344 	mov.w	r3, #50176	; 0xc400
  8001be2:	61fb      	str	r3, [r7, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
  8001be4:	2300      	movs	r3, #0

@@ -791,8 +791,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : KEYBOARD_COLUMN_3_Pin encoder_button_Pin */
-  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_3_Pin|encoder_button_Pin;
+  /*Configure GPIO pins : MOTION_SENSOR_9960_Pin KEYBOARD_COLUMN_3_Pin encoder_button_Pin */
+  GPIO_InitStruct.Pin = MOTION_SENSOR_9960_Pin|KEYBOARD_COLUMN_3_Pin|encoder_button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);

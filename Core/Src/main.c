@@ -180,9 +180,63 @@ int main(void)
 //  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
 //  int32_t prevCounter = 0;
   ////////////////////////////////////////////////////
+
+
+
+
+  // Found:
+    //   Dec       Heh
+    //   118		 0x76     // BME280
+
+    // 0x60				// OLED       <<<<<<<<<<<
+    // 0x87				// CLOCK
+    // 0x104				// CLOCK ???
+    // 0x118				// BME280
+    // 0x119              // MEMS
+    // 0x188              // OLED ???
+    // 0x215				// CLOCK ???
+    // 0x232				// CLOCK ???
+    // 0x246				//  ????
+    // 0x247				// MEMS
+    // 0x255              //  ????
+
+    // Read ID from BME280 ////////////////////////////////////////////////////////////////
+    uint16_t STATUS=0;
+    uint16_t addres_devise = 0x76;   // BME280
+    uint16_t addr = 0xD0;
+    uint8_t buff=0;         // Return 0x96 -> Dec 60
+    STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    // Read ID from DS3231 ////////////////////////////////////////////////////////////////
+    addres_devise = 0x68;            // DS3231
+    addr = 0x00;						// Read seconds register
+    buff=0;
+    STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    // Test OLED  ////////////////////////////////////////////////////////////////
+  //  oled_init();
+  //  char oled_buff[] = "TEST";
+  //  // draw_pixel(10, 10, WHITE);
+  //  graphics_text(1, 1, 1, oled_buff);
+  //  graphics_text(1, 20, 2, oled_buff);
+  //  graphics_text(50, 1, 3, oled_buff);
+  //  oled_update();
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    // Test MEMS  ////////////////////////////////////////////////////////////////
+//    while (MPU6050_Init(&hi2c3) == 1);
+//    MPU6050_Read_All(&hi2c3, &MPU6050);
+
+     /////////////////////////////////////////////////////////////////////////////////////////
+
   while (1)
   {
 	  /////////////////////////////////////////////////////////////////
+
+
+	  I2C_3_scaner();
 
 	 //menu();
 
@@ -216,10 +270,10 @@ int main(void)
 
 
 	  // Keyboard test //////////////////////////////////////////////
-	  if(keyboard.read_one_digit_status == true)
-	  {
-		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
-	  }
+//	  if(keyboard.read_one_digit_status == true)
+//	  {
+//		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
+//	  }
 	  /////////////////////////////////////////////////////////////////
 
 

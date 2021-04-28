@@ -63,6 +63,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c2;
 I2C_HandleTypeDef hi2c3;
 
 I2S_HandleTypeDef hi2s3;
@@ -91,6 +92,7 @@ static void MX_RNG_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_I2C3_Init(void);
+static void MX_I2C2_Init(void);
 static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
@@ -140,6 +142,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM1_Init();
   MX_I2C3_Init();
+  MX_I2C2_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -181,7 +184,7 @@ int main(void)
   {
 	  /////////////////////////////////////////////////////////////////
 
-	 menu();
+	 //menu();
 
 
 
@@ -213,10 +216,10 @@ int main(void)
 
 
 	  // Keyboard test //////////////////////////////////////////////
-//	  if(keyboard.read_one_digit_status == true)
-//	  {
-//		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
-//	  }
+	  if(keyboard.read_one_digit_status == true)
+	  {
+		  ILI9341_Draw_Text( keyboard.keyboard_digits_buffer, 10, 10, WHITE, 3, BLACK);
+	  }
 	  /////////////////////////////////////////////////////////////////
 
 
@@ -347,6 +350,40 @@ static void MX_NVIC_Init(void)
   /* TIM2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
+
 }
 
 /**
@@ -754,22 +791,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : encoder_button_Pin */
-  GPIO_InitStruct.Pin = encoder_button_Pin;
+  /*Configure GPIO pins : KEYBOARD_COLUMN_3_Pin encoder_button_Pin */
+  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_3_Pin|encoder_button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(encoder_button_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : CLK_IN_Pin */
-  GPIO_InitStruct.Pin = CLK_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-  HAL_GPIO_Init(CLK_IN_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : KEYBOARD_COLUMN_3_Pin KEYBOARD_COLUMN_2_Pin KEYBOARD_COLUMN_1_Pin */
-  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_3_Pin|KEYBOARD_COLUMN_2_Pin|KEYBOARD_COLUMN_1_Pin;
+  /*Configure GPIO pins : KEYBOARD_COLUMN_2_Pin KEYBOARD_COLUMN_1_Pin */
+  GPIO_InitStruct.Pin = KEYBOARD_COLUMN_2_Pin|KEYBOARD_COLUMN_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

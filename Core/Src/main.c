@@ -33,6 +33,7 @@
 #include "screens/oled/gfx.h"
 
 #include "sensors/mpu6050.h"
+#include <sensors/hmc5883l.h>
 
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
@@ -234,6 +235,25 @@ int main(void)
     while (MPU6050_Init(&hi2c2) == 1);
     MPU6050_Read_All(&hi2c2, &MPU6050);
     /////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    // Test HMC5883L  ////////////////////////////////////////////////////////////////////// Don't work
+//    addres_devise = 0x1E;
+//    addr = 0x0B;						// HMC5883L_REG_IDENT_A
+//    buff=0;
+//    STATUS=HAL_I2C_Mem_Read(&hi2c2, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
+
+//    HMC5883L_setRange(HMC5883L_RANGE_1_3GA);
+//    HMC5883L_setMeasurementMode(HMC5883L_CONTINOUS);
+//    HMC5883L_setDataRate(HMC5883L_DATARATE_15HZ);
+//    HMC5883L_setSamples(HMC5883L_SAMPLES_1); HMC5883L_setOffset(0, 0);
+//
+//    Vector mag = HMC5883L_readRaw();
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    int g = 999;
 
   while (1)
   {

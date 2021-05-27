@@ -24,18 +24,17 @@ static uint8_t getPressKey(void);  				// Function for read data from keyboard  
 static void Generic_Write(const char* Text);    // Function for print text on LCD
 static void Level1Item3_Enter(void);// FOR LED
 
-/** This is used when an invalid menu handle is required in
- *  a \ref MENU_ITEM() definition, i.e. to indicate that a
- *  menu has no linked parent, child, next or previous entry.
+/* Це використовується, коли у визначенні \ ref MENU_ITEM ()
+ потрібен недійсний дескриптор меню, тобто, щоб вказати,
+ що меню не має пов'язаних батьків, дочірніх елементів, наступного або попереднього запису.
  */
 Menu_Item_t NULL_MENU = {0};
 
 /** \internal
- *  Pointer to the generic menu text display function
- *  callback, to display the configured text of a menu item
- *  if no menu-specific display function has been set
- *  in the select menu item.
- */
+Вказівник на загальний виклик функції відображення тексту меню,
+щоб відобразити конфігурований текст елемента меню, якщо у
+вибраному пункті меню не було встановлено жодної функції відображення меню.
+*/
 static void (*MenuWriteFunc)(const char* Text) = NULL;
 
 /** \internal
@@ -58,27 +57,76 @@ typedef enum								// Enumeration for button state
   BUTTON_NOTHING  = 255
 } Button_TypeDef;
 
+
+// Test place ///////////////////////////////////////////////////////
+//void (*print_all_top_menu)(const char* Text);
+void print_all_top_menu(void);
+void print_all_menu_1_menus(void);
+void print_all_menu_1_1_menus(void);
+
+void tongle_green_led(void);
+/////////////////////////////////////////////////////////////////////
+
+char main_menus[5][30] =
+{
+		"1. Communication",
+		"2. Sensors",
+		"3. Data logging",
+		"4. Menu. Red LED",   //<< LEDs on off
+		"5. Menu"
+};
+
+char menu_1[4][20] =
+{
+		"1. GSM",
+		"2. NRf",
+		"3. ESP",
+		"4. LoRa"
+};
+
+char menu_1_1[4][20] =
+{
+		"Menu-1.1.1",
+		"Menu-1.1.2",
+		"Menu-1.1.3",
+		"Menu-1.1.4"
+};
+
 // Menus  Name | Next | Prev | Parent | Child | SelectFunction | EnterFunction | Text
-MENU_ITEM(Menu_1, Menu_2, Menu_3, NULL_MENU, Menu_1_1, NULL, NULL, "Menu-1");
-MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-2");
-//MENU_ITEM(Menu_3, Menu_1, Menu_2, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-3");
-MENU_ITEM(Menu_3, Menu_1, Menu_2, NULL_MENU, NULL_MENU, NULL, Level1Item3_Enter, "Enter ON/OFF red LED");
+MENU_ITEM(Menu_1, Menu_2, Menu_5, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "1. Wireless communication");
+MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "2. Sensors");
+MENU_ITEM(Menu_3, Menu_4, Menu_2, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "3. Data logging");
+MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "4. Menu. Red LED");
+MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "5. Menu");
 
-MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_2, Menu_1, Menu_1_1_1, NULL, NULL, "Menu-1.1");
-MENU_ITEM(Menu_1_2, Menu_1_1, Menu_1_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.2");
+MENU_ITEM(Menu_1_1, Menu_1_2, Menu_1_4, Menu_1, Menu_1_1_1, print_all_menu_1_menus, NULL, "1. GSM");
+MENU_ITEM(Menu_1_2, Menu_1_3, Menu_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "2. NRf");
+MENU_ITEM(Menu_1_3, Menu_1_4, Menu_1_2, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "3. ESP");
+MENU_ITEM(Menu_1_4, Menu_1_1, Menu_1_3, NULL_MENU, NULL_MENU, print_all_menu_1_menus, NULL, "4. LoRa");
 
-MENU_ITEM(Menu_1_1_1, Menu_1_1_2, Menu_1_1_4, Menu_1_1, NULL_MENU, NULL, NULL, "Menu-1.1.1");
-MENU_ITEM(Menu_1_1_2, Menu_1_1_3, Menu_1_1_1, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.2");
-MENU_ITEM(Menu_1_1_3, Menu_1_1_4, Menu_1_1_2, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.3");
-MENU_ITEM(Menu_1_1_4, Menu_1_1_1, Menu_1_1_3, NULL_MENU, NULL_MENU, NULL, NULL, "Menu-1.1.4");
+MENU_ITEM(Menu_1_1_1, Menu_1_1_2, Menu_1_1_4, Menu_1_1, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.1");
+MENU_ITEM(Menu_1_1_2, Menu_1_1_3, Menu_1_1_1, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.2");
+MENU_ITEM(Menu_1_1_3, Menu_1_1_4, Menu_1_1_2, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, NULL, "Menu-1.1.3");
+MENU_ITEM(Menu_1_1_4, Menu_1_1_1, Menu_1_1_3, NULL_MENU, NULL_MENU, print_all_menu_1_1_menus, tongle_green_led, "Menu-1.1.4");
 
 
-bool flagPressed = false;						// flag presed key
+bool flagPressed = false;						// flag pressed key
+
+uint8_t pointer_on_selected_menu =1;
+//uint8_t p =0;
+//void print_sign(p);
 
 void menu()
 {
-	Menu_SetGenericWriteCallback(Generic_Write);  // transfer Generic_Write function point in Menu_SetGenericWriteCallback
+	Menu_SetGenericWriteCallback(Generic_Write);  //передача показника на Generic_Write функцію  point in Menu_SetGenericWriteCallback
+
+	//print_all_top_menu();
 	Menu_Navigate(&Menu_1);
+//	Menu_Navigate(MENU_NEXT);
+//	Menu_Navigate(MENU_NEXT);
+//	print_sign(p);
+//	Menu_Navigate(&Menu_2);
+//	Menu_Navigate(&Menu_3);
 	while (1)
 	  {
 	   uint8_t pressed_key = getPressKey();
@@ -88,21 +136,28 @@ void menu()
 			flagPressed = true;
 			switch(pressed_key)
 			{
-			 case BUTTON_LEFT:
-			  Menu_Navigate(MENU_PARENT);
-			  break;
-			 case BUTTON_UP:
-			  Menu_Navigate(MENU_PREVIOUS);
-			  break;
-			 case BUTTON_DOWN:
-			  Menu_Navigate(MENU_NEXT);
-			  break;
-			 case BUTTON_RIGHT:
-			  Menu_Navigate(MENU_CHILD);
-			  break;
-			 case BUTTON_SELECT:
-			  Menu_EnterCurrentItem();
-			  break;
+				case BUTTON_LEFT:
+					Menu_Navigate(MENU_PARENT);
+					break;
+
+				case BUTTON_UP:
+					pointer_on_selected_menu--;			// <<<<<<<<<<<<<<<<
+					Menu_Navigate(MENU_PREVIOUS);
+					break;
+
+				case BUTTON_DOWN:
+					pointer_on_selected_menu++;			// <<<<<<<<<<<<<<<<
+					Menu_Navigate(MENU_NEXT);
+					break;
+
+				case BUTTON_RIGHT:
+					Menu_Navigate(MENU_CHILD);
+					break;
+
+				case BUTTON_SELECT:
+					Menu_EnterCurrentItem();
+					break;
+
 			 default:
 			  break;
 			}
@@ -114,6 +169,178 @@ void menu()
 
 	  }
 }
+// -----------------------------------------------------------------------
+//// TEST PRINT FUNCTION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+void print_all_top_menu(void)
+{
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
+	// Print all main menus
+	ILI9341_Draw_Text(main_menus[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[3], 30, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(main_menus[4], 30, 190, WHITE, 2, BLACK);
+
+	//
+	if(pointer_on_selected_menu <= 0)
+	{
+		pointer_on_selected_menu = 5;
+	}
+	if(pointer_on_selected_menu >= 6)
+	{
+		pointer_on_selected_menu = 1;
+	}
+	// Clearn all pointers on menu
+	ILI9341_Draw_Text( "  ", 5, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 190, WHITE, 2, BLACK);
+
+	// Point pointer on menu
+	switch (pointer_on_selected_menu)
+	{
+		case 1:
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			break;
+		case 2:
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+		case 3:
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			break;
+		case 4:
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
+			break;
+		case 5:
+			ILI9341_Draw_Text( "->", 5, 190, RED, 2, BLACK);
+			break;
+	}
+
+}
+// -----------------------------------------------------------------------
+void print_all_menu_1_menus(void)
+{
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
+	// Clearn all pointers on menu
+	ILI9341_Draw_Text( "  ", 5, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 190, WHITE, 2, BLACK);
+
+	ILI9341_Draw_Text(menu_1[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1[3], 30, 170, WHITE, 2, BLACK);
+
+	if(pointer_on_selected_menu <= 0)
+	{
+		pointer_on_selected_menu = 4;
+	}
+	if(pointer_on_selected_menu >= 5)
+	{
+		pointer_on_selected_menu = 1;
+	}
+
+	switch (pointer_on_selected_menu)
+	{
+		case 1:
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			break;
+		case 2:
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+		case 3:
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			break;
+		case 4:
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
+			break;
+	}
+}
+// -----------------------------------------------------------------------
+void print_all_menu_1_1_menus(void)
+{
+	// Claen all menu place
+	ILI9341_Draw_Text( "                                   ", 30, 110, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 130, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 150, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 170, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 190, RED, 2, BLACK);
+	ILI9341_Draw_Text( "                                   ", 30, 210, RED, 2, BLACK);
+
+	// Clearn all pointers on menu
+	ILI9341_Draw_Text( "  ", 5, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 170, WHITE, 2, BLACK);
+	ILI9341_Draw_Text( "  ", 5, 190, WHITE, 2, BLACK);
+
+	ILI9341_Draw_Text(menu_1_1[0], 30, 110, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[1], 30, 130, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[2], 30, 150, WHITE, 2, BLACK);
+	ILI9341_Draw_Text(menu_1_1[3], 30, 170, WHITE, 2, BLACK);
+
+	if(pointer_on_selected_menu <= 0)
+	{
+		pointer_on_selected_menu = 4;
+	}
+	if(pointer_on_selected_menu >= 5)
+	{
+		pointer_on_selected_menu = 1;
+	}
+
+	switch (pointer_on_selected_menu)
+	{
+		case 1:
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			break;
+		case 2:
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			break;
+		case 3:
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			break;
+		case 4:
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
+			break;
+	}
+}
+// -----------------------------------------------------------------------
+void tongle_green_led(void)
+{
+	HAL_GPIO_TogglePin( GPIOD, GPIO_PIN_12);
+}
+// -----------------------------------------------------------------------
+
+void print_main_menus(Menu_Item_t* const NewMenu)
+{
+
+
+}
+//// -----------------------------------------------------------------------
+//void print_sign(p)
+//{
+//	ILI9341_Draw_Text( "<", 180, 60+p, WHITE, 2, BLACK);
+//}
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------
 void RED_LED_ON(void)
 {
@@ -129,58 +356,56 @@ static void Level1Item3_Enter(void)
 {
  bool flagPressed = false;
 
- ILI9341_Draw_Text( "                          ", 10, 10, WHITE, 2, BLACK);   // Clearn lcd
+ ILI9341_Draw_Text( "                          ", 10, 60, WHITE, 2, BLACK);   // Clearn lcd
 
- ILI9341_Draw_Text( "Red LED is:", 10, 10, WHITE, 2, BLACK);
+ ILI9341_Draw_Text( "Red LED is:", 10, 60, WHITE, 2, BLACK);
 
  while(getPressKey() != BUTTON_LEFT)
  {
 	 // Read PIN
-	 if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14))
-	 {
-		 ILI9341_Draw_Text( "ON ", 150, 10, WHITE, 2, BLACK);
-	 } else
-	 {
-		 ILI9341_Draw_Text( "OFF", 150, 10, WHITE, 2, BLACK);
+	 int led_status =  HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_14);
 
+	 if(flagPressed == true)
+	 {
+		 if(led_status == GPIO_PIN_SET)
+		 {
+			 ILI9341_Draw_Text( "ON ", 150, 60, WHITE, 2, BLACK);
+		 }
+		 else
+		 {
+		 	 ILI9341_Draw_Text( "OFF", 150, 60, WHITE, 2, BLACK);
+		 }
 	 }
-  if(getPressKey() != BUTTON_NOTHING && !flagPressed)
-  {
-	  flagPressed = true;
 
-	  switch(getPressKey())  // If press any key
-	  {
-	  	  case BUTTON_UP:
-	  		  RED_LED_ON();
-	  		  break;
-	  	  case BUTTON_DOWN:
-	  		  RED_LED_OFF();
-	  		  break;
-	  	  default:
-	  		  break;
-	  }
-  }
-  else if(getPressKey() == BUTTON_NOTHING && flagPressed)
-  {
-	  flagPressed = false; 	// if button was release
-  }
+
+	 if(getPressKey() != BUTTON_NOTHING && !flagPressed)
+	 {
+		 flagPressed = true;
+
+		 switch(getPressKey())  // If press any key
+		 {
+	  	  	  case BUTTON_UP:
+	  	  		  RED_LED_ON();
+	  	  		  break;
+	  	  	  case BUTTON_DOWN:
+	  	  		  RED_LED_OFF();
+	  	  		  break;
+	  	  	  default:
+	  	  		  break;
+		 }
+	 }
+	 else if(getPressKey() == BUTTON_NOTHING && flagPressed)
+	 {
+		 flagPressed = false; 	// if button was release
+	 }
  }
 
- ILI9341_Draw_Text( "                        ", 10, 10, WHITE, 2, BLACK); // Cleaning one row LCD
+ ILI9341_Draw_Text( "                           ", 10, 60, WHITE, 2, BLACK); // Cleaning one row LCD
  Menu_Navigate(&Menu_3);  // Back to menu 3
 }
 // -----------------------------------------------------------------------
 static uint8_t getPressKey()		// 3x4 keyboard
 {
-////	BUTTON_LEFT   = 0,
-////	BUTTON_UP   = 1,
-////  BUTTON_DOWN   = 2,
-////	BUTTON_RIGHT   = 3,
-////	BUTTON_SELECT  = 4,
-////	BUTTON_NOTHING  = 255
-//	//flagPressed = true;
-
-
 	char digit = '\0';
 	char buff_lcd[20] = "KEY: ";
 	digit = read_one_digit_from_keyboard();
@@ -189,89 +414,58 @@ static uint8_t getPressKey()		// 3x4 keyboard
 		case '4':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 0, 0, WHITE, 2, BLACK);
 			return BUTTON_LEFT;
 		}
 		case '2':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 0, 0, WHITE, 2, BLACK);
 			return BUTTON_UP;
 		}
 		case '8':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 0, 0, WHITE, 2, BLACK);
 			return BUTTON_DOWN;
 		}
 		case '6':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 0, 0, WHITE, 2, BLACK);
 			return BUTTON_RIGHT;
 		}
 		case '5':
 		{
 			strncat(buff_lcd, &digit, 1);
-			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( buff_lcd, 0, 0, WHITE, 2, BLACK);
 			return BUTTON_SELECT;
 		}
 		default:
 			return BUTTON_NOTHING;
 			break;
 
-		//flagPressed = true;			// Flag: Key was pressed
-//		case '0':
-//		{
-//			strncat(buff_lcd, &digit, 1);
-//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
-//			return BUTTON_LEFT;
-//		}
-//		case '1':
-//		{
-//			strncat(buff_lcd, &digit, 1);
-//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
-//			return BUTTON_UP;
-//		}
-//		case '2':
-//		{
-//			strncat(buff_lcd, &digit, 1);
-//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
-//			return BUTTON_DOWN;
-//		}
-//		case '3':
-//		{
-//			strncat(buff_lcd, &digit, 1);
-//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
-//			return BUTTON_RIGHT;
-//		}
-//		case '4':
-//		{
-//			strncat(buff_lcd, &digit, 1);
-//			ILI9341_Draw_Text( buff_lcd, 10, 180, WHITE, 2, BLACK);
-//			return BUTTON_SELECT;
-//		}
-//		default:
-//			return BUTTON_NOTHING;
-//			break;
+
 	}
 }
 // -----------------------------------------------------------------------
-void Generic_Write(const char* Text)		// Print data on LCD
+void Generic_Write(const char* Text)		// Print "Text" data on LCD
 {
 	if (Text)
 	{
-		ILI9341_Draw_Text( "                   ", 10, 10, WHITE, 2, BLACK);
-		ILI9341_Draw_Text( Text, 10, 10, WHITE, 2, BLACK);
+		ILI9341_Draw_Text( "                                 ", 10, 100, WHITE, 1, BLACK);
+		ILI9341_Draw_Text( Text, 10, 100, WHITE, 1, BLACK);
 	}
 }
 // -----------------------------------------------------------------------
-Menu_Item_t* Menu_GetCurrentMenu(void)
+Menu_Item_t* Menu_GetCurrentMenu(void)		// Повертає поточни вибраний пункт меню
 {
 	return CurrentMenuItem;
 }
 // -----------------------------------------------------------------------
-// Navigation on menu
+// Переходи по меню
+// in: ПОказник на апсолютний пункт меню, для вибору
+// MENU_PARENT, MENU_CHILD, MENU_NEXT або  MENU_PREVIOUS
 void Menu_Navigate(Menu_Item_t* const NewMenu)
 {
 	if ((NewMenu == &NULL_MENU) || (NewMenu == NULL))  // What it mean???
@@ -279,11 +473,11 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
 		return;		// Exit
 	}
 
-	CurrentMenuItem = NewMenu;    //
+	CurrentMenuItem = NewMenu;    // Передане маню стає вибране
 
-	if (MenuWriteFunc)    // If   MenuWriteFunc  != NULL
+	if (MenuWriteFunc)    // If   MenuWriteFunc  != NULL  ???????
 	{
-		MenuWriteFunc(CurrentMenuItem->Text);			// Print on LCD
+		MenuWriteFunc(CurrentMenuItem->Text);			// Print Text string on LCD
 	}
 
 	//   void (*SelectCallback)(void) - Creating pointer on function
@@ -296,13 +490,21 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
 	}
 }
 // -----------------------------------------------------------------------
+/*Налаштовує функцію зворотного виклику тексту меню, що спрацьовує для всіх
+ пунктів меню. В рамках цієї функції зворотного виклику користувач повинен
+ реалізувати код для відображення поточного тексту меню, що зберігається
+ в  ref MENU_ITEM_STORAGE пам'яті.. */
+// In: вказівник на функцію зворотного виклику для виконання кожного вибраного пункту меню.
 void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))    //  What doing this function??????? <<<<<<<<<<<
 {
-	MenuWriteFunc = WriteFunc;  		// Write pointer WriteFunc in MenuWriteFunc
-	Menu_Navigate(CurrentMenuItem);
+	MenuWriteFunc = WriteFunc;  		// Запис показника функції WriteFunc в
+	//  показник на функцію під назвою MenuWriteFunc
+	Menu_Navigate(CurrentMenuItem);      // Передача цього показника в функцію Menu_Navigate
 }
 // -----------------------------------------------------------------------
-void Menu_EnterCurrentItem(void)		// It does when was press any buttons
+/* Функція входить у вибраний на даний момент пункт меню, виконуючи налаштовану
+   функцію зворотного дзвінка (якщо така є) */
+void Menu_EnterCurrentItem(void)
 {
 	if ((CurrentMenuItem == &NULL_MENU) || (CurrentMenuItem == NULL))
 	{
@@ -423,4 +625,4 @@ void test_touchsreen(void)
 		ILI9341_Draw_Text("            ", 0, 20, WHITE, 3, BLACK);
 	}
 }
-//-------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------

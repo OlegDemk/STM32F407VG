@@ -271,7 +271,7 @@ int main(void)
 
 	  //I2C_3_scaner();
 
-	 //menu();
+	 menu();
 
 
 

@@ -1,0 +1,8 @@
+main_sensor_file.c:64:6:detect_all_sensors	8	static
+main_sensor_file.c:76:6:detect_bme280	32	static
+main_sensor_file.c:96:6:detect_mpu6050	40	static
+main_sensor_file.c:136:6:denect_hmc5883l	32	static
+main_sensor_file.c:165:6:detect_ms5611	32	static
+main_sensor_file.c:184:6:detect_apds9960	32	static
+main_sensor_file.c:204:6:detect_oled_screen	24	static
+main_sensor_file.c:223:6:detect_ds3231	32	static

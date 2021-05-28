@@ -29,11 +29,9 @@
 
 #include <stdbool.h>
 
-#include "screens/oled/oled.h"
-#include "screens/oled/gfx.h"
 
-#include "sensors/mpu6050.h"
-#include <sensors/hmc5883l.h>
+
+#include <sensors/main_sensor_file.h>
 
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
@@ -103,7 +101,7 @@ static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
-MPU6050_t MPU6050;
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -190,76 +188,9 @@ int main(void)
 
 
 
-  // Found:
-    //   Dec       Heh
-    //   118		 0x76     // BME280
-
-    // 0x60				// OLED       <<<<<<<<<<<
-    // 0x87				// CLOCK
-    // 0x104				// CLOCK ???
-    // 0x118				// BME280
-    // 0x119              // MEMS
-    // 0x188              // OLED ???
-    // 0x215				// CLOCK ???
-    // 0x232				// CLOCK ???
-    // 0x246				//  ????
-    // 0x247				// MEMS
-    // 0x255              //  ????
-
-    // Read ID from BME280 ////////////////////////////////////////////////////////////////
-    uint16_t STATUS=0;
-    uint16_t addres_devise = 0x76;   // BME280
-    uint16_t addr = 0xD0;
-    uint8_t buff=0;         // Return 0x96 -> Dec 60
-    STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Read ID from DS3231 ////////////////////////////////////////////////////////////////
-    addres_devise = 0x68;            // DS3231
-    addr = 0x00;						// Read seconds register
-    buff=0;
-    STATUS=HAL_I2C_Mem_Read(&hi2c3, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Test OLED  ////////////////////////////////////////////////////////////////
-    oled_init();
-    char oled_buff[] = "TEST";
-    // draw_pixel(10, 10, WHITE);
-    graphics_text(1, 1, 1, oled_buff);
-    graphics_text(1, 20, 2, oled_buff);
-    graphics_text(50, 1, 3, oled_buff);
-    oled_update();
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Test MPU6050  //////////////////////////////////////////////////////////////////////
-    while (MPU6050_Init(&hi2c2) == 1);
-    MPU6050_Read_All(&hi2c2, &MPU6050);
-    /////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-    // Test HMC5883L  ////////////////////////////////////////////////////////////////////// Don't work
-//    addres_devise = 0x1E;
-//    addr = 0x0B;						// HMC5883L_REG_IDENT_A
-//    buff=0;
-//    STATUS=HAL_I2C_Mem_Read(&hi2c2, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
-
-//    HMC5883L_setRange(HMC5883L_RANGE_1_3GA);
-//    HMC5883L_setMeasurementMode(HMC5883L_CONTINOUS);
-//    HMC5883L_setDataRate(HMC5883L_DATARATE_15HZ);
-//    HMC5883L_setSamples(HMC5883L_SAMPLES_1); HMC5883L_setOffset(0, 0);
-//
-//    Vector mag = HMC5883L_readRaw();
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-
-    // Read ID from motion sensor apds9960   ////////////////////////////////////////////////////
-    addres_devise = 0x39;
-    addr = 0x92;						// HMC5883L_REG_IDENT_A
-    buff=0;
-    STATUS=HAL_I2C_Mem_Read(&hi2c2, (uint16_t)addres_devise<<1,(uint16_t)addr, 1, &buff, 1, 1000);
-	//////////////////////////////////////////////////////////////////////////////////////
+    detect_all_sensors();
 
 
     int g = 999;

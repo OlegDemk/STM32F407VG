@@ -15,6 +15,7 @@
 "Core/Src/sensors/bme280.o"
 "Core/Src/sensors/hmc5883l.o"
 "Core/Src/sensors/i2c_scanner.o"
+"Core/Src/sensors/main_sensor_file.o"
 "Core/Src/sensors/mpu6050.o"
 "Core/Startup/startup_stm32f407vgtx.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"

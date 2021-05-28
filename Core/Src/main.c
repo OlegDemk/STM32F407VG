@@ -185,15 +185,7 @@ int main(void)
 //  int32_t prevCounter = 0;
   ////////////////////////////////////////////////////
 
-
-
-
-
-
-    detect_all_sensors();
-
-
-    int g = 999;
+   detect_all_sensors();			// Detect all devices which connected to i2c2 and i2c3
 
   while (1)
   {

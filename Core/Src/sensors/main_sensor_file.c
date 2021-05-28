@@ -13,6 +13,9 @@
 #include "sensors/mpu6050.h"
 #include <sensors/hmc5883l.h>
 
+#include "sensors/bme280_defs.h"
+#include "sensors/bme280.h"
+
 extern I2C_HandleTypeDef hi2c2;
 extern I2C_HandleTypeDef hi2c3;
 
@@ -25,6 +28,17 @@ void denect_hmc5883l(void );
 void detect_ms5611(void );
 void detect_oled_screen(void );
 void detect_ds3231(void );
+
+
+void measure(void);
+void bme280_measure(void);
+float temperature;
+	float humidity;
+	float pressure;
+
+	struct bme280_dev dev;
+	struct bme280_data comp_data;
+//int8_t bme280_init(struct bme280_dev *dev);
 
 /*зробити структуру , в якій записувати в bool поля статус дівайсів
  *
@@ -55,8 +69,6 @@ struct {
 	int MPU6050_gyro_z;
 	float MPU6050_temperature;
 
-
-
 }i2c_device;
 
 
@@ -70,8 +82,26 @@ void detect_all_sensors(void)
 	detect_ms5611();
 	detect_oled_screen();
 	detect_ds3231();
-}
 
+	measure();
+}
+//----------------------------------------------------------------------------------------
+void measure(void)
+{
+	bme280_measure();
+//	mpu6050();
+//	hmc5883l();
+//	ms5611();
+//	apds9960();
+}
+//----------------------------------------------------------------------------------------
+void bme280_measure(void)
+{
+	// From       --> https://github.com/eziya/STM32_HAL_BME280/blob/master/Src/main.c
+	int8_t data =0;
+	data = bme280_init(&dev);
+	//rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
+}
 //----------------------------------------------------------------------------------------
 void detect_bme280(void)
 {

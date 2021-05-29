@@ -75,6 +75,9 @@ int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 // MPU6050 part
 int8_t init_mpu6050(void);
 void mpu6050_measure(void);
+
+MPU6050_t MPU6050;
+
 // End MPU6050 part
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
@@ -97,12 +100,12 @@ struct {
 	float  BME280_humidity;
 	float  BME280_preasure;
 
-	int MPU6050_acceleration_x;
-	int MPU6050_acceleration_y;
-	int MPU6050_acceleration_z;
-	int MPU6050_gyro_x;
-	int MPU6050_gyro_y;
-	int MPU6050_gyro_z;
+	double MPU6050_acceleration_Ax;
+	double MPU6050_acceleration_Ay;
+	double MPU6050_acceleration_Az;
+	double MPU6050_gyro_Gx;
+	double MPU6050_gyro_Gy;
+	double MPU6050_gyro_Gz;
 	float MPU6050_temperature;
 
 }i2c_device;
@@ -130,11 +133,12 @@ void detect_all_sensors_and_init(void)
 	detect_ds3231();
 
 }
-//----------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
 void measure_sensors(void)
 {
 	bme280_measure();
 	mpu6050_measure();
+
 
 
 //	hmc5883l();
@@ -144,12 +148,29 @@ void measure_sensors(void)
 //----------------------------------------------------------------------------------------
 int8_t init_mpu6050(void)
 {
-
+	if(MPU6050_Init(&hi2c2) == 1)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 //----------------------------------------------------------------------------------------
 void mpu6050_measure(void)
 {
+	MPU6050_Read_All(&hi2c2, &MPU6050);
 
+	i2c_device.MPU6050_acceleration_Ax = MPU6050.Ax;
+	i2c_device.MPU6050_acceleration_Ay = MPU6050.Ay;
+	i2c_device.MPU6050_acceleration_Az = MPU6050.Az;
+
+	i2c_device.MPU6050_gyro_Gx = MPU6050.Gx;
+	i2c_device.MPU6050_gyro_Gy = MPU6050.Gy;
+	i2c_device.MPU6050_gyro_Gz = MPU6050.Gz;
+
+	i2c_device.MPU6050_temperature = MPU6050.Temperature;
 }
 //----------------------------------------------------------------------------------------
 int8_t init_bme280(void)

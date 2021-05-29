@@ -32,12 +32,44 @@ void detect_ds3231(void );
 
 void measure(void);
 void bme280_measure(void);
-float temperature;
-	float humidity;
-	float pressure;
+void mpu6050(void);
 
-	struct bme280_dev dev;
-	struct bme280_data comp_data;
+float temperature;
+float humidity;
+float pressure;
+
+struct bme280_dev dev;
+struct bme280_data comp_data;
+int8_t rslt;
+
+
+int8_t init_bme280(void);
+
+int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
+{
+  if(HAL_I2C_Master_Transmit(&hi2c3, (id << 1), &reg_addr, 1, 10) != HAL_OK) return -1;
+  if(HAL_I2C_Master_Receive(&hi2c3, (id << 1) | 0x01, data, len, 10) != HAL_OK) return -1;
+
+  return 0;
+}
+
+void user_delay_ms(uint32_t period)
+{
+  HAL_Delay(period);
+}
+
+int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
+{
+  int8_t *buf;
+  buf = malloc(len +1);
+  buf[0] = reg_addr;
+  memcpy(buf +1, data, len);
+
+  if(HAL_I2C_Master_Transmit(&hi2c3, (id << 1), (uint8_t*)buf, len + 1, HAL_MAX_DELAY) != HAL_OK) return -1;
+
+  free(buf);
+  return 0;
+}
 //int8_t bme280_init(struct bme280_dev *dev);
 
 /*зробити структуру , в якій записувати в bool поля статус дівайсів
@@ -88,20 +120,104 @@ void detect_all_sensors(void)
 //----------------------------------------------------------------------------------------
 void measure(void)
 {
-	bme280_measure();
+	if(i2c_device.BME280_ready_status == true)
+	{
+	    init_bme280();
+		bme280_measure();
+	}
+
 //	mpu6050();
 //	hmc5883l();
 //	ms5611();
 //	apds9960();
 }
 //----------------------------------------------------------------------------------------
+int8_t init_bme280(void)
+{
+	dev.dev_id = BME280_I2C_ADDR_PRIM;
+	dev.intf = BME280_I2C_INTF;
+	dev.read = user_i2c_read;
+	dev.write = user_i2c_write;
+	dev.delay_ms = user_delay_ms;
+
+	rslt = bme280_init(&dev);
+
+	 /* BME280 설정 */
+	dev.settings.osr_h = BME280_OVERSAMPLING_1X;
+	dev.settings.osr_p = BME280_OVERSAMPLING_16X;
+	dev.settings.osr_t = BME280_OVERSAMPLING_2X;
+	dev.settings.filter = BME280_FILTER_COEFF_16;
+	rslt = bme280_set_sensor_settings(BME280_OSR_PRESS_SEL | BME280_OSR_TEMP_SEL | BME280_OSR_HUM_SEL | BME280_FILTER_SEL, &dev);
+
+	//	  rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
+	rslt = bme280_set_sensor_mode(BME280_NORMAL_MODE, &dev);
+
+	 dev.delay_ms(40);
+}
 void bme280_measure(void)
 {
 	// From       --> https://github.com/eziya/STM32_HAL_BME280/blob/master/Src/main.c
-	int8_t data =0;
-	data = bme280_init(&dev);
+	  while(1)			// Fort test
+	  {
+		  rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
+
+		  if(rslt == BME280_OK)
+		  {
+			  temperature = comp_data.temperature / 100.0;      /* °C  */
+			  humidity = comp_data.humidity / 1024.0;           /* %   */
+			  pressure = comp_data.pressure / 10000.0;          /* hPa */
+		  }
+		  else
+		  {
+			  int g = 5;
+			  while(g >= 0)
+			  {
+				  HAL_Delay(300);
+				  g--;
+			  }
+		  }
+
+		  HAL_Delay(500);
+	  }
+
+
+//	int8_t data =0;
+//	data = bme280_init(&dev);
 	//rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
 }
+//----------------------------------------------------------------------------------------
+void mpu6050(void)
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //----------------------------------------------------------------------------------------
 void detect_bme280(void)
 {

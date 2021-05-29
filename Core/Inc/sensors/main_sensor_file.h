@@ -8,6 +8,6 @@
 #ifndef INC_SENSORS_MAIN_SENSOR_FILE_H_
 #define INC_SENSORS_MAIN_SENSOR_FILE_H_
 
-void detect_all_sensors(void);
+void detect_all_sensors_and_init(void);
 
 #endif /* INC_SENSORS_MAIN_SENSOR_FILE_H_ */

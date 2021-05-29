@@ -20,7 +20,7 @@ extern I2C_HandleTypeDef hi2c2;
 extern I2C_HandleTypeDef hi2c3;
 
 //MPU6050_t MPU6050;
-
+// Functions for detect i2c devices
 void detect_bme280(void );
 void detect_mpu6050(void );
 void detect_apds9960(void );
@@ -29,22 +29,21 @@ void detect_ms5611(void );
 void detect_oled_screen(void );
 void detect_ds3231(void );
 
-
 void measure(void);
+
 void bme280_measure(void);
 void mpu6050(void);
 
-float temperature;
-float humidity;
-float pressure;
-
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+// BME280 part
 struct bme280_dev dev;
 struct bme280_data comp_data;
 int8_t rslt;
 
-
 int8_t init_bme280(void);
 
+//----------------------------------------------------------------------------------------
 int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   if(HAL_I2C_Master_Transmit(&hi2c3, (id << 1), &reg_addr, 1, 10) != HAL_OK) return -1;
@@ -52,12 +51,12 @@ int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 
   return 0;
 }
-
+//----------------------------------------------------------------------------------------
 void user_delay_ms(uint32_t period)
 {
   HAL_Delay(period);
 }
-
+//----------------------------------------------------------------------------------------
 int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   int8_t *buf;
@@ -70,11 +69,11 @@ int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
   free(buf);
   return 0;
 }
-//int8_t bme280_init(struct bme280_dev *dev);
+// End BME280 part
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
 
-/*зробити структуру , в якій записувати в bool поля статус дівайсів
- *
- */
+
 
 struct {
 	// Sensors
@@ -89,9 +88,9 @@ struct {
 	bool DS3231_ready_status; 		// RTC Clock module
 
 	// variable for data from i2c device
-	int  BME280_temperature;
-	int  BME280_humidity;
-	int  BME280_preasure;
+	float  BME280_temperature;
+	float  BME280_humidity;
+	float  BME280_preasure;
 
 	int MPU6050_acceleration_x;
 	int MPU6050_acceleration_y;
@@ -105,9 +104,13 @@ struct {
 
 
 //----------------------------------------------------------------------------------------
-void detect_all_sensors(void)
+void detect_all_sensors_and_init(void)
 {
 	detect_bme280();
+	if(i2c_device.BME280_ready_status == true)
+	{
+		init_bme280();
+	}
 	detect_mpu6050();
 	detect_apds9960();
 	denect_hmc5883l();
@@ -120,11 +123,8 @@ void detect_all_sensors(void)
 //----------------------------------------------------------------------------------------
 void measure(void)
 {
-	if(i2c_device.BME280_ready_status == true)
-	{
-	    init_bme280();
-		bme280_measure();
-	}
+	bme280_measure();
+
 
 //	mpu6050();
 //	hmc5883l();
@@ -142,7 +142,6 @@ int8_t init_bme280(void)
 
 	rslt = bme280_init(&dev);
 
-	 /* BME280 설정 */
 	dev.settings.osr_h = BME280_OVERSAMPLING_1X;
 	dev.settings.osr_p = BME280_OVERSAMPLING_16X;
 	dev.settings.osr_t = BME280_OVERSAMPLING_2X;
@@ -152,38 +151,22 @@ int8_t init_bme280(void)
 	//	  rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
 	rslt = bme280_set_sensor_mode(BME280_NORMAL_MODE, &dev);
 
-	 dev.delay_ms(40);
+	dev.delay_ms(40);
 }
 void bme280_measure(void)
 {
-	// From       --> https://github.com/eziya/STM32_HAL_BME280/blob/master/Src/main.c
-	  while(1)			// Fort test
-	  {
-		  rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
+	rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
 
-		  if(rslt == BME280_OK)
-		  {
-			  temperature = comp_data.temperature / 100.0;      /* °C  */
-			  humidity = comp_data.humidity / 1024.0;           /* %   */
-			  pressure = comp_data.pressure / 10000.0;          /* hPa */
-		  }
-		  else
-		  {
-			  int g = 5;
-			  while(g >= 0)
-			  {
-				  HAL_Delay(300);
-				  g--;
-			  }
-		  }
-
-		  HAL_Delay(500);
-	  }
-
-
-//	int8_t data =0;
-//	data = bme280_init(&dev);
-	//rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
+	if(rslt == BME280_OK)
+	{
+		// Save data in main structure
+		i2c_device.BME280_temperature = comp_data.temperature;
+		i2c_device.BME280_humidity = comp_data.humidity;
+		i2c_device.BME280_preasure = comp_data.pressure;
+		//temperature = comp_data.temperature / 100.0;      /* °C  */
+		//humidity = comp_data.humidity / 1024.0;           /* %   */
+		//pressure = comp_data.pressure / 10000.0;          /* hPa */
+	}
 }
 //----------------------------------------------------------------------------------------
 void mpu6050(void)
@@ -217,7 +200,7 @@ void mpu6050(void)
 
 
 
-
+// Function for detect i2c devices ////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------------------
 void detect_bme280(void)
 {

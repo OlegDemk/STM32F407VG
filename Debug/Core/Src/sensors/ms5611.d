@@ -1,9 +1,5 @@
-Core/Src/sensors/main_sensor_file.o: \
- ../Core/Src/sensors/main_sensor_file.c ../Core/Inc/main.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- ../Core/Inc/stm32f4xx_hal_conf.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+Core/Src/sensors/ms5611.o: ../Core/Src/sensors/ms5611.c \
+ ../Core/Inc/sensors/ms5611.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -12,6 +8,10 @@ Core/Src/sensors/main_sensor_file.o: \
  ../Drivers/CMSIS/Include/cmsis_gcc.h \
  ../Drivers/CMSIS/Include/mpu_armv7.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Inc/stm32f4xx_hal_conf.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
@@ -34,21 +34,9 @@ Core/Src/sensors/main_sensor_file.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../Core/Inc/screens/oled/oled.h ../Core/Inc/screens/oled/gfx.h \
- ../Core/Inc/sensors/mpu6050.h ../Core/Inc/sensors/hmc5883l.h \
- ../Core/Inc/sensors/bme280_defs.h ../Core/Inc/sensors/bme280.h \
- ../Core/Inc/sensors/bme280_defs.h ../Core/Inc/sensors/ms5611.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 
-../Core/Inc/main.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
-
-../Core/Inc/stm32f4xx_hal_conf.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h:
+../Core/Inc/sensors/ms5611.h:
 
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 
@@ -65,6 +53,14 @@ Core/Src/sensors/main_sensor_file.o: \
 ../Drivers/CMSIS/Include/mpu_armv7.h:
 
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
+
+../Core/Inc/stm32f4xx_hal_conf.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h:
 
@@ -111,19 +107,3 @@ Core/Src/sensors/main_sensor_file.o: \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
-
-../Core/Inc/screens/oled/oled.h:
-
-../Core/Inc/screens/oled/gfx.h:
-
-../Core/Inc/sensors/mpu6050.h:
-
-../Core/Inc/sensors/hmc5883l.h:
-
-../Core/Inc/sensors/bme280_defs.h:
-
-../Core/Inc/sensors/bme280.h:
-
-../Core/Inc/sensors/bme280_defs.h:
-
-../Core/Inc/sensors/ms5611.h:

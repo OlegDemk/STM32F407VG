@@ -18,6 +18,7 @@
 
 #include "sensors/ms5611.h"
 
+
 extern I2C_HandleTypeDef hi2c2;
 extern I2C_HandleTypeDef hi2c3;
 
@@ -111,6 +112,7 @@ struct {
 	float  BME280_humidity;
 	float  BME280_preasure;
 
+	// Data from MPU6050
 	double MPU6050_acceleration_Ax;
 	double MPU6050_acceleration_Ay;
 	double MPU6050_acceleration_Az;
@@ -118,6 +120,11 @@ struct {
 	double MPU6050_gyro_Gy;
 	double MPU6050_gyro_Gz;
 	float MPU6050_temperature;
+
+	// Data from MS5611
+	double MS5611_temperature;
+	double MS5611_pressure;
+
 
 }i2c_device;
 
@@ -137,7 +144,7 @@ void detect_all_sensors_and_init(void)
 		init_mpu6050();
 	}
 
-	denect_hmc5883l();
+	denect_hmc5883l();								// Don't work
 
 	detect_ms5611();
 	if(i2c_device.MS5611_ready_status == true)
@@ -152,15 +159,14 @@ void detect_all_sensors_and_init(void)
 
 }
 //---------------------------------------------------------------------------------------
+// Measure one time
 void measure_sensors(void)
 {
 	bme280_measure();
 	mpu6050_measure();
-
-
-
-//	hmc5883l();
 	ms5611_measure();
+
+
 //	apds9960();
 }
 
@@ -169,11 +175,15 @@ int8_t init_ms5611(void)
 {
 	ms5611_set_i2c(&hi2c2);
 	ms5611_init();
+
 }
 //----------------------------------------------------------------------------------------
 void ms5611_measure(void)
 {
+	ms5611_update();
 
+	double temp = ms5611_get_temperature();
+	double pressure = ms5611_get_pressure();
 }
 //----------------------------------------------------------------------------------------
 int8_t init_mpu6050(void)
@@ -271,6 +281,7 @@ void bme280_measure(void)
 
 // Function for detect i2c devices ////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------------------
+// Temperature, humidity and pressure sensor
 void detect_bme280(void)
 {
 	uint16_t STATUS=0;
@@ -291,6 +302,8 @@ void detect_bme280(void)
 	}
 }
 //----------------------------------------------------------------------------------------
+// 1. IMU Module. Measure Acceleration X, Y, Z and Gyroscope X, Y, Z.
+// 2. Turn on ability work with  hmc5883l ( Magnetometer  sensor ).
 void detect_mpu6050(void)
 {
 	uint16_t STATUS = 0;

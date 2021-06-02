@@ -7,6 +7,8 @@
 
 #include "sensors/ms5611.h"
 
+extern I2C_HandleTypeDef hi2c2;
+
 //#include "i2c.h"
 //#include "systick.h"
 
@@ -31,8 +33,12 @@ void ms5611_set_i2c(I2C_HandleTypeDef* i2cx){
  * @param output output data
  * @return HAL_STATUS, 0(HAL_OK) = success
  */
-uint8_t ms5611_read_i2c(uint8_t register_address,uint8_t length,uint8_t* output){
-	return I2C_read(ms5611_i2cx,MS5611_I2C_ADDR,register_address,length,output);
+uint8_t ms5611_read_i2c(uint8_t register_address,uint8_t length,uint8_t* output)
+{
+	//return I2C_read(ms5611_i2cx,MS5611_I2C_ADDR,register_address,length,output);
+	uint8_t STATUS = 0;
+	STATUS = HAL_I2C_Mem_Read(&hi2c2, MS5611_I2C_ADDR<<1, register_address, 1, output, length, 1000);
+	return STATUS;
 }
 
 /**
@@ -42,8 +48,13 @@ uint8_t ms5611_read_i2c(uint8_t register_address,uint8_t length,uint8_t* output)
  * @param output buffer to hold data to be sent
  * @return HAL_STATUS, 0(HAL_OK) = success
  */
-uint8_t ms5611_write_i2c(uint8_t register_address,uint8_t length,uint8_t* input){
-	return I2C_write(ms5611_i2cx,MS5611_I2C_ADDR,register_address,length,input);
+uint8_t ms5611_write_i2c(uint8_t register_address,uint8_t length,uint8_t* input)
+{
+	//STATUS = I2C_write(ms5611_i2cx,MS5611_I2C_ADDR,register_address,length,input);
+	uint8_t STATUS = 0;
+	STATUS = HAL_I2C_Mem_Read(&hi2c2, MS5611_I2C_ADDR<<1, register_address, 1, input, length, 1000);
+	return STATUS;
+
 }
 
 /**
@@ -60,7 +71,7 @@ void ms5611_init(){
 	//read 6 factory calibration data
 	for (int i = 0; i < NUM_CALIBRATION_DATA; i++){
 		uint8_t reg_addr = MS5611_CMD_READ_PROM + (i << 1);//interval 2
-		uint8_t buffer[2];
+		uint8_t buffer[2] = {0};
 		ms5611_read_i2c(reg_addr,2,buffer);
 
 		fc[i] = (uint16_t)(buffer[0] << 8 | buffer[1]);
@@ -75,7 +86,7 @@ void ms5611_update_pressure(){
 	int state;
 	state = ms5611_write_i2c(MS5611_CMD_CONVERT_D1 | (selected_osr << 1),0,buffer);
 
-	delay(12);//time delay necessary for ADC to convert, must be >= 9.02ms
+	HAL_Delay(12);//time delay necessary for ADC to convert, must be >= 9.02ms
 
 	state = ms5611_read_i2c(MS5611_CMD_ADC_READ,3,buffer);
 	raw_pressure = ((uint32_t)buffer[0] << 16) | ((uint32_t)buffer[1] << 8) | ((uint32_t)buffer[2]);
@@ -90,7 +101,7 @@ void ms5611_update_temperature(){
 	int state;
 	state = ms5611_write_i2c(MS5611_CMD_CONVERT_D2 | (selected_osr << 1),0,buffer);
 
-	delay(12);//time delay necessary for ADC to convert, must be >= 9.02ms
+	HAL_Delay(12);//time delay necessary for ADC to convert, must be >= 9.02ms
 
 	state = ms5611_read_i2c(MS5611_CMD_ADC_READ,3,buffer);
 	raw_temperature = ((uint32_t)buffer[0] << 16) | ((uint32_t)buffer[1] << 8) | ((uint32_t)buffer[2]);

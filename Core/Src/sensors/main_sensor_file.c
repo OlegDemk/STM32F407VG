@@ -126,6 +126,8 @@ struct {
 	double MS5611_pressure;
 
 
+
+
 }i2c_device;
 
 
@@ -152,8 +154,13 @@ void detect_all_sensors_and_init(void)
 		init_ms5611();
 	}
 
-
 	detect_apds9960();
+	if(i2c_device.APDS9960_ready_status == true)
+	{
+		init_apds9960();
+	}
+
+
 	detect_oled_screen();
 	detect_ds3231();
 
@@ -171,11 +178,29 @@ void measure_sensors(void)
 }
 
 //----------------------------------------------------------------------------------------
+void init_apds9960(void)
+{
+	int status = apds9960init();
+	enableGestureSensor(true);
+
+	while(1)
+	{
+		int gesture = 0;
+		gesture = apds9960ReadSensor();  // <----------------------------------
+		HAL_Delay(300);
+	}
+
+}
+//----------------------------------------------------------------------------------------
+void apds9960_measure(void)
+{
+
+}
+//----------------------------------------------------------------------------------------
 int8_t init_ms5611(void)
 {
 	ms5611_set_i2c(&hi2c2);
 	ms5611_init();
-
 }
 //----------------------------------------------------------------------------------------
 void ms5611_measure(void)

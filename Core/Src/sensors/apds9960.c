@@ -124,12 +124,28 @@ int apds9960init(void)
     if( !i2c1_write(APDS9960_ATIME, DEFAULT_ATIME) ) {
         return false;
     }
+
+//    /////////////////////////////////// TEST PART//////////////////////////////////////////////////////////
+//    uint8_t data = 0;
+//    int STATUS = HAL_I2C_Mem_Read(&hi2c2, APDS9960_I2C_ADDR<<1, APDS9960_ATIME, 1, &data, 1, 1000);
+//    if(STATUS != false)
+//    {
+//    	// Error
+//    	int f=0;
+//    }
+//    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
     if( !i2c1_write(APDS9960_WTIME, DEFAULT_WTIME) ) {
         return false;
     }
+
     if( !i2c1_write(APDS9960_PPULSE, DEFAULT_PROX_PPULSE) ) {
         return false;
     }
+
+
     if( !i2c1_write(APDS9960_POFFSET_UR, DEFAULT_POFFSET_UR) ) {
         return false;
     }
@@ -211,10 +227,17 @@ int apds9960init(void)
         return false;
     }
 
-#if 0
+#if 1
+
+    HAL_Delay(100);
+
     /* Gesture config register dump */
-    uint8_t reg;
-    uint8_t val;
+    uint8_t reg = 0;
+    uint8_t val = 0;
+
+    uint8_t dump_buffer_setings[50] = {0};
+    uint8_t dump_buffer_data[10] = {0};
+    uint8_t i = 0;
 
     for(reg = 0x80; reg <= 0xAF; reg++) {
         if( (reg != 0x82) && \
@@ -224,20 +247,26 @@ int apds9960init(void)
             (reg != 0xAC) && \
             (reg != 0xAD) )
         {
-            i2c1_read(reg, val,1);
+            i2c1_read(reg, &val,1);
+            dump_buffer_setings[i] = val;		// Read data in array
+            i++;
             //debugPutChar(reg);
-            debugPutString(": 0x");
+            //debugPutString(": 0x");
             //debugPutChar(val);
-
         }
     }
 
+    i = 0;
     for(reg = 0xE4; reg <= 0xE7; reg++) {
-        i2c1_read(reg, val,1);
+        i2c1_read(reg, &val,1);
+
+        dump_buffer_data[i] = val;		// Read data in array
+        i++;
         //debugPutChar(reg);
-        debugPutString(": 0x");
+        //debugPutString(": 0x");
         //debugPutChar(val);
     }
+    int jjj = 99;
 #endif
 
     return true;
@@ -780,6 +809,19 @@ int setGestureEnterThresh(uint8_t threshold)
     if( !i2c1_write(APDS9960_GPENTH, threshold) ) {
         return false;
     }
+
+    // TEST READ REGISTER
+//	int STATUS = 0;
+//	uint8_t data = 0;
+//	//STATUS = i2c1_read(APDS9960_GPENTH, &data, 1);
+//	STATUS = HAL_I2C_Mem_Read(&hi2c2, APDS9960_I2C_ADDR<<1, APDS9960_GPENTH, 1, &data, 1, 1000);
+//	if(STATUS != false)
+//	{
+//		// Error
+//		int f=0;
+//	}
+
+
 
     return true;
 }/* End of this function */

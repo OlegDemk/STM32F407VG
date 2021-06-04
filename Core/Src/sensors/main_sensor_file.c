@@ -183,12 +183,28 @@ void init_apds9960(void)
 	int status = apds9960init();
 	enableGestureSensor(true);
 
-	while(1)
-	{
-		int gesture = 0;
-		gesture = apds9960ReadSensor();  // <----------------------------------
-		HAL_Delay(300);
-	}
+
+//	while(1)
+//	{
+////		if(external_interrupt_is_set)
+////		{
+////
+////		}
+////		else
+////		{
+////			// nothing
+////		}
+//
+//	}
+
+
+
+//	while(1)
+//	{
+//		int gesture = 0;
+//		gesture = apds9960ReadSensor();  // <----------------------------------
+//		HAL_Delay(300);
+//	}
 
 }
 //----------------------------------------------------------------------------------------

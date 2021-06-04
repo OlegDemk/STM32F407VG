@@ -105,6 +105,7 @@ void Error_Handler(void);
 #define BOOT1_GPIO_Port GPIOB
 #define MOTION_SENSOR_9960_Pin GPIO_PIN_10
 #define MOTION_SENSOR_9960_GPIO_Port GPIOE
+#define MOTION_SENSOR_9960_EXTI_IRQn EXTI15_10_IRQn
 #define KEYBOARD_COLUMN_3_Pin GPIO_PIN_14
 #define KEYBOARD_COLUMN_3_GPIO_Port GPIOE
 #define encoder_button_Pin GPIO_PIN_15

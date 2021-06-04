@@ -10,4 +10,5 @@ stm32f4xx_it.c:189:6:SysTick_Handler	8	static
 stm32f4xx_it.c:210:6:RCC_IRQHandler	4	static
 stm32f4xx_it.c:223:6:TIM2_IRQHandler	8	static
 stm32f4xx_it.c:269:6:TIM3_IRQHandler	8	static
-stm32f4xx_it.c:286:6:OTG_FS_IRQHandler	8	static
+stm32f4xx_it.c:286:6:EXTI15_10_IRQHandler	8	static
+stm32f4xx_it.c:308:6:OTG_FS_IRQHandler	8	static

@@ -18,6 +18,8 @@
 
 #include "sensors/ms5611.h"
 
+#include "sensors/apds9960.h"
+
 
 extern I2C_HandleTypeDef hi2c2;
 extern I2C_HandleTypeDef hi2c3;
@@ -180,9 +182,95 @@ void measure_sensors(void)
 //----------------------------------------------------------------------------------------
 void init_apds9960(void)
 {
-	int status = apds9960init();
-	enableGestureSensor(true);
+	//////////////////////////////////////////////////////////////////////////////////////
+	if(apds9960init() != true)
+	{
+		// Init error !!
+		while(1)
+		{
+			int j = 0;
+		}
+	}
+	else
+	{
+		if(enableGestureSensor(true) != true)
+		{
+			// Init error !!
+			while(1)
+			{
+				int j = 0;
+			}
+		}
+	}
 
+    while(1)
+    {
+    	int gesture = 0;
+    	HAL_Delay(100);
+    	gesture = apds9960ReadSensor();
+
+    	detect_apds9960();
+    }
+    //////////////////////////////////////////////////////////////////////////////////////
+
+
+
+	// From  https://habr.com/ru/post/423847/     DON'T WORK //////////////////////
+//	i2c1_write(APDS9960_CONTROL, DEFAULT_PGAIN);
+//	i2c1_write(APDS9960_GPENTH, DEFAULT_GPENTH);
+//	i2c1_write(APDS9960_GEXTH, DEFAULT_GEXTH);
+//	i2c1_write(APDS9960_GCONF2, DEFAULT_GGAIN);
+//	//i2c1_write(APDS9960_GPULSE, DEFAULT_PULSE_LENGTH);  // DEFAULT_GPULSE
+//	//i2c1_write(APDS9960_PPULSE, DEFAULT_PULSE_LENGTH);
+//
+//	HAL_Delay(200);
+//	//GesturesSet(1);
+//
+//
+//
+//	while(1)
+//	{
+//		i2c1_write(APDS9960_ENABLE, APDS9960_GEN | APDS9960_PEN | APDS9960_PON);
+//
+//		uint8_t GestureUp = 0;
+//		uint8_t GestureDown = 0;
+//		uint8_t GestureLeft = 0;
+//		uint8_t GestureRight = 0;
+//
+//		uint8_t GestUpDown = 0;
+//		uint8_t GestLeftRight = 0;
+//
+//		uint8_t GSTATUS_buf = 0;
+//		uint8_t GFLVL_buf = 0;
+//
+//		GSTATUS_buf = i2c1_read(0xAF);
+//
+//		if(GSTATUS_buf & APDS9960_GVALID)
+//		{
+//			GFLVL_buf = i2c1_read(APDS9960_GFLVL);
+//			if(GFLVL_buf)
+//			{
+//				GestureUp = i2c1_read(APDS9960_GFIFO_U);
+//				GestureDown = i2c1_read(APDS9960_GFIFO_D);
+//				GestureLeft = i2c1_read(APDS9960_GFIFO_L);
+//				GestureRight = i2c1_read(APDS9960_GFIFO_R);
+//
+//							//Truth table:
+//							//UP: 	 GestUpDown(+) | GestLeftRight(+)
+//							//DOWN:  GestUpDown(-) | GestLeftRight(-)
+//							//LEFT:  GestUpDown(+) | GestLeftRight(-)
+//							//RIGHT: GestUpDown(-) | GestLeftRight(+)
+//
+//				GestUpDown = GestureUp-GestureDown;
+//				GestLeftRight = GestureLeft-GestureRight;
+//
+//				i2c1_write(APDS9960_ENABLE, APDS9960_PEN | APDS9960_PON);
+//
+//			}
+//		}
+//
+//	}
+	//////////////////////////////////////////////////////////////////////////////////////
 
 //	while(1)
 //	{

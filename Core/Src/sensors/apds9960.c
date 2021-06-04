@@ -232,12 +232,16 @@ int apds9960init(void)
     HAL_Delay(100);
 
     /* Gesture config register dump */
+    uint8_t i = 0;
+
     uint8_t reg = 0;
     uint8_t val = 0;
 
-    uint8_t dump_buffer_setings[50] = {0};
+    uint8_t dump_buffer_setings[60] = {0};
+    memset(dump_buffer_setings, 0xFF, sizeof(dump_buffer_setings));
+
     uint8_t dump_buffer_data[10] = {0};
-    uint8_t i = 0;
+    memset(dump_buffer_data, 0xFF, sizeof(dump_buffer_data));
 
     for(reg = 0x80; reg <= 0xAF; reg++) {
         if( (reg != 0x82) && \
@@ -266,7 +270,7 @@ int apds9960init(void)
         //debugPutString(": 0x");
         //debugPutChar(val);
     }
-    int jjj = 99;
+    int jjj = 99;  		// For debug
 #endif
 
     return true;

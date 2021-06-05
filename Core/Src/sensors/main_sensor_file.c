@@ -95,6 +95,7 @@ void ms5611_measure(void);
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 
+void am2302_measure(void);
 
 
 struct {
@@ -126,6 +127,13 @@ struct {
 	// Data from MS5611
 	double MS5611_temperature;
 	double MS5611_pressure;
+
+	// Data from APDS9960
+	bool APDS9960_Gesture_UP;
+	bool APDS9960_Gesture_DOWN;
+	bool APDS9960_Gesture_RIGHT;
+	bool APDS9960_Gesture_LEFT;
+	// ..... some another data fron APDS9960
 
 
 
@@ -159,7 +167,7 @@ void detect_all_sensors_and_init(void)
 	detect_apds9960();
 	if(i2c_device.APDS9960_ready_status == true)
 	{
-		init_apds9960();
+		//init_apds9960();
 	}
 
 
@@ -175,10 +183,18 @@ void measure_sensors(void)
 	mpu6050_measure();
 	ms5611_measure();
 
+	am2302_measure();
+
 
 //	apds9960();
 }
 
+//----------------------------------------------------------------------------------------
+void am2302_measure(void)
+{
+
+
+}
 //----------------------------------------------------------------------------------------
 void init_apds9960(void)
 {
@@ -203,14 +219,14 @@ void init_apds9960(void)
 		}
 	}
 
-    while(1)
-    {
+//    while(1)            // For debug
+//    {
     	int gesture = 0;
     	HAL_Delay(100);
     	gesture = apds9960ReadSensor();
 
     	detect_apds9960();
-    }
+//    }
     //////////////////////////////////////////////////////////////////////////////////////
 
 

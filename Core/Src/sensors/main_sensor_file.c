@@ -185,7 +185,8 @@ void measure_sensors(void)
 	mpu6050_measure();
 	ms5611_measure();
 
-	am2302_measure();
+
+	//am2302_measure();   DON't work !!!!
 
 
 //	apds9960();
@@ -392,8 +393,8 @@ void ms5611_measure(void)
 {
 	ms5611_update();
 
-	double temp = ms5611_get_temperature();
-	double pressure = ms5611_get_pressure();
+	i2c_device.MS5611_temperature = ms5611_get_temperature();
+	i2c_device.MS5611_pressure = ms5611_get_pressure();
 }
 //----------------------------------------------------------------------------------------
 int8_t init_mpu6050(void)

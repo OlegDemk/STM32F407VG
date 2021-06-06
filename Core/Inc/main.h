@@ -93,8 +93,6 @@ void Error_Handler(void);
 #define AM2302_GPIO_Port GPIOC
 #define PDM_OUT_Pin GPIO_PIN_3
 #define PDM_OUT_GPIO_Port GPIOC
-#define B1_Pin GPIO_PIN_0
-#define B1_GPIO_Port GPIOA
 #define I2S3_WS_Pin GPIO_PIN_4
 #define I2S3_WS_GPIO_Port GPIOA
 #define SPI1_SCK_Pin GPIO_PIN_5
@@ -134,12 +132,8 @@ void Error_Handler(void);
 #define LD6_GPIO_Port GPIOD
 #define CS_mcroSD_Pin GPIO_PIN_6
 #define CS_mcroSD_GPIO_Port GPIOC
-#define I2S3_MCK_Pin GPIO_PIN_7
-#define I2S3_MCK_GPIO_Port GPIOC
 #define VBUS_FS_Pin GPIO_PIN_9
 #define VBUS_FS_GPIO_Port GPIOA
-#define OTG_FS_ID_Pin GPIO_PIN_10
-#define OTG_FS_ID_GPIO_Port GPIOA
 #define OTG_FS_DM_Pin GPIO_PIN_11
 #define OTG_FS_DM_GPIO_Port GPIOA
 #define OTG_FS_DP_Pin GPIO_PIN_12

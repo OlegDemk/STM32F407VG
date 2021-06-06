@@ -88,7 +88,6 @@ TIM_HandleTypeDef htim3;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_SPI2_Init(void);
@@ -97,6 +96,7 @@ static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_I2C2_Init(void);
+static void MX_I2S3_Init(void);
 static void MX_NVIC_Init(void);
 void MX_USB_HOST_Process(void);
 
@@ -137,7 +137,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2S3_Init();
   MX_SPI1_Init();
   MX_USB_HOST_Init();
   MX_TIM2_Init();
@@ -147,6 +146,7 @@ int main(void)
   MX_TIM1_Init();
   MX_I2C3_Init();
   MX_I2C2_Init();
+  MX_I2S3_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -450,11 +450,11 @@ static void MX_I2S3_Init(void)
   hi2s3.Init.Mode = I2S_MODE_MASTER_TX;
   hi2s3.Init.Standard = I2S_STANDARD_PHILIPS;
   hi2s3.Init.DataFormat = I2S_DATAFORMAT_16B;
-  hi2s3.Init.MCLKOutput = I2S_MCLKOUTPUT_ENABLE;
-  hi2s3.Init.AudioFreq = I2S_AUDIOFREQ_96K;
+  hi2s3.Init.MCLKOutput = I2S_MCLKOUTPUT_DISABLE;
+  hi2s3.Init.AudioFreq = I2S_AUDIOFREQ_8K;
   hi2s3.Init.CPOL = I2S_CPOL_LOW;
   hi2s3.Init.ClockSource = I2S_CLOCK_PLL;
-  hi2s3.Init.FullDuplexMode = I2S_FULLDUPLEXMODE_DISABLE;
+  hi2s3.Init.FullDuplexMode = I2S_FULLDUPLEXMODE_ENABLE;
   if (HAL_I2S_Init(&hi2s3) != HAL_OK)
   {
     Error_Handler();
@@ -789,12 +789,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
   HAL_GPIO_Init(PDM_OUT_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BOOT1_Pin */
   GPIO_InitStruct.Pin = BOOT1_Pin;

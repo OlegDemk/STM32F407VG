@@ -7,6 +7,7 @@
 
 #include "main.h"
 
+
 #include "screens/oled/oled.h"
 #include "screens/oled/gfx.h"
 
@@ -23,6 +24,7 @@
 
 extern I2C_HandleTypeDef hi2c2;
 extern I2C_HandleTypeDef hi2c3;
+
 
 //MPU6050_t MPU6050;
 // Functions for detect i2c devices
@@ -190,9 +192,72 @@ void measure_sensors(void)
 }
 
 //----------------------------------------------------------------------------------------
+__STATIC_INLINE void DelayMicro(__IO uint32_t micros)
+{
+	uint32_t test_micros = SystemCoreClock;
+	micros *= (SystemCoreClock / 100000) /84;
+	while (micros--);
+}
+//----------------------------------------------------------------------------------------
 void am2302_measure(void)
 {
+	//HAL_GPIO_ReadPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+	//HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
 
+
+	// For test pin
+//	for(int i = 0; i<=10; i++)
+//	{
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
+//		HAL_Delay(200);
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
+//		HAL_Delay(200);
+//	}
+
+//	HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
+//	HAL_Delay(18);
+//	HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
+//	HAL_Delay(40);
+
+
+
+
+	while(1)
+	{
+		// Deinit GPIO
+
+
+//		1. Звільнити ще два - три юарт порти
+//		2. ПОтестити проект і плату
+//		3. Зробити файли для вісіх сенсорів, передавачів і дівайсів
+//		HAL_GPIO_DeInit(GPIOC, GPIO_PIN_1);
+//		GPIOC->CRH != GPIO_CRH_MOD11;
+//
+//
+//		GPIOC->ODR != GPIO_ODR_ODR_1;
+		//PORTC.GPIO_Mode = GPIO_Mode_Out_PP;
+
+        HAL_Delay(3000);
+
+
+
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
+//		DelayMicro(17000);
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
+//		DelayMicro(39);
+
+
+//        HAL_Delay(3000);
+
+
+//		HAL_GPIO_TogglePin(GPIOC, AM2302_Pin);
+//		DelayMicro(10);
+
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
+//		DelayMicro(10);
+//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
+//		DelayMicro(10);
+	}
 
 }
 //----------------------------------------------------------------------------------------

@@ -50,4 +50,3 @@
 "Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.o"
 "USB_HOST/App/usb_host.o"
 "USB_HOST/Target/usbh_conf.o"
-"USB_HOST/Target/usbh_platform.o"

@@ -192,16 +192,24 @@ void detect_all_sensors_and_init(void)
 // Measure one time
 void measure_sensors(void)
 {
-	while(1)
-	{
+//	while(1)
+//	{
+
 		bme280_measure();
 		mpu6050_measure();
 		ms5611_measure();
-		am2302_measure();	// Measure must be less than one time per 2-3 seconds
+
+		bool am2302_measure_ok = true;
+		if(am2302_measure_ok)
+		{
+			HAL_Delay(1000);
+			am2302_measure();	// Measure must be less than one time per 2-3 seconds
+		}
+
 
 		//	apds9960();   DON't work !!!!
-		HAL_Delay(1000);
-	}
+		//HAL_Delay(1000);
+//	}
 
 
 

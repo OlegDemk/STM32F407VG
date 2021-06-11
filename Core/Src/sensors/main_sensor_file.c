@@ -347,8 +347,8 @@ void init_am2302(void)
 	GPIOC->OTYPER &= ~GPIO_OTYPER_OT_1;             // Push-pull mode
 	GPIOC->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR0_1;     // Speed
 	GPIOC->ODR ^= 0x02; 							// set GPIOC pin 1 on high
-	HAL_Delay(2000); // First init must be 2 seconds delay
-	am2302_measure();
+	HAL_Delay(2000); 							// First init must be 2 seconds delay
+	am2302_measure(); 							// For fill in i2c_device.AM2302_ready_status
 }
 //----------------------------------------------------------------------------------------
 void am2302_measure(void)
@@ -369,7 +369,7 @@ void am2302_measure(void)
  * 	 \			    /			\
  * 	  \____________/			 \_
  *
- * 	   * Receive '1' Bit
+ * Receive '1' Bit
  *     Low 50 us             High 70 us
  * __                ________________________
  * 	 \			    /				         \
@@ -444,6 +444,10 @@ void am2302_measure(void)
 		i2c_device.AM2302_humidity = hum;
 
 		i2c_device.AM2302_ready_status = true;
+	}
+	else
+	{
+		i2c_device.AM2302_ready_status = false;
 	}
 }
 //----------------------------------------------------------------------------------------

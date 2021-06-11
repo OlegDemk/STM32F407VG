@@ -836,7 +836,7 @@ int setGestureEnterThresh(uint8_t threshold)
  *
  *  Description  :Starts the gesture recognition engine on the APDS-9960
  *
- *  Input : interrupts true to enable hardware external interrupt on gesture
+ *  Input : interrupts true to enable hardware external interrupt gesture
  *
  *  Output : None
  *

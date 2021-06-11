@@ -91,7 +91,7 @@ MPU6050_t MPU6050;
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 // MPU6050 part
-int8_t init_ms5611(void);
+void init_ms5611(void);
 void ms5611_measure(void);
 // End MPU6050 part
 //----------------------------------------------------------------------------------------
@@ -107,6 +107,8 @@ struct {
 	bool HMC5883L_ready_status; 	// Magnetometer
 	bool MS5611_ready_status;		// Reassure
 	bool APDS9960_ready_status; 	// Motion sensor
+
+	bool AM2302_ready_status;
 
 	// Clock
 	bool OLED_ready_status;			// OLED screen
@@ -129,6 +131,10 @@ struct {
 	// Data from MS5611
 	double MS5611_temperature;
 	double MS5611_pressure;
+
+	// Data from AM2302
+	float AM2302_temperature;
+	float AM2302_humidity;
 
 	// Data from APDS9960
 	bool APDS9960_Gesture_UP;
@@ -158,7 +164,7 @@ void detect_all_sensors_and_init(void)
 		init_mpu6050();
 	}
 
-	denect_hmc5883l();								// Don't work
+
 
 	detect_ms5611();
 	if(i2c_device.MS5611_ready_status == true)
@@ -166,13 +172,18 @@ void detect_all_sensors_and_init(void)
 		init_ms5611();
 	}
 
+	init_am2302();			// Init AM2302 sensor
+
+	//////////////////////////////////////////////////////////////
+	// DON'T WORK
+	denect_hmc5883l();								// Don't work
+
 	detect_apds9960();
 	if(i2c_device.APDS9960_ready_status == true)
 	{
 		//init_apds9960();
 	}
-
-
+	///////////////////////////////////////////////////////////////
 	detect_oled_screen();
 	detect_ds3231();
 
@@ -181,86 +192,22 @@ void detect_all_sensors_and_init(void)
 // Measure one time
 void measure_sensors(void)
 {
-	bme280_measure();
-	mpu6050_measure();
-	ms5611_measure();
-
-
-	//am2302_measure();   DON't work !!!!
-
-
-//	apds9960();
-}
-
-//----------------------------------------------------------------------------------------
-__STATIC_INLINE void DelayMicro(__IO uint32_t micros)
-{
-	uint32_t test_micros = SystemCoreClock;
-	micros *= (SystemCoreClock / 100000) /84;
-	while (micros--);
-}
-//----------------------------------------------------------------------------------------
-void am2302_measure(void)
-{
-	//HAL_GPIO_ReadPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
-	//HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
-
-
-	// For test pin
-//	for(int i = 0; i<=10; i++)
-//	{
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
-//		HAL_Delay(200);
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
-//		HAL_Delay(200);
-//	}
-
-//	HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
-//	HAL_Delay(18);
-//	HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
-//	HAL_Delay(40);
-
-
-
-
 	while(1)
 	{
-		// Deinit GPIO
+		bme280_measure();
+		mpu6050_measure();
+		ms5611_measure();
+		am2302_measure();	// Measure must be less than one time per 2-3 seconds
 
-
-//		1. Звільнити ще два - три юарт порти
-//		2. ПОтестити проект і плату
-//		3. Зробити файли для вісіх сенсорів, передавачів і дівайсів
-//		HAL_GPIO_DeInit(GPIOC, GPIO_PIN_1);
-//		GPIOC->CRH != GPIO_CRH_MOD11;
-//
-//
-//		GPIOC->ODR != GPIO_ODR_ODR_1;
-		//PORTC.GPIO_Mode = GPIO_Mode_Out_PP;
-
-        HAL_Delay(3000);
-
-
-
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
-//		DelayMicro(17000);
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
-//		DelayMicro(39);
-
-
-//        HAL_Delay(3000);
-
-
-//		HAL_GPIO_TogglePin(GPIOC, AM2302_Pin);
-//		DelayMicro(10);
-
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_RESET);
-//		DelayMicro(10);
-//		HAL_GPIO_WritePin(GPIOC, AM2302_Pin, GPIO_PIN_SET);
-//		DelayMicro(10);
+		//	apds9960();   DON't work !!!!
+		HAL_Delay(1000);
 	}
 
+
+
 }
+
+
 //----------------------------------------------------------------------------------------
 void init_apds9960(void)
 {
@@ -382,8 +329,125 @@ void apds9960_measure(void)
 {
 
 }
+
 //----------------------------------------------------------------------------------------
-int8_t init_ms5611(void)
+/*
+ * Function make us delay
+ */
+__STATIC_INLINE void DelayMicro(__IO uint32_t micros)
+{
+	uint32_t test_micros = SystemCoreClock;
+	micros *= (SystemCoreClock / 100000) /84;
+	while (micros--);
+}
+//----------------------------------------------------------------------------------------
+void init_am2302(void)
+{
+	GPIOC->MODER |= GPIO_MODER_MODER1_0;            // Output mode GPIOC0
+	GPIOC->OTYPER &= ~GPIO_OTYPER_OT_1;             // Push-pull mode
+	GPIOC->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR0_1;     // Speed
+	GPIOC->ODR ^= 0x02; 							// set GPIOC pin 1 on high
+	HAL_Delay(2000); // First init must be 2 seconds delay
+	am2302_measure();
+}
+//----------------------------------------------------------------------------------------
+void am2302_measure(void)
+{
+	//  function must use less than one time per 2-3 seconds.
+/* Init work with sensor:
+ *
+ * From microcontroller
+ * 						            From sensor
+ * 	   Low 10 msec	      High 39 us|	80us Pull down     80us Pull up 	Start Receive data from sensor
+ * ____                     _______	|					 __________________
+ * 	   \	   	           /	   \|					/				   \
+ * 	   	\_________________/			\__________________/		 			\_______
+ *
+ * Receive '0' Bit
+ *     Low 50 us    High 26 - 28 us
+ * __                ___________
+ * 	 \			    /			\
+ * 	  \____________/			 \_
+ *
+ * 	   * Receive '1' Bit
+ *     Low 50 us             High 70 us
+ * __                ________________________
+ * 	 \			    /				         \
+ * 	  \____________/			              \_
+ */
+
+	bool get_data_status = false;
+	int j = 0;   							// Counter bytes
+	int i = 0;								// Counter bits
+	uint8_t data[4] = {0};					// Buffer for incoming data from sensor
+	float temper, hum;						// Buffer variables
+
+	// Init GPIO like output
+	GPIOC->MODER |= GPIO_MODER_MODER1_0;            // Output mode GPIOC0
+	GPIOC->OTYPER &= ~GPIO_OTYPER_OT_1;             // Push-pull mode
+	GPIOC->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR0_1;     // Speed
+
+	// Make output pin C1
+	GPIOC->ODR &= ~0x02;		// Low level
+	DelayMicro(18000);
+	GPIOC->ODR ^= 0x02;			// High level
+	DelayMicro(39);
+
+	// Make input pin C1
+	GPIOC->MODER &= ~0x04;  	// Set Pin C1 Input   (MODER GPIOC_1 Must be 00)
+	GPIOC->PUPDR &= ~0x04;		// Set Pin C1 Pull up
+
+	if(GPIOC->IDR & GPIO_IDR_ID1)		// Sensor must pull down
+	{
+		get_data_status = false; 					// Error. Sensor not response
+	}
+	else
+	{
+		get_data_status = true;
+	}
+
+	DelayMicro(80);
+	if(!(GPIOC->IDR & GPIO_IDR_ID1))  	// Sensor must pull up
+	{
+		get_data_status = false; 					// Error. Sensor not response
+	}
+	else
+	{
+		get_data_status = true;
+	}
+	DelayMicro(80);
+
+	if(get_data_status == true)
+	{
+		for(j = 0; j <5; j++)							// Reading 5 bytes
+		{
+			data[4-j] = 0;
+			for(i = 0; i < 8; i++)						// Reading 8 bits
+			{
+				while(!(GPIOC->IDR & GPIO_IDR_ID1));	// While signal is "0"
+				DelayMicro(30);
+				if(GPIOC->IDR & GPIO_IDR_ID1)			// If signal is high when wrute "1" in buffer (data[])
+				{
+					data[4-j] |= (1 << (7 - i));        // Shift received bite
+				}
+				while(GPIOC->IDR & GPIO_IDR_ID1);		// Wait end of "1" signal
+			}
+			get_data_status = true;										// Data was been written okay
+		}
+
+		temper = (float)((*(uint16_t*)(data+1)) & 0x3FFF) /10;
+		if((*(uint16_t*)(data+1)) & 0x8000) temper  *= -1.0;
+
+		i2c_device.AM2302_temperature = temper;
+
+		hum = (float)(*(int16_t*)(data+3)) / 10;
+		i2c_device.AM2302_humidity = hum;
+
+		i2c_device.AM2302_ready_status = true;
+	}
+}
+//----------------------------------------------------------------------------------------
+void init_ms5611(void)
 {
 	ms5611_set_i2c(&hi2c2);
 	ms5611_init();

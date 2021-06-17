@@ -32,11 +32,9 @@ __STATIC_INLINE void DelayMicro(__IO uint32_t micros)
 //----------------------------------------------------------------------------------------
 uint8_t NRF24_ReadReg(uint8_t addr)
 {
-  uint8_t STATUS = 99;
   uint8_t dt=0, cmd;
   CS_ON;
-  STATUS = HAL_SPI_TransmitReceive(&hspi1,&addr,&dt,1,1000);
-
+  HAL_SPI_TransmitReceive(&hspi1,&addr,&dt,1,1000);
   if (addr!=STATUS_NRF)
   {
 	  cmd=0xFF;
@@ -48,10 +46,9 @@ uint8_t NRF24_ReadReg(uint8_t addr)
 //----------------------------------------------------------------------------------------
 void NRF24_WriteReg(uint8_t addr, uint8_t dt)
 {
-  uint8_t STATUS = 0;
   addr |= W_REGISTER;								// Add write bit
   CS_ON;
-  STATUS = HAL_SPI_Transmit(&hspi1,&addr,1,1000);	// Send address in bus
+  HAL_SPI_Transmit(&hspi1,&addr,1,1000);	// Send address in bus
   HAL_SPI_Transmit(&hspi1,&dt,1,1000);				// Send data in bus
   CS_OFF;
 }

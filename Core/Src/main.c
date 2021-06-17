@@ -33,6 +33,8 @@
 
 #include <sensors/main_sensor_file.h>
 
+#include "communications/NRF24L01/nrf24l01.h"
+
 /* Screen PINs:   SIP2
   		PE4	- CS LCD
 		PE5 - RESET LCD
@@ -187,7 +189,9 @@ int main(void)
 
   detect_all_sensors_and_init();			// Detect all devices which connected to i2c2 and i2c3
   measure_sensors();
-  HAL_Delay(500);
+
+  //NRF24_ini();
+  nrf_communication_test();
 
   while (1)
   {
@@ -515,7 +519,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -743,18 +747,18 @@ static void MX_GPIO_Init(void)
                           |DC_LCD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, OTG_FS_PowerSwitchOn_Pin|CSN_nrf_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(CE_nrf_GPIO_Port, CE_nrf_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, CSN_nrf_Pin|CS_mcroSD_Pin|CS_M25Q_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, KEYBOARD_ROW_4_Pin|KEYBOARD_ROW_3_Pin|KEYBOARD_ROW_2_Pin|KEYBOARD_ROW_1_Pin
                           |LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, CS_mcroSD_Pin|CS_M25Q_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6|T_CLK_Pin|T_CS_Pin, GPIO_PIN_RESET);
@@ -779,8 +783,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin CSN_nrf_Pin CS_mcroSD_Pin CS_M25Q_Pin */
-  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|CSN_nrf_Pin|CS_mcroSD_Pin|CS_M25Q_Pin;
+  /*Configure GPIO pins : OTG_FS_PowerSwitchOn_Pin CS_mcroSD_Pin CS_M25Q_Pin */
+  GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin|CS_mcroSD_Pin|CS_M25Q_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -800,6 +804,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(CE_nrf_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CSN_nrf_Pin */
+  GPIO_InitStruct.Pin = CSN_nrf_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(CSN_nrf_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BOOT1_Pin */
   GPIO_InitStruct.Pin = BOOT1_Pin;

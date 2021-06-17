@@ -18,6 +18,7 @@ RM := rm -rf
 -include Core/Src/sensors/subdir.mk
 -include Core/Src/screens/oled/subdir.mk
 -include Core/Src/screens/lcd/subdir.mk
+-include Core/Src/communications/NRF24L01/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
 -include objects.mk

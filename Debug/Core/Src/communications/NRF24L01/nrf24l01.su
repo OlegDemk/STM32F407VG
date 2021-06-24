@@ -7,7 +7,7 @@ nrf24l01.c:82:6:NRF24_Write_Buf	16	static
 nrf24l01.c:92:6:NRF24_FlushRX	16	static
 nrf24l01.c:101:6:NRF24_FlushTX	16	static
 nrf24l01.c:110:6:NRF24L01_RX_Mode	16	static
-nrf24l01.c:137:6:NRF24L01_Receive	16	static
-nrf24l01.c:168:6:NRF24_ini	8	static
-nrf24l01.c:197:6:test_nrf	40	static
-nrf24l01.c:220:6:nrf_communication_test	8	static
+nrf24l01.c:141:6:NRF24L01_Receive	16	static
+nrf24l01.c:172:6:NRF24_ini	8	static
+nrf24l01.c:201:6:test_nrf	40	static
+nrf24l01.c:224:6:nrf_communication_test	8	static

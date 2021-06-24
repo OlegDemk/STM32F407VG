@@ -124,7 +124,11 @@ void NRF24L01_RX_Mode(void)
   // Debug read CONFIG register   //////////////////////////////////////////////////
   NRF24_WriteReg(CONFIG, 0x33);     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< IRQ WORK  ~ 130 us
   //NRF24_WriteReg(CONFIG, 0x7B);   my test
-  regval = NRF24_ReadReg(CONFIG);
+
+
+//
+//  regval = NRF24_ReadReg(RF_SETUP);
+//  NRF24_WriteReg(RF_SETUP,0x00);     // set -16 dBm <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
   ////////////////////////////////////////////////////////////////////////////////////
   CE_SET;
   DelayMicro(150); // Delay 130 us
@@ -161,7 +165,7 @@ void NRF24L01_Receive(void)
       //Number_7219(dt);
       dt_2 = *(int16_t*)(RX_BUF+2);
      // NumberL_7219(dt);
-      NRF24_WriteReg(STATUS_NRF, 0x40);		// Turn off
+      NRF24_WriteReg(STATUS_NRF, 0x40);		// Turn off interrupt
     }
 }
 //----------------------------------------------------------------------------------------
@@ -183,7 +187,7 @@ void NRF24_ini(void)
 	NRF24_WriteReg(DYNPD, 0); 				// Turn off all payload length data pipe
 	NRF24_WriteReg(STATUS_NRF, 0x70); 		// Reset flags for IRQ
 	NRF24_WriteReg(RF_CH, 76); 				// Frequency = 2476 MHz
-	NRF24_WriteReg(RF_SETUP, 0x06); 		//TX_PWR:0dBm, Datarate:1Mbps
+	NRF24_WriteReg(RF_SETUP, 0x06); 					// 0x06 //TX_PWR:0dBm, Datarate:1Mbps
 
 	NRF24_Write_Buf(TX_ADDR, TX_ADDRESS, TX_ADR_WIDTH);
 	NRF24_Write_Buf(RX_ADDR_P1, TX_ADDRESS, TX_ADR_WIDTH);

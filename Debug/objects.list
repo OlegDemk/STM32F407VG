@@ -6,6 +6,7 @@
 "Core/Src/syscalls.o"
 "Core/Src/sysmem.o"
 "Core/Src/system_stm32f4xx.o"
+"Core/Src/test.o"
 "Core/Src/screens/lcd/ILI9341_GFX.o"
 "Core/Src/screens/lcd/ILI9341_STM32_Driver.o"
 "Core/Src/screens/lcd/ILI9341_Touchscreen.o"

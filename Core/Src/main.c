@@ -29,29 +29,11 @@
 
 #include <stdbool.h>
 
-
-
 #include <sensors/main_sensor_file.h>
 
 #include "communications/NRF24L01/nrf24l01.h"
 
-/* Screen PINs:   SIP2
-  		PE4	- CS LCD
-		PE5 - RESET LCD
-		PE6 - D/C LCD
-		PC2 - MISO
-		PB15 - MOSI
-		PB13 - SCK
-   Touch Screen PINs:
-		PC13 - T_IRQ_Pin
-		PE2 - T_MISO_Pin (DO)
-		PE0 - T_MOSI_Pin (DI)
-		PB8 - T_CS_Pin
-		PB7 - T_CLK_Pin
-*/
-
-
-
+#include "test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,7 +66,6 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -187,17 +168,17 @@ int main(void)
 //  int32_t prevCounter = 0;
   ////////////////////////////////////////////////////
 
-  detect_all_sensors_and_init();			// Detect all devices which connected to i2c2 and i2c3
+  //detect_all_sensors_and_init();			// Detect all devices which connected to i2c2 and i2c3
   measure_sensors();
   HAL_Delay(1000);
 
   //NRF24_ini();
-  nrf_communication_test();
+  //nrf_communication_test();
+  //main_test_function();
 
   while (1)
   {
 	  /////////////////////////////////////////////////////////////////
-
 
 	  //I2C_3_scaner();
 

@@ -1,4 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/test.o: ../Core/Src/test.c \
+ ../Core/Inc/screens/lcd/ILI9341_Touchscreen.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -34,11 +35,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../USB_HOST/App/usb_host.h ../Core/Inc/screens/lcd/ILI9341_Touchscreen.h \
  ../Core/Inc/screens/lcd/ILI9341_STM32_Driver.h \
- ../Core/Inc/screens/lcd/ILI9341_GFX.h ../Core/Inc/screens/lcd/LCD.h \
- ../Core/Inc/sensors/main_sensor_file.h \
- ../Core/Inc/communications/NRF24L01/nrf24l01.h ../Core/Inc/test.h
+ ../Core/Inc/screens/lcd/ILI9341_GFX.h ../Core/Inc/screens/lcd/LCD.h
+
+../Core/Inc/screens/lcd/ILI9341_Touchscreen.h:
 
 ../Core/Inc/main.h:
 
@@ -112,18 +112,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 
-../USB_HOST/App/usb_host.h:
-
-../Core/Inc/screens/lcd/ILI9341_Touchscreen.h:
-
 ../Core/Inc/screens/lcd/ILI9341_STM32_Driver.h:
 
 ../Core/Inc/screens/lcd/ILI9341_GFX.h:
 
 ../Core/Inc/screens/lcd/LCD.h:
-
-../Core/Inc/sensors/main_sensor_file.h:
-
-../Core/Inc/communications/NRF24L01/nrf24l01.h:
-
-../Core/Inc/test.h:

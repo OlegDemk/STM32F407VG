@@ -38,7 +38,8 @@ Core/Src/screens/lcd/LCD.o: ../Core/Src/screens/lcd/LCD.c \
  ../Core/Inc/screens/lcd/ILI9341_Touchscreen.h \
  ../Core/Inc/screens/lcd/ILI9341_STM32_Driver.h \
  ../Core/Inc/screens/lcd/ILI9341_GFX.h \
- ../Core/Inc/screens/lcd/snow_tiger.h ../Core/Inc/keyboard.h
+ ../Core/Inc/screens/lcd/snow_tiger.h ../Core/Inc/keyboard.h \
+ ../Core/Inc/sensors/main_sensor_file.h
 
 ../Core/Inc/main.h:
 
@@ -123,3 +124,5 @@ Core/Src/screens/lcd/LCD.o: ../Core/Src/screens/lcd/LCD.c \
 ../Core/Inc/screens/lcd/snow_tiger.h:
 
 ../Core/Inc/keyboard.h:
+
+../Core/Inc/sensors/main_sensor_file.h:

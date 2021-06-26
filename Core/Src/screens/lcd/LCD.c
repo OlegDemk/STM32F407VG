@@ -28,13 +28,15 @@ For add new menu need.
 #include "keyboard.h"
 
 #include <string.h>
+#include <stdio.h>
+
+#include "sensors/main_sensor_file.h"
 
 extern RNG_HandleTypeDef hrng;
 
 static uint8_t getPressKey(void);  				// Function for read data from keyboard    // Simulation
 static void Generic_Write(const char* Text);    // Function for print text on LCD
 static void Level1Item3_Enter(void);			// FOR LED
-
 
 /* Це використовується, коли у визначенні \ ref MENU_ITEM ()
  потрібен недійсний дескриптор меню, тобто, щоб вказати,
@@ -80,11 +82,24 @@ void clean_all_lines_of_menu (void);
 void clearn_all_pointers_on_menu(void);
 
 void show_pointer_on_menu_item(uint8_t *position_pointer_on_item_menu, uint8_t number_items_on_menu);
-void toggle_green_led(void);					// Function for toggle LED (example)
+
+
+// Function for measure and print data from sensors on LCD
+void print_status_resdy_all_sensors_on_lcd(void);
+void print_data_from_BME280_on_lcd(void);						// Temperature, humidity and pressure
+void print_data_from_MPU6050_Acc_and_Gyro_on_lcd(void); 		//  Acceleration X, Y, Z and Gyroscope X, Y, Z
+void print_data_from_HMC5883L_on_lcd(void);						// Magnetometer
+void print_data_from_MS5611_on_lcd(void);						// Temperature and pressure
+void print_data_from_AM2302_on_lcd(void);						// Temperature and humidity
+void print_data_from_APD59960_on_lcd(void);						// Motion sensor
+
+void toggle_green_led(void);									// Function for toggle LED (example)
+
+void measure_and_print_all_sensors(void);
 
 bool flagPressed = false;						// flag pressed key
 
-int min_line_position = 110;	// Position on LCD
+int min_line_position = 90;	// Position on LCD
 int max_line_position = 210;	// Position on LCD
 
 // Variabls for optimisation drawing on LCD
@@ -106,7 +121,7 @@ char main_menus[5][20] =
 		"1. Communication",
 		"2. Sensors",
 		"3. Data logging",
-		"4. Menu",
+		"4. Clock",
 		"5. Menu"
 };
 
@@ -125,7 +140,8 @@ char menu_level_1_b_str[7][20] =
 		"3. HMC5883L",
 		"4. MS5611",
 		"5. AM2302",
-		"6. APDS9960"
+		"6. APDS9960",
+		"7. MEASURE ALL"
 };
 
 char menu_level_1_c_str[2][20] =
@@ -148,7 +164,7 @@ char menu_1_1[4][20] =
 MENU_ITEM(Menu_1, Menu_2, Menu_5, NULL_MENU, Menu_1_1, print_all_top_menu, NULL, "1. Communication");
 MENU_ITEM(Menu_2, Menu_3, Menu_1, NULL_MENU, Menu_2_1, print_all_top_menu, NULL, "2. Sensors");
 MENU_ITEM(Menu_3, Menu_4, Menu_2, NULL_MENU, Menu_3_1, print_all_top_menu, NULL, "3. Data logging");
-MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "4. Menu");
+MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "4. Clock");
 MENU_ITEM(Menu_5, Menu_1, Menu_4, NULL_MENU, NULL_MENU, print_all_top_menu, NULL, "5. Menu");
 //MENU_ITEM(Menu_4, Menu_5, Menu_3, NULL_MENU, NULL_MENU, print_all_top_menu, Level1Item3_Enter, "4. Menu. Red LED");
 
@@ -159,12 +175,15 @@ MENU_ITEM(Menu_1_3, Menu_1_4, Menu_1_2, Menu_1, NULL_MENU, print_all_menu_level_
 MENU_ITEM(Menu_1_4, Menu_1_1, Menu_1_3, Menu_1, NULL_MENU, print_all_menu_level_1_a_communication, NULL, "4. LoRa");
 
 // Menu level 1 b (Sensors)
-MENU_ITEM(Menu_2_1, Menu_2_2, Menu_2_6, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "1. BME280");
+MENU_ITEM(Menu_2_1, Menu_2_2, Menu_2_7, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "1. BME280");
 MENU_ITEM(Menu_2_2, Menu_2_3, Menu_2_1, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "2. MPU6050");
 MENU_ITEM(Menu_2_3, Menu_2_4, Menu_2_2, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "3. HMC5883L");
 MENU_ITEM(Menu_2_4, Menu_2_5, Menu_2_3, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "4. MS5611");
 MENU_ITEM(Menu_2_5, Menu_2_6, Menu_2_4, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "5. AM2302");
-MENU_ITEM(Menu_2_6, Menu_2_1, Menu_2_5, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "6. APDS9960");
+//MENU_ITEM(Menu_2_5, Menu_2_6, Menu_2_4, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, print_AM2302_data_on_lcd, "5. AM2302");
+MENU_ITEM(Menu_2_6, Menu_2_7, Menu_2_5, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, NULL, "6. APDS9960");
+MENU_ITEM(Menu_2_7, Menu_2_1, Menu_2_6, Menu_1, NULL_MENU, print_all_menu_level_1_b_sensors, measure_and_print_all_sensors, "7. MEASURE ALL");
+
 
 //// Menu level 1 c (Data logging)
 MENU_ITEM(Menu_3_1, Menu_3_2, Menu_3_2, Menu_1, NULL_MENU, print_all_menu_level_1_c_sensors, NULL, "1. Flash memory");
@@ -246,11 +265,11 @@ void print_all_top_menu(void)
 	{
 		clean_all_lines_of_menu ();
 
-		ILI9341_Draw_Text(main_menus[0], 30, 110, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(main_menus[1], 30, 130, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(main_menus[2], 30, 150, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(main_menus[3], 30, 170, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(main_menus[4], 30, 190, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(main_menus[0], 30, 90, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(main_menus[1], 30, 110, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(main_menus[2], 30, 130, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(main_menus[3], 30, 150, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(main_menus[4], 30, 170, WHITE, 2, BLACK);
 
 		menu_level_0 = true;					// Trigger variable
 		menu_level_0_position_pointer = 1;		// Pointers on item menu always show on first item menu.
@@ -273,10 +292,10 @@ void print_all_menu_level_1_a_communication(void)
 	{
 		clean_all_lines_of_menu ();
 
-		ILI9341_Draw_Text(menu_level_1_a_str[0], 30, 110, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_a_str[1], 30, 130, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_a_str[2], 30, 150, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_a_str[3], 30, 170, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_a_str[0], 30, 90, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_a_str[1], 30, 110, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_a_str[2], 30, 130, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_a_str[3], 30, 150, WHITE, 2, BLACK);
 
 		menu_level_1_A_position_pointer = 1;
 		menu_level_1_A = true;
@@ -299,12 +318,16 @@ void print_all_menu_level_1_b_sensors(void)
 	{
 		clean_all_lines_of_menu ();
 
-		ILI9341_Draw_Text(menu_level_1_b_str[0], 30, 110, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_b_str[1], 30, 130, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_b_str[2], 30, 150, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_b_str[3], 30, 170, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_b_str[4], 30, 190, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_b_str[5], 30, 210, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[0], 30, 90, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[1], 30, 110, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[2], 30, 130, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[3], 30, 150, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[4], 30, 170, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[5], 30, 190, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_b_str[6], 30, 210, YELLOW, 2, BLACK);
+
+		// 1. Show ready status  for all sensors
+		print_status_resdy_all_sensors_on_lcd();
 
 		menu_level_1_B_position_pointer = 1;
 		menu_level_1_B = true;
@@ -312,9 +335,9 @@ void print_all_menu_level_1_b_sensors(void)
 
 	// Clear all pointers on menu
 	clearn_all_pointers_on_menu();
-	show_pointer_on_menu_item(&menu_level_1_B_position_pointer, 6);
+	show_pointer_on_menu_item(&menu_level_1_B_position_pointer, 7);
 
-	// 1. Show status data for all sensors
+
 }
 // -----------------------------------------------------------------------
 void print_all_menu_level_1_c_sensors(void)
@@ -329,8 +352,8 @@ void print_all_menu_level_1_c_sensors(void)
 	{
 		clean_all_lines_of_menu ();
 
-		ILI9341_Draw_Text(menu_level_1_c_str[0], 30, 110, WHITE, 2, BLACK);
-		ILI9341_Draw_Text(menu_level_1_c_str[1], 30, 130, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_c_str[0], 30, 90, WHITE, 2, BLACK);
+		ILI9341_Draw_Text(menu_level_1_c_str[1], 30, 110, WHITE, 2, BLACK);
 
 		menu_level_1_C_position_pointer = 1;
 		menu_level_1_C = true;
@@ -395,7 +418,7 @@ void clean_all_lines_of_menu (void)
 	}
 }
 // -----------------------------------------------------------------------
-// Clearn all pointers on menu (arrows)
+// Clean all pointers on menu (arrows)
 void clearn_all_pointers_on_menu(void)
 {
 	for (int line = min_line_position; line <= max_line_position; line = line +20)
@@ -404,43 +427,322 @@ void clearn_all_pointers_on_menu(void)
 	}
 }
 // -----------------------------------------------------------------------
+// Show -> near menu items
 void show_pointer_on_menu_item(uint8_t *position_pointer_on_item_menu, uint8_t number_items_on_menu)
 {
 	if(*position_pointer_on_item_menu <= 0)
 	{
 		*position_pointer_on_item_menu = number_items_on_menu;
 	}
-	if(*position_pointer_on_item_menu >= number_items_on_menu+1)
+
+	//
+	if(*position_pointer_on_item_menu >= (number_items_on_menu + 1))
 	{
 		*position_pointer_on_item_menu = 1;
 	}
 
-	// Point pointer on menu
+	// Print pointer on menu
 	switch (*position_pointer_on_item_menu)
 	{
 		case 1:
-			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
+			ILI9341_Draw_Text( "->", 5, 90, RED, 2, BLACK);
 			break;
 		case 2:
-			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
+			ILI9341_Draw_Text( "->", 5, 110, RED, 2, BLACK);
 			break;
 		case 3:
-			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
+			ILI9341_Draw_Text( "->", 5, 130, RED, 2, BLACK);
 			break;
 		case 4:
-			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
+			ILI9341_Draw_Text( "->", 5, 150, RED, 2, BLACK);
 			break;
 		case 5:
-			ILI9341_Draw_Text( "->", 5, 190, RED, 2, BLACK);
+			ILI9341_Draw_Text( "->", 5, 170, RED, 2, BLACK);
 			break;
 		case 6:
+			ILI9341_Draw_Text( "->", 5, 190, RED, 2, BLACK);
+			break;
+		case 7:
 			ILI9341_Draw_Text( "->", 5, 210, RED, 2, BLACK);
 			break;
 		}
 }
 // -----------------------------------------------------------------------
+// Print "ready" or "Error""status all sensors.
+void print_status_resdy_all_sensors_on_lcd(void)
+{
+	if(i2c_device.BME280_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 90, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 90, RED, 2, BLACK);
+	}
+
+	if(i2c_device.MPU6050_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 110, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 110, RED, 2, BLACK);
+	}
+
+	if(i2c_device.HMC5883L_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 130, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 130, RED, 2, BLACK);
+	}
+
+	if(i2c_device.MS5611_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 150, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 150, RED, 2, BLACK);
+	}
+
+	if(i2c_device.AM2302_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 170, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 170, RED, 2, BLACK);
+	}
+
+	if(i2c_device.APDS9960_ready_status == true)
+	{
+		ILI9341_Draw_Text("Ready", 240, 190, GREEN, 2, BLACK);
+	}
+	else
+	{
+		ILI9341_Draw_Text("Error", 240, 190, RED, 2, BLACK);
+	}
+}
+// -----------------------------------------------------------------------
+void measure_and_print_all_sensors(void)
+{
+	bool sensor_print_status = false;			// For print only first time
+	int i = 0;									// For create different period measure
+	// Clear all LCD
+	ILI9341_Fill_Screen(BLACK);
+
+	while(getPressKey() != BUTTON_LEFT)
+	{
+		if(sensor_print_status == false)	// Print lines only first time.
+		{
+			// Print name sensors
+			ILI9341_Draw_Text( "1.BME280", 5, 90, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "2.MPU6050a", 5, 110, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "3.MPU6050g", 5, 130, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "4.HMC5883L", 5, 150, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "5.MS5611", 5, 170, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "6.AM2302", 5, 190, WHITE, 2, BLACK);
+			ILI9341_Draw_Text( "7.APDS9960", 5, 210, WHITE, 2, BLACK);
+
+			// Print lines
+			ILI9341_Draw_Horizontal_Line(0, 89, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 109, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 129, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 149, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 169, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 189, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 209, 320, GREEN);
+			ILI9341_Draw_Horizontal_Line(0, 229, 320, GREEN);
+			ILI9341_Draw_Vertical_Line(0, 89, 140, GREEN);
+			ILI9341_Draw_Vertical_Line(23, 89, 140, GREEN);
+			ILI9341_Draw_Vertical_Line(130, 89, 140, GREEN);
+			ILI9341_Draw_Vertical_Line(319, 89, 140, GREEN);
+
+			sensor_print_status = true;
+		}
+
+		// Measuring and printing
+		print_data_from_MPU6050_Acc_and_Gyro_on_lcd();   	// Acceleration X, Y, Z
+
+		// print_data_from_HMC5883L_on_lcd();		// Magnetometer DON'T WORK
+
+		if((i >= 10) | (i == 0))					// Measured and printed only one time per one second
+		{
+			print_data_from_AM2302_on_lcd();		// Temperature and humidity
+			print_data_from_BME280_on_lcd();		// Temperature, humidity and pressure
+			print_data_from_MS5611_on_lcd();		// Temperature and pressure
+			i = 0;
+		}
+
+		// print_data_from_APD59960_on_lcd();		// Motion sensor  DON'T WORK
+
+		HAL_Delay(100);
+		i++;
+	}
+	ILI9341_Fill_Screen(BLACK);
+	Menu_Navigate(&Menu_1);     // Back to menu 2
+}
 
 // -----------------------------------------------------------------------
+void print_data_from_AM2302_on_lcd(void)
+{
+	if(i2c_device.AM2302_ready_status == true)
+	{
+		am2302_measure();
+		// Convert data
+		int temp = i2c_device.AM2302_temperature;
+		int hum = i2c_device.AM2302_humidity;
+
+		char str_t[20] = {0};
+		char str_h[10] = {0};
+		char cels_s[7] = " C  ";
+		char hum_s[4] = " %";
+
+		// Add strings
+		itoa(temp, str_t, 10);
+		itoa(hum, str_h, 10);
+
+		strcat(str_t, cels_s);
+		strcat(str_h, hum_s);
+
+		strcat(str_t, str_h);
+
+		// Print like one line
+		ILI9341_Draw_Text(str_t, 135, 190, WHITE, 2, BLACK);
+	}
+}
+// -----------------------------------------------------------------------
+void print_data_from_MS5611_on_lcd(void)
+{
+	if(i2c_device.MS5611_ready_status)
+	{
+		ms5611_measure();
+
+		char str_MS5611[30] = {0};
+		char str_MS5611_buff[13] = {0};
+
+		int temp_MS5611 = i2c_device.MS5611_temperature;
+		int pres_MS5611 = i2c_device.MS5611_pressure;
+
+		char str_t_MS5611[6] = " C  ";
+		char str_p_MS5611[6] = " P";
+
+		itoa(temp_MS5611, str_MS5611_buff, 10);
+		strcat(str_MS5611, str_MS5611_buff);
+		strcat(str_MS5611, str_t_MS5611);
+
+		itoa(pres_MS5611, str_MS5611_buff, 10); 	// Convert from int in str
+		strcat(str_MS5611, str_MS5611_buff);
+		strcat(str_MS5611, str_p_MS5611);
+
+		ILI9341_Draw_Text(str_MS5611, 135, 170, WHITE, 2, BLACK);
+	}
+}
+// -----------------------------------------------------------------------
+void print_data_from_MPU6050_Acc_and_Gyro_on_lcd(void)
+{
+	bool print_x_y_z_status = false;
+
+	if(i2c_device.MPU6050_ready_status == true)
+	{
+		if(print_x_y_z_status == false)
+		{
+			// Print x.y and z
+			char str_x[3] = "X:";
+			char str_y[3] = "Y:";
+			char str_z[3] = "Z:";
+
+			// Acc
+			ILI9341_Draw_Text(str_x, 135, 115, WHITE, 1, BLACK);
+			ILI9341_Draw_Text(str_y, 190, 115, WHITE, 1, BLACK);
+			ILI9341_Draw_Text(str_z, 250, 115, WHITE, 1, BLACK);
+
+			// Gyro
+			ILI9341_Draw_Text(str_x, 135, 135, WHITE, 1, BLACK);
+			ILI9341_Draw_Text(str_y, 190, 135, WHITE, 1, BLACK);
+			ILI9341_Draw_Text(str_z, 250, 135, WHITE, 1, BLACK);
+
+			print_x_y_z_status = true;
+		}
+
+		mpu6050_measure();
+
+		char str_MPU6050[6] = {0};
+
+		// Acceleration
+		gcvt(i2c_device.MPU6050_acceleration_Ax, 2, str_MPU6050 );
+		ILI9341_Draw_Text("       ", 145, 115, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 145, 115, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+
+		gcvt(i2c_device.MPU6050_acceleration_Ay, 2, str_MPU6050 );
+		ILI9341_Draw_Text("        ", 200, 115, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 200, 115, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+
+		gcvt(i2c_device.MPU6050_acceleration_Az, 2, str_MPU6050 );
+		ILI9341_Draw_Text("        ", 260, 115, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 260, 115, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+
+		// Gyroscope
+		gcvt(i2c_device.MPU6050_gyro_Gx, 2, str_MPU6050 );
+		ILI9341_Draw_Text("       ", 145, 135, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 145, 135, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+
+		gcvt(i2c_device.MPU6050_gyro_Gy, 2, str_MPU6050 );
+		ILI9341_Draw_Text("        ", 200, 135, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 200, 135, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+
+		gcvt(i2c_device.MPU6050_gyro_Gz, 2, str_MPU6050 );
+		ILI9341_Draw_Text("        ", 260, 135, WHITE, 1, BLACK);
+		ILI9341_Draw_Text(str_MPU6050, 260, 135, WHITE, 1, BLACK);
+		memset(str_MPU6050, 0 , sizeof(str_MPU6050));
+	}
+}
+// -----------------------------------------------------------------------
+void print_data_from_BME280_on_lcd(void)
+{
+	if(i2c_device.BME280_ready_status == true)
+	{
+		bme280_measure();
+
+		char str_t_BME280[20] = {0};
+		char str_h_BME280[20] = {0};
+		char str_p_BME280[20] = {0};
+
+		int temp = i2c_device.BME280_temperature;
+		int hum = i2c_device.BME280_humidity;
+		int pres = i2c_device.BME280_preasure;
+
+		itoa(temp, str_t_BME280, 10);
+		itoa(hum, str_h_BME280, 10);
+		itoa(pres, str_p_BME280, 10);
+
+		char cels_s_BME280[7] = " C ";
+		char hum_s_BME280[4] = "% ";
+		char pres_s_BME280[4] = "P";
+
+		strcat(str_t_BME280, cels_s_BME280);
+		strcat(str_h_BME280, hum_s_BME280);
+		strcat(str_p_BME280, pres_s_BME280);
+
+		strcat(str_t_BME280, str_h_BME280);
+		strcat(str_t_BME280, str_p_BME280);
+
+		ILI9341_Draw_Text(str_t_BME280, 135, 90, WHITE, 2, BLACK);
+	}
+}
+// -----------------------------------------------------------------------
+
+
+
+
+
 
 
 
@@ -555,8 +857,8 @@ void Generic_Write(const char* Text)		// Print "Text" data on LCD
 {
 	if (Text)
 	{
-		ILI9341_Draw_Text( "                                 ", 10, 100, WHITE, 1, BLACK);
-		ILI9341_Draw_Text( Text, 10, 100, WHITE, 1, BLACK);
+		ILI9341_Draw_Text( "                                 ", 10, 60, WHITE, 1, BLACK);
+		ILI9341_Draw_Text( Text, 10, 60, WHITE, 1, BLACK);
 	}
 }
 // -----------------------------------------------------------------------

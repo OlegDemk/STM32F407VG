@@ -35,11 +35,11 @@ Core/Src/sensors/main_sensor_file.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../Core/Inc/screens/oled/oled.h ../Core/Inc/screens/oled/gfx.h \
- ../Core/Inc/sensors/mpu6050.h ../Core/Inc/sensors/hmc5883l.h \
- ../Core/Inc/sensors/bme280_defs.h ../Core/Inc/sensors/bme280.h \
- ../Core/Inc/sensors/bme280_defs.h ../Core/Inc/sensors/ms5611.h \
- ../Core/Inc/sensors/apds9960.h
+ ../Core/Inc/sensors/main_sensor_file.h ../Core/Inc/screens/oled/oled.h \
+ ../Core/Inc/screens/oled/gfx.h ../Core/Inc/sensors/mpu6050.h \
+ ../Core/Inc/sensors/hmc5883l.h ../Core/Inc/sensors/bme280_defs.h \
+ ../Core/Inc/sensors/bme280.h ../Core/Inc/sensors/bme280_defs.h \
+ ../Core/Inc/sensors/ms5611.h ../Core/Inc/sensors/apds9960.h
 
 ../Core/Inc/main.h:
 
@@ -112,6 +112,8 @@ Core/Src/sensors/main_sensor_file.o: \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
+
+../Core/Inc/sensors/main_sensor_file.h:
 
 ../Core/Inc/screens/oled/oled.h:
 

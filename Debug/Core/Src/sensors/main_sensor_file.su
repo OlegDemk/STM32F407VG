@@ -1,7 +1,7 @@
-main_sensor_file.c:51:8:user_i2c_read	24	static
-main_sensor_file.c:59:6:user_delay_ms	16	static
-main_sensor_file.c:64:8:user_i2c_write	32	static
-main_sensor_file.c:153:6:detect_all_sensors_and_init	8	static
+main_sensor_file.c:52:8:user_i2c_read	24	static
+main_sensor_file.c:60:6:user_delay_ms	16	static
+main_sensor_file.c:65:8:user_i2c_write	32	static
+main_sensor_file.c:154:6:detect_all_sensors_and_init	8	static
 main_sensor_file.c:193:6:measure_sensors	16	static
 main_sensor_file.c:220:6:init_apds9960	24	static
 main_sensor_file.c:336:6:apds9960_measure	4	static

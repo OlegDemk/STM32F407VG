@@ -59,9 +59,7 @@ int movement =0;						    // Variable for save up or down
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern HCD_HandleTypeDef hhcd_USB_OTG_FS;
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -215,105 +213,6 @@ void RCC_IRQHandler(void)
   /* USER CODE BEGIN RCC_IRQn 1 */
 
   /* USER CODE END RCC_IRQn 1 */
-}
-
-/**
-  * @brief This function handles TIM2 global interrupt.
-  */
-void TIM2_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-  //const int i = 0;
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);			// For
-  // Changing duty cycle every interrupt. (Period = 0,01 sec)
-  // Duty cycle from 0 to 100 and back
-  if(movement == 0)			// Up
-  {
-	  if(i <= 200)
-	  {
-		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
-		  i++;
-	  }
-	  else
-	  {
-		  movement = 1;
-	  }
-  }
-
-
-  if(movement == 1)			// Down
-  {
-	  if( i >= 100)
-	  {
-		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
-		  i--;
-	  }
-	  else
-	  {
-		  movement = 0;
-		  i = 100;
-	  }
-  }
-
- //HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
-}
-
-/**
-  * @brief This function handles TIM3 global interrupt.
-  */
-void TIM3_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM3_IRQn 0 */
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-  read_digits();
-
-	//keyboard_test();
-  /* USER CODE END TIM3_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim3);
-  /* USER CODE BEGIN TIM3_IRQn 1 */
-
-  /* USER CODE END TIM3_IRQn 1 */
-}
-
-/**
-  * @brief This function handles EXTI line[15:10] interrupts.
-  */
-void EXTI15_10_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-
-//	int h = 0;
-
-//	if(GPIO_Pin == MOTION_SENSOR_9960_Pin)  // GPIO_EXTII10_Pin     EXTI15_10
-//	{
-//		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
-//			// HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-//	}
-  /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
-  /* USER CODE END EXTI15_10_IRQn 1 */
-}
-
-/**
-  * @brief This function handles USB On The Go FS global interrupt.
-  */
-void OTG_FS_IRQHandler(void)
-{
-  /* USER CODE BEGIN OTG_FS_IRQn 0 */
-
-  /* USER CODE END OTG_FS_IRQn 0 */
-  HAL_HCD_IRQHandler(&hhcd_USB_OTG_FS);
-  /* USER CODE BEGIN OTG_FS_IRQn 1 */
-
-  /* USER CODE END OTG_FS_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

@@ -24,16 +24,10 @@ Core/Src/screens/oled/oled.o: ../Core/Src/screens/oled/oled.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Core/Inc/screens/oled/oled.h
 
 ../Core/Inc/main.h:
@@ -88,10 +82,6 @@ Core/Src/screens/oled/oled.o: ../Core/Src/screens/oled/oled.c \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h:
 
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h:
-
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
@@ -99,13 +89,5 @@ Core/Src/screens/oled/oled.o: ../Core/Src/screens/oled/oled.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
-
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 
 ../Core/Inc/screens/oled/oled.h:

@@ -20,11 +20,9 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Core/Src/communications/NRF24L01 \
 Core/Src \
 Core/Src/screens/lcd \
 Core/Src/screens/oled \
-Core/Src/sensors \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src \

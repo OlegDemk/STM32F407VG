@@ -29,11 +29,8 @@
 
 #include <stdbool.h>
 
-#include <sensors/main_sensor_file.h>
 
-#include "communications/NRF24L01/nrf24l01.h"
 
-#include "test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -150,7 +147,6 @@ int main(void)
   ILI9341_Fill_Screen(BLACK);
   ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);          // was  SCREEN_HORIZONTAL_2
 
-
   ILI9341_Fill_Screen(BLACK);
   int number_of_tests = 100;
   speed_test_LCD(number_of_tests);
@@ -163,54 +159,10 @@ int main(void)
   keyboard.how_meny_digits_must_be_written = 10;
   // Stop scan digits
 
-  // Encoder /////////////////////////////////////////
-//  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-//  int32_t prevCounter = 0;
-  ////////////////////////////////////////////////////
-
-  detect_all_sensors_and_init();			// Detect all devices which connected to i2c2 and i2c3
-  measure_sensors();
-  //HAL_Delay(1000);
-
-  //NRF24_ini();
-  //nrf_communication_test();
-  //main_test_function();
-
   while (1)
   {
-	  /////////////////////////////////////////////////////////////////
-
-	  //I2C_3_scaner();
-
-	 menu();
 
 
-
-
-
-//	  // Encoder test //////////////////////////////////////////////
-//	  int currCounter = __HAL_TIM_GET_COUNTER(&htim1);
-//	  currCounter = 32767 - ((currCounter-1) & 0xFFFF) / 2;
-//	  if(currCounter != prevCounter)
-//	  {
-//	          char buff[16];
-//	          snprintf(buff, sizeof(buff), "%06d", currCounter);
-//	          ILI9341_Draw_Text( buff, 10, 30, WHITE, 3, BLACK);
-//
-//	          // выводим куда-то currCounter
-//	          // ... пропущено ...
-//
-//	          prevCounter = currCounter;
-//	   }
-//	  if(HAL_GPIO_ReadPin(GPIOE, encoder_button_Pin) == 0)
-//	  {
-//		  ILI9341_Draw_Text( "KEY pressed", 10, 60, WHITE, 3, BLACK);
-//	  }
-//	  else
-//	  {
-//		  ILI9341_Draw_Text( "            ", 10, 60, WHITE, 3, BLACK);
-//	  }
-//	  ////////////////////////////////////////////////////////////////
 
 
 	  // Keyboard test //////////////////////////////////////////////
@@ -227,57 +179,9 @@ int main(void)
 
 
 
-	  //////////////////////////////////////////////////////////////
-//      НОВИЙ МЕТОД ЗЧИТУВАННЯ ЗНАКІВ З ЗЛАВІАТУРИ
-//	  введені_всі_символи? = read_keys_from_keyboard(how_meny_read_digits);
-
-
-	  /*
-	   * 1. включити переривання.
-	   * 2. якщо не введені всі символи:
-	   * 		тоді ввести символ в буфер
-	   * 3. Якщо введені всі символи:
-	   * 		вернути статус готовності
-	   * 		виключити переривання
-	   *
-	   * Вивід на екран це має бути окрема функція !!!!!!!!
-	   *
-	   */
-/////////////////////////////////////////////////////
 
 
 
-	 //  ВИкористати окремий канал для цього????? <<<<<<<<<<<<<<<<<<<<
-	  /* Алгоритм реалізації зчитування з клавіатури одного або
-	  багатьох символів
-	  1. Зробити таймер з перериванням на 1/3 секунди
-	  2. Помістити в неї функцію зчитування клавіатури
-	  	  Функція приймає параметри:
-	  	  	  1. Показник на массив буфера.
-	  	  	  2. Кількість знаків які потрібно записати
-	  	  Функція вертає статус виконання запису цифр. (0 - заипсаноб 1 - в процесі)
-	  При кожному перериванні функція зчитує натиснуті кнопки.
-	  	  Якщо кнопка не написанена - пропустити
-	  	  Якщо кнопка натиснута:
-	  	  	  Записано менше 10 цифр?
-	  	  	  	  так
-	  	  	  	  	  Записати знак в поеазник на елемент масива вхідного масиву.
-	  	  	  	  	  Зробити інкремент показника на масив.
-	  	  	  	  Ні
-	  	  	  	  	  Вернути знак завершення роботи
-
-
-
-	  */
-
-	  //test_touchsreen();
-//	  char number;
-//	  int ARR_REG =0;
-
-	 // HAL_TIM_Base_Start_IT(&htim3);			// Start timer measure
-	  //number = keyboard_test();					// Target function
-//	  HAL_TIM_Base_Stop_IT(&htim3);				// Stop timer measure
-//	  ARR_REG = TIM3-> CNT;
 
 
     /* USER CODE END WHILE */

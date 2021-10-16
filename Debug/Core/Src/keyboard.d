@@ -28,6 +28,8 @@ Core/Src/keyboard.o: ../Core/Src/keyboard.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/keyboard.h ../Core/Inc/screens/lcd/ILI9341_Touchscreen.h \
  ../Core/Inc/screens/lcd/ILI9341_STM32_Driver.h \
  ../Core/Inc/screens/lcd/ILI9341_GFX.h ../Core/Inc/screens/lcd/LCD.h
@@ -91,6 +93,10 @@ Core/Src/keyboard.o: ../Core/Src/keyboard.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 ../Core/Inc/keyboard.h:
 

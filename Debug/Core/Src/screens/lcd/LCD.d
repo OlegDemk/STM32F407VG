@@ -28,6 +28,8 @@ Core/Src/screens/lcd/LCD.o: ../Core/Src/screens/lcd/LCD.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/screens/lcd/LCD.h \
  ../Core/Inc/screens/lcd/ILI9341_Touchscreen.h \
  ../Core/Inc/screens/lcd/ILI9341_STM32_Driver.h \
@@ -93,6 +95,10 @@ Core/Src/screens/lcd/LCD.o: ../Core/Src/screens/lcd/LCD.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 ../Core/Inc/screens/lcd/LCD.h:
 

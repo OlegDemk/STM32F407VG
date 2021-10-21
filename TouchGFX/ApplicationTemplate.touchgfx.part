@@ -1,0 +1,22 @@
+
+{
+  "Application": {
+    "Name": "STM32F407",
+    "TouchGfxPath": "../Middlewares/ST/touchgfx",
+    "AvailableColorDepths": [ 16 ],
+    "AvailableLCDs":
+    {
+      "16": "LCD16bpp"
+    },
+    "AvailableResolutions" : [
+      {
+        "Width": 32,
+        "Height": 32
+      }
+    ],
+    "PostGenerateTargetCommand" : "touchgfx update_project --project-file=../STM32F407.ioc --platform=m4",
+    "Family" : "STM32F4",
+    "SubFamily" : "STM32F407/417"
+  },
+  "Version": "4.17.0"
+}
